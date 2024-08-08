@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:latest
+    volumes:
+      - ~/apps/apps/database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+
+  excalibur:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./apps/facture:/usr/src/app/apps/facture
+      - ./apps/deduction:/usr/src/app/apps/deduction
+    restart: always
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - database
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+    working_dir: /usr/src/app
