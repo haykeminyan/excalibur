@@ -105,6 +105,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+HOME_TEMPLATES = [
+    os.path.join(BASE_DIR, 'facture', 'templates'),
+    os.path.join(BASE_DIR, 'deduction', 'templates'),
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -118,10 +122,12 @@ USE_I18N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Example directory for collected static files
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

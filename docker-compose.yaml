@@ -4,9 +4,9 @@ services:
   database:
     image: postgres:latest
     volumes:
-      - ~/apps/apps/database:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=foo
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
@@ -33,3 +33,7 @@ services:
     ports:
       - "8000:8000"
     working_dir: /usr/src/app
+
+
+volumes:
+  postgres_data:
