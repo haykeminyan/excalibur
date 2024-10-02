@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Facture
+from .models import LocalFacture, WorldFacture
 
-admin.site.register(Facture)
+admin.site.register(LocalFacture)
+admin.site.register(WorldFacture)
+

@@ -1,3 +1,77 @@
 h1{
 text-align: center;
 }
+
+
+
+body, html {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+/* Center the grid both horizontally and vertically */
+.grid-container-first {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr); /* 2 columns */
+    gap: 20px; /* Space between grid items */
+    max-width: 1000px;
+    text-align: center;
+    margin: auto; /* Center horizontally and vertically */
+    padding: 20px; /* Optional padding inside the container */
+}
+
+/* Style for each grid item */
+.grid-item {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.address-item {
+    grid-column: 1 / -1; /* Make it span across all columns */
+    padding: 30px; /* Add more padding */
+    text-align: center;
+    font-size: 1.2rem; /* Increase font size for a larger block appearance */
+    max-width: 800px; /* Control maximum width */
+    margin: 0 auto; /* Center the block */
+}
+
+#address{
+    width: 500px;
+    height: 100px;
+}
+
+/* Center the grid both horizontally and vertically */
+.grid-container-second {
+    display: inline-grid;
+    grid-template-columns: repeat(4, 1fr); /* 2 columns */
+    gap: 20px; /* Space between grid items */
+    max-width: 1000px;
+    text-align: center;
+    margin: auto; /* Center horizontally and vertically */
+    padding: 20px; /* Optional padding inside the container */
+}
+
+.grid-container-third{
+        display: inline-grid;
+    grid-template-columns: repeat(5, 1fr); /* 2 columns */
+    gap: 20px; /* Space between grid items */
+    max-width: 1000px;
+    text-align: center;
+    margin: auto; /* Center horizontally and vertically */
+    padding: 20px; /* Optional padding inside the container */
+}
+
+.grid-container {
+text-align: center;
+}
+.container {
+text-align: center;
+    margin-top: 100px;
+}
+.bg-blue-500{
+    margin-top: 20px;
+}

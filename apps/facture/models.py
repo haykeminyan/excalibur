@@ -4,7 +4,7 @@ from datetime import date
 
 
 class Facture(models.Model):
-    id = models.AutoField(primary_key=True)
+    address = models.TextField()
     number_facture = models.IntegerField(default=date.today().year)
     owner = models.ForeignKey(
         'auth.User',
@@ -12,30 +12,16 @@ class Facture(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
-    firm_name = models.CharField(max_length=255)
-    address = models.TextField()
-    date = models.DateField(default=date.today)
-    facture_type = models.CharField(
-        choices=[('internal', 'Internal'), ('world', 'World')],
-        max_length=10
-    )
-    update_time = models.DateField(auto_now=True)
-    reference = models.CharField(default='', max_length=10, blank=True)
-    destination = models.CharField(default='Recharge Express', max_length=30)
-    quantity = models.IntegerField(blank=True, null=True)
+    date = models.DateField(default=date.today())
+    update_time = models.DateTimeField(auto_now=True)
+    reference = models.CharField(default='', max_length=10, blank=True, null=True)
+    quantity = models.IntegerField()
     percent = models.FloatField(
-        blank=True,
-        null=True,
         validators=[MinValueValidator(0), MaxValueValidator(1)],
     )
-    quantity_after_percent = models.FloatField(blank=True, null=True)
-    advance_payment = models.CharField(default='', max_length=10, blank=True)
-    total_tax = models.FloatField(blank=True, null=True)
-    total_payment_after_tax = models.FloatField(blank=True, null=True)
-    total_sum_fr = models.TextField()
-    total_sum_en = models.TextField()
-    contract_date = models.CharField(max_length=25)
-    account_number = models.CharField(max_length=25, blank=True, null=True)
+    quantity_after_percent = models.FloatField()
+    total_tax = models.FloatField()
+    total_payment_after_tax = models.FloatField()
 
     def save(self, *args, **kwargs):
         if not self.pk:  # Use pk to check if instance is new
@@ -45,6 +31,26 @@ class Facture(models.Model):
                 self.number_facture = int(f"{self.number_facture:04d}{self.pk:04d}")
                 self.save(update_fields=['number_facture'])  # Save updated number_facture
         super().save(*args, **kwargs)  # Ensure final save
+
+class LocalFacture(Facture):
+    # check if this fucking shit has reason to exist
+    identification_number = models.IntegerField(blank=True, null=True)
+    destination = models.CharField(max_length=255, default='Recharge express')
+    deposit = models.FloatField(blank=True, null=True)
+
+
+    def __str__(self) -> str:
+        """Return model string representation."""
+        return f'{self.date} {self.id}'
+
+
+class WorldFacture(Facture):
+    firm_name = models.TextField()
+    account_number = models.IntegerField()
+    sku = models.IntegerField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    specification = models.IntegerField(blank=True, null=True)
+
 
     def __str__(self) -> str:
         """Return model string representation."""

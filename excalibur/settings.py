@@ -79,12 +79,12 @@ WSGI_APPLICATION = 'excalibur.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'database',
-        'PORT': 5432,
-    },
+        'NAME': 'pmsolution_facture',  # Same as POSTGRES_DB
+        'USER': 'postgres',  # Same as POSTGRES_USER
+        'PASSWORD': 'postgres',  # Same as POSTGRES_PASSWORD
+        'HOST': 'database',  # Docker service name for PostgreSQL
+        'PORT': '5432',
+    }
 }
 
 # Password validation
