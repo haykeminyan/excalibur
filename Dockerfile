@@ -1,30 +1,46 @@
-# pull official base image
-FROM python:3.12
+# Stage 1: Builder Image
+FROM python:3.12 AS builder
 
-# set work directory
+# Set work directory
 WORKDIR /usr/src/app
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 
-# install system dependencies
-RUN apt-get update && apt-get install -y netcat-traditional
+# Install system dependencies, PostgreSQL dev libraries, and pip
+RUN apt-get update && apt-get install -y \
+    netcat-traditional \
+    libpq-dev \
+    gcc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# install dependencies
-RUN pip install --upgrade pip
-
-# Copy requirements.txt from cerberus-api directory
+# Upgrade pip and install dependencies from requirements.txt
 COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
 
-# install dependencies from requirements.txt
-RUN pip install -r requirements.txt
+# Stage 2: Production Image
+FROM python:3.12-slim
 
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+# Set work directory
+WORKDIR /usr/src/app
+
+# Install PostgreSQL client libraries and clean up
+RUN apt-get update && apt-get install -y libpq5 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy installed dependencies from builder stage
+COPY --from=builder /root/.local /root/.local
+
+# Set PATH to include local pip installations
+ENV PATH=/root/.local/bin:$PATH
 
 # Copy the rest of the application
 COPY . .
 
-# specify the command to run on container start
+# Ensure entrypoint script is executable
+RUN chmod +x entrypoint.sh
+
+# Specify the command to run on container start
 CMD ["./entrypoint.sh"]
