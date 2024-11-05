@@ -1,17 +1,30 @@
 from django import forms
 
-from apps.facture.models import Facture
+from apps.facture.models import Facture, WorldFacture, LocalFacture
+import logging
 
+logger = logging.getLogger(__name__)
 
-class FactureForm(forms.ModelForm):
+class LocalFactureForm(forms.ModelForm):
     class Meta:
-        model = Facture
+        model = LocalFacture
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super(FactureForm, self).__init__(*args, **kwargs)
+        super(LocalFactureForm, self).__init__(*args, **kwargs)
         self.fields['number_facture'].label = 'Numero'
         self.fields['quantity'].label = 'Quantityé'
         self.fields['percent'].label = 'P.U.TTC'
         self.fields['total_tax'].label = 'Total H.T.'
-        print(self.fields)
+
+class WorldFactureForm(forms.ModelForm):
+    class Meta:
+        model = WorldFacture
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(WorldFactureForm, self).__init__(*args, **kwargs)
+        self.fields['number_facture'].label = 'Numero'
+        self.fields['quantity'].label = 'Quantityé'
+        self.fields['percent'].label = 'P.U.TTC'
+        self.fields['total_tax'].label = 'Total H.T.'

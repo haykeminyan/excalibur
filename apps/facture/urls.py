@@ -19,8 +19,10 @@ from django.urls import path, include
 
 from apps import facture
 from apps.facture.models import Facture
-from apps.facture.views import FactureCreateView
+from apps.facture.views import FactureCreateView, LocalFactureListView, WorldFactureListView
 
 urlpatterns = [
-    path('create-facture', FactureCreateView.as_view(), name='create-facture')
+    path('create-facture', FactureCreateView.as_view(), name='create-facture'),
+    path('local-list-facture', LocalFactureListView.as_view(), name='local-list-facture'),
+    path('world-list-facture', WorldFactureListView.as_view(), name='world-list-facture'),
 ]

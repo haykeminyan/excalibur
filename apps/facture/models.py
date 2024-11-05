@@ -2,6 +2,8 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import date
 
+from apps.facture.constants import FACTURE_TYPE_CHOICES, LOCAL
+
 
 class Facture(models.Model):
     address = models.TextField()
@@ -22,6 +24,7 @@ class Facture(models.Model):
     quantity_after_percent = models.FloatField()
     total_tax = models.FloatField()
     total_payment_after_tax = models.FloatField()
+    facture_type = models.CharField(max_length=10, choices=FACTURE_TYPE_CHOICES, default=LOCAL)
 
     def save(self, *args, **kwargs):
         if not self.pk:  # Use pk to check if instance is new
@@ -31,6 +34,9 @@ class Facture(models.Model):
                 self.number_facture = int(f"{self.number_facture:04d}{self.pk:04d}")
                 self.save(update_fields=['number_facture'])  # Save updated number_facture
         super().save(*args, **kwargs)  # Ensure final save
+
+    def is_local(self):
+        return self.facture_type == LOCAL
 
 class LocalFacture(Facture):
     # check if this fucking shit has reason to exist
@@ -50,7 +56,6 @@ class WorldFacture(Facture):
     sku = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     specification = models.IntegerField(blank=True, null=True)
-
 
     def __str__(self) -> str:
         """Return model string representation."""
