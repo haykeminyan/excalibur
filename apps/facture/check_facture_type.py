@@ -4,16 +4,15 @@ from apps.facture.forms import LocalFactureForm, WorldFactureForm
 
 
 def render_form_response(request, facture_form, facture_type):
-    template_mapping = {
-        'local': 'html/create-facture-local.html',
-        'world': 'html/create-facture-world.html'
-    }
+    # Ensure the facture_type is valid
+    if facture_type not in {'local', 'world'}:
+        return JsonResponse({'error': 'Invalid facture type'}, status=400)
 
-    template_name = template_mapping.get(facture_type)
-    if template_name:
-        return render(request, template_name, {'facture_form': facture_form})
+    # Map facture_type to its respective template
+    template_name = f'html/create-facture-{facture_type}.html'
 
-    return JsonResponse({'error': 'Invalid facture type'}, status=400)
+    # Render the appropriate template
+    return render(request, template_name, {'facture_form': facture_form})
 
 
 def get_facture_form(facture_type, data):
@@ -21,7 +20,6 @@ def get_facture_form(facture_type, data):
         'local': LocalFactureForm,
         'world': WorldFactureForm
     }
-
     form_class = form_mapping.get(facture_type)
     if form_class:
         return form_class(data=data)

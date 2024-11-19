@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-+dmib-8)00(@_hq$-8^mwx*dj@7m2*0#f^o%1+0_wij+^zy7+s
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+INTERNAL_IPS = [
+    '127.0.0.1',  # Localhost
+    '172.17.0.1',  # Default Docker gateway (adjust if using a custom network)
+]
 
 # Application definition
 
@@ -37,9 +40,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'apps.deduction',
     'apps.facture'
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,7 +67,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+}
 
 ROOT_URLCONF = 'excalibur.urls'
 
