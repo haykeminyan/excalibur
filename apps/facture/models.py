@@ -24,7 +24,6 @@ class Facture(models.Model):
     quantity_after_percent = models.FloatField()
     total_tax = models.FloatField()
     total_payment_after_tax = models.FloatField()
-    facture_type = models.CharField(max_length=10, choices=FACTURE_TYPE_CHOICES, default=LOCAL)
 
     def save(self, *args, **kwargs):
         if not self.pk:  # Use pk to check if instance is new
@@ -35,8 +34,6 @@ class Facture(models.Model):
                 self.save(update_fields=['number_facture'])  # Save updated number_facture
         super().save(*args, **kwargs)  # Ensure final save
 
-    def is_local(self):
-        return self.facture_type == LOCAL
 
 class LocalFacture(Facture):
     # check if this fucking shit has reason to exist

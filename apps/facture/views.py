@@ -4,44 +4,112 @@ from importlib.metadata import requires
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView
-
+from django.views.generic import ListView, DetailView, FormView
+from django.urls import reverse_lazy
 from excalibur.mixins import JsonRequestMixin
-from .check_facture_type import get_facture_form, handle_facture_form, render_form_response
+from .forms import LocalFactureForm, WorldFactureForm
 from .models import  LocalFacture, WorldFacture
 import logging
 
 logger = logging.getLogger(__name__)
 
 class LocalFactureListView(ListView):
-    def get(self, request, *args, **kwargs):
-        facture = LocalFacture.objects.select_related('owner').all()
-        return render(request, 'html/local-list-facture.html', {'facture': facture})
+    model = LocalFacture
+    template_name = 'html/local_list_facture.html'
+    allow_empty = False
+    context_object_name = 'factures'
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('owner')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return context
+
 
 
 class WorldFactureListView(ListView):
-    def get(self, request, *args, **kwargs):
-        facture = WorldFacture.objects.select_related('owner').all()
-        return render(request, 'html/world-list-facture.html', {'facture': facture})
+    model = WorldFacture
+    template_name = 'html/world_list_facture.html'
+    allow_empty = False
+    context_object_name = 'factures'
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('owner')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return context
+
+
+class LocalFactureDetailView(DetailView):
+    model = LocalFacture
+    template_name = 'html/detail_facture_local.html'
+    allow_empty = False
+    context_object_name = 'facture'
+    slug_url_kwarg = 'pk'
+
+    def get_object(self, **kwargs):
+        return get_object_or_404(LocalFacture, pk = self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class WorldFactureDetailView(DetailView):
+    model = WorldFacture
+    template_name = 'html/detail_facture_world.html'
+    allow_empty = False
+    context_object_name = 'facture'
+    slug_url_kwarg = 'pk'
+
+    def get_object(self, **kwargs):
+        return get_object_or_404(WorldFacture, pk = self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class FactureCreateView(JsonRequestMixin, ListView):
-    def get(self, request, *args, **kwargs):
-        facture_type = request.GET.get('facture_type')
-        facture_form = get_facture_form(facture_type=facture_type, data=request.data)
+class AddLocalFacture(FormView):
+    form_class = LocalFactureForm
+    template_name = 'html/create_facture_local.html'
+    success_url = reverse_lazy('success')
 
-        if facture_form:
-            return render_form_response(request=request, facture_form=facture_form, facture_type=facture_type)
 
-        return JsonResponse({'error': 'Invalid facture type'}, status=400)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['facture_form'] = self.get_form()
+        return context
 
-    def post(self, request):
-        facture_type = request.data.get('facture_type')
-        facture_form = get_facture_form(facture_type=facture_type, data=request.data)
-        if facture_form:
-            return handle_facture_form(facture_form)
-        return JsonResponse({'error': 'Invalid facture type'}, status=400)
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print("Form errors:", form.errors)
+        return super().form_invalid(form)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AddWorldFacture(FormView):
+    form_class = WorldFactureForm
+    template_name = 'html/create_facture_world.html'
+    success_url = reverse_lazy('success')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['facture_form'] = self.get_form()
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print("Form errors:", form.errors)
+        return super().form_invalid(form)

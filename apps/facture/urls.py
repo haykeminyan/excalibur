@@ -18,11 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 
 from apps import facture
-from apps.facture.models import Facture
-from apps.facture.views import FactureCreateView, LocalFactureListView, WorldFactureListView
+from apps.facture.models import Facture, WorldFacture
+from apps.facture.views import LocalFactureListView, WorldFactureListView, LocalFactureDetailView, \
+    WorldFactureDetailView, AddLocalFacture, AddWorldFacture
 
 urlpatterns = [
-    path('create-facture', FactureCreateView.as_view(), name='create-facture'),
-    path('local-list-facture', LocalFactureListView.as_view(), name='local-list-facture'),
-    path('world-list-facture', WorldFactureListView.as_view(), name='world-list-facture'),
+    # Facture creation
+    path('facture/local/create/', AddLocalFacture.as_view(), name='facture_local_create'),
+    path('facture/world/create/', AddWorldFacture.as_view(), name='facture_world_create'),
+
+    # Facture listing
+    path('facture/local/', LocalFactureListView.as_view(), name='facture_local_list'),
+    path('facture/world/', WorldFactureListView.as_view(), name='facture_world_list'),
+
+    # Facture details
+    path('facture/local/<int:pk>/', LocalFactureDetailView.as_view(), name='facture_local_detail'),
+    path('facture/world/<int:pk>/', WorldFactureDetailView.as_view(), name='facture_world_detail'),
 ]
