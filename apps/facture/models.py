@@ -1,11 +1,11 @@
-from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+import logging
 from datetime import date
 
-
-import logging
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 logger = logging.getLogger(__name__)
+
 
 class Facture(models.Model):
     address = models.TextField()
@@ -43,12 +43,12 @@ class Facture(models.Model):
 
         super().save(*args, **kwargs)
 
+
 class LocalFacture(Facture):
     # check if this fucking shit has reason to exist
     identification_number = models.IntegerField(blank=True, null=True)
     destination = models.CharField(max_length=255, default='Recharge express')
     deposit = models.FloatField(blank=True, null=True)
-
 
     def __str__(self) -> str:
         """Return model string representation."""

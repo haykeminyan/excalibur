@@ -1,102 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% load static %} <!-- Load Django static template tag -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Facture</title>
-    <!-- Import Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Import FontAwesome for icons -->
-    {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="{% static 'facture/css/styles.css' %}">
-    {% endblock stylesheets %}
-</head>
-<body class="bg-gray-100">
-
-    <!-- Main Container -->
-    <div class="flex min-h-screen">
-
-        <!-- Sidebar -->
-        <div class="w-1/5 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8">
-            <h2 class="text-2xl font-bold">Dashboard</h2>
-            <ul class="space-y-6">
-                <li>
-                    <a href="{% url 'facture_world_create' %}" class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
-                        <i class="fas fa-file-invoice-dollar text-xl"></i>
-                        <span>Create Facture</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
-                        <i class="fas fa-chart-line text-xl"></i>
-                        <span>Reports</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
-                        <i class="fas fa-cogs text-xl"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Content Area -->
-        <div class="w-4/5 p-10">
-            <h1 class="text-4xl font-bold text-blue-800 mb-6">{{title}}</h1>
-
-            <!-- Form Section -->
-<div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
-    <form method="post" action="">
-        {% csrf_token %}
-
-        <!-- General form errors -->
-        {% if form.non_field_errors %}
-            <div class="bg-red-100 text-red-700 p-4 mb-6 rounded">
-                <ul>
-                    {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
+    <head>
+        {% load static %}
+        <!-- Load Django static template tag -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create Facture</title>
+        <!-- Import Tailwind CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+              rel="stylesheet">
+        <!-- Import FontAwesome for icons -->
+        {% block stylesheets %}
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="{% static 'facture/css/styles.css' %}">
+        {% endblock stylesheets %}
+    </head>
+    <body class="bg-gray-100">
+        <!-- Main Container -->
+        <div class="flex min-h-screen">
+            <!-- Sidebar -->
+            <div class="w-1/5 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8">
+                <h2 class="text-2xl font-bold">Dashboard</h2>
+                <ul class="space-y-6">
+                    <li>
+                        <a href="{% url 'facture_world_create' %}"
+                           class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
+                            <i class="fas fa-file-invoice-dollar text-xl"></i>
+                            <span>Create Facture</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                           class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
+                            <i class="fas fa-chart-line text-xl"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                           class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
+                            <i class="fas fa-cogs text-xl"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
-        {% endif %}
-
-        <!-- Form fields -->
-        {% for f in form %}
-            <div class="mb-6">
-                <label for="{{ f.id_for_label }}" class="block text-sm font-semibold text-gray-700">{{ f.label }}</label>
-
-                <div class="mt-2">
-                    <!-- Render the field as-is, and if it's a date field, it will render as an <input type="date"> -->
-                    {{ f }}
-                </div>
-
-                <!-- Field-specific errors -->
-                {% if f.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in f.errors %}
-                            <p>{{ error }}</p>
+            <!-- Content Area -->
+            <div class="w-4/5 p-10">
+                <h1 class="text-4xl font-bold text-blue-800 mb-6">{{ title }}</h1>
+                <!-- Form Section -->
+                <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <!-- General form errors -->
+                        {% if form.non_field_errors %}
+                            <div class="bg-red-100 text-red-700 p-4 mb-6 rounded">
+                                <ul>
+                                    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <!-- Form fields -->
+                        {% for f in form %}
+                            <div class="mb-6">
+                                <label for="{{ f.id_for_label }}"
+                                       class="block text-sm font-semibold text-gray-700">{{ f.label }}</label>
+                                <div class="mt-2">
+                                    <!-- Render the field as-is, and if it's a date field, it will render as an <input type="date"> -->
+                                    {{ f }}
+                                </div>
+                                <!-- Field-specific errors -->
+                                {% if f.errors %}
+                                    <div class="text-red-600 text-sm mt-1">
+                                        {% for error in f.errors %}<p>{{ error }}</p>{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         {% endfor %}
-                    </div>
-                {% endif %}
+                        <!-- Submit button -->
+                        <div class="mt-8">
+                            <button type="submit"
+                                    value="update"
+                                    class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300">
+                                {{ button }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        {% endfor %}
-
-        <!-- Submit button -->
-        <div class="mt-8">
-            <button type="submit" value="update" class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300">
-                Submit Facture
-            </button>
         </div>
-    </form>
-</div>
-
-
-
-        </div>
-    </div>
-
-</body>
+    </body>
 </html>

@@ -1,114 +1,94 @@
-import json
-from importlib.metadata import requires
-
-from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
-from django.urls import reverse_lazy
-from excalibur.mixins import JsonRequestMixin
-from .forms import LocalFactureForm, WorldFactureForm
-from .models import  LocalFacture, WorldFacture
 import logging
+
+from django.urls import reverse_lazy
+from django.views.generic import UpdateView
+
+from .forms import LocalFactureForm, WorldFactureForm
+from .mixins import (
+    BaseFactureCreateView,
+    BaseFactureDeleteView,
+    BaseFactureDetailView,
+    BaseFactureListView,
+    BaseFactureUpdateView,
+)
+from .models import LocalFacture, WorldFacture
 
 logger = logging.getLogger(__name__)
 
-class LocalFactureListView(ListView):
+
+class LocalFactureListView(BaseFactureListView):
     model = LocalFacture
     template_name = 'html/local_list_facture.html'
-    allow_empty = False
     context_object_name = 'factures'
 
-    def get_queryset(self):
-        return super().get_queryset().select_related('owner')
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        return context
-
-
-
-class WorldFactureListView(ListView):
+class WorldFactureListView(BaseFactureListView):
     model = WorldFacture
     template_name = 'html/world_list_facture.html'
-    allow_empty = False
     context_object_name = 'factures'
 
-    def get_queryset(self):
-        return super().get_queryset().select_related('owner')
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        return context
-
-
-class LocalFactureDetailView(DetailView):
+class LocalFactureDetailView(BaseFactureDetailView):
     model = LocalFacture
     template_name = 'html/detail_facture_local.html'
-    allow_empty = False
-    context_object_name = 'facture'
-    slug_url_kwarg = 'pk'
-
-    def get_object(self, **kwargs):
-        return get_object_or_404(LocalFacture, pk = self.kwargs['pk'])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    title = 'Local Facture Details'
+    button_text = 'Return'
 
 
-class WorldFactureDetailView(DetailView):
+class WorldFactureDetailView(BaseFactureDetailView):
     model = WorldFacture
     template_name = 'html/detail_facture_world.html'
-    allow_empty = False
-    context_object_name = 'facture'
-    slug_url_kwarg = 'pk'
-
-    def get_object(self, **kwargs):
-        return get_object_or_404(WorldFacture, pk = self.kwargs['pk'])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    title = 'World Facture Details'
+    button_text = 'Return'
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class AddLocalFacture(CreateView):
+class AddLocalFacture(BaseFactureCreateView):
     form_class = LocalFactureForm
     model = LocalFacture
     template_name = 'html/create_facture_local.html'
     success_url = reverse_lazy('facture_local_list')
-
-    extra_context = {
-        'title': 'Create Local Facture'
-    }
+    title = 'Create Local Facture'
+    button_text = 'Submit'
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class AddWorldFacture(CreateView):
+class AddWorldFacture(BaseFactureCreateView):
     form_class = WorldFactureForm
     model = WorldFacture
     template_name = 'html/create_facture_world.html'
     success_url = reverse_lazy('facture_world_list')
+    title = 'Create World Facture'
+    button_text = 'Submit'
 
-@method_decorator(csrf_exempt, name='dispatch')
-class UpdateLocalFacture(UpdateView):
+
+class UpdateLocalFacture(BaseFactureUpdateView):
     form_class = LocalFactureForm
     model = LocalFacture
     template_name = 'html/create_facture_local.html'
     success_url = reverse_lazy('facture_local_list')
-
-    extra_context = {
-        'title': 'Update Local Facture'
-    }
+    title = 'Update Local Facture'
+    button_text = 'Submit'
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class UpdateWorldFacture(UpdateView):
     form_class = WorldFactureForm
     model = WorldFacture
     template_name = 'html/create_facture_world.html'
     success_url = reverse_lazy('facture_world_list')
+    title = 'Update World Facture'
+    button_text = 'Submit'
 
+
+class DeleteLocalFacture(BaseFactureDeleteView):
+    model = LocalFacture
+    template_name = 'html/create_facture_local.html'
+    success_url = reverse_lazy('facture_local_list')
+    title = 'Delete Local Facture'
+    button_text = 'Delete'
+
+
+class DeleteWorldFacture(BaseFactureDeleteView):
+    model = WorldFacture
+    template_name = 'html/create_facture_world.html'
+    success_url = reverse_lazy('facture_world_list')
+    title = 'Delete World Facture'
+    button_text = 'Delete'

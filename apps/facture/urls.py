@@ -14,27 +14,49 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
 
-from apps import facture
-from apps.facture.models import Facture, WorldFacture
-from apps.facture.views import LocalFactureListView, WorldFactureListView, LocalFactureDetailView, \
-    WorldFactureDetailView, AddLocalFacture, AddWorldFacture, UpdateLocalFacture, UpdateWorldFacture
+from django.urls import path
+
+from apps.facture.views import (
+    AddLocalFacture,
+    AddWorldFacture,
+    DeleteLocalFacture,
+    DeleteWorldFacture,
+    LocalFactureDetailView,
+    LocalFactureListView,
+    UpdateLocalFacture,
+    UpdateWorldFacture,
+    WorldFactureDetailView,
+    WorldFactureListView,
+)
 
 urlpatterns = [
     # Facture creation
     path('facture/local/create/', AddLocalFacture.as_view(), name='facture_local_create'),
     path('facture/world/create/', AddWorldFacture.as_view(), name='facture_world_create'),
-
-    path('facture/local/update/<int:pk>/', UpdateLocalFacture.as_view(), name='facture_local_update'),
-
-    path('facture/world/update/<int:pk>/', UpdateWorldFacture.as_view(), name='facture_world_update'),
-
+    path(
+        'facture/local/update/<int:pk>/',
+        UpdateLocalFacture.as_view(),
+        name='facture_local_update',
+    ),
+    path(
+        'facture/world/update/<int:pk>/',
+        UpdateWorldFacture.as_view(),
+        name='facture_world_update',
+    ),
+    path(
+        'facture/local/delete/<int:pk>/',
+        DeleteLocalFacture.as_view(),
+        name='facture_local_delete',
+    ),
+    path(
+        'facture/world/delete/<int:pk>/',
+        DeleteWorldFacture.as_view(),
+        name='facture_world_update',
+    ),
     # Facture listing
     path('facture/local/', LocalFactureListView.as_view(), name='facture_local_list'),
     path('facture/world/', WorldFactureListView.as_view(), name='facture_world_list'),
-
     # Facture details
     path('facture/local/<int:pk>/', LocalFactureDetailView.as_view(), name='facture_local_detail'),
     path('facture/world/<int:pk>/', WorldFactureDetailView.as_view(), name='facture_world_detail'),

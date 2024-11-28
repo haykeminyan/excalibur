@@ -1,9 +1,8 @@
-{{facture}}
+{{ facture }}
 xer
-
-                    <div>
-                        <h2 class="text-xl font-bold text-gray-700">{{ facture.number_facture }}</h2>
-                        <p class="text-gray-600">Date: {{ facture.created_date }}</p>
-                        <p class="text-gray-600">Reference: {{ facture.reference }}</p>
-                        <p class="text-gray-600">Total: {{ facture.total_payment_after_tax }}</p>
-                    </div>
+<div>
+    <h2 class="text-xl font-bold text-gray-700">{{ facture.number_facture }}</h2>
+    <p class="text-gray-600">Date: {{ facture.created_date }}</p>
+    <p class="text-gray-600">Reference: {{ facture.reference }}</p>
+    <p class="text-gray-600">Total: {{ facture.total_payment_after_tax }}</p>
+</div>

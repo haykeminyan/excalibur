@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title><!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %} <!-- Load Django static template tag -->
-    <meta charset="UTF-8">
-    <title>All Factures</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    {% block stylesheets %}
-        <!-- Correct usage of static tag -->
-        <link rel="stylesheet" type="text/css" href="{% static 'facture/css/styles.css' %}">
-    {% endblock stylesheets %}
-</head>
-      {% csrf_token %}
-<body class="bg-gray-100">
-    <div class="container mx-auto py-8">
-        <!-- Header Section -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">All Factures</h1>
-            <a href="{% url 'create_facture' %}?facture_type=world" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Create New Facture
-            </a>
-        </div>
-
-        <!-- Factures List -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for facture in factures %}
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-start">
-                    <div class="mr-4 text-blue-500">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v2a2 2 0 002 2h2a2 2 0 002-2v-2m0-6V5a2 2 0 00-2-2H9a2 2 0 00-2 2v6m0 0h8m-8 0h8"></path>
-                        </svg>
+    <head>
+        <meta charset="UTF-8">
+        <title><!DOCTYPE html>
+            <html lang="en">
+                <head>
+                    {% load static %}
+                    <!-- Load Django static template tag -->
+                    <meta charset="UTF-8">
+                    <title>All Factures</title>
+                    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+                          rel="stylesheet">
+                    {% block stylesheets %}
+                        <!-- Correct usage of static tag -->
+                        <link rel="stylesheet"
+                              type="text/css"
+                              href="{% static 'facture/css/styles.css' %}">
+                    {% endblock stylesheets %}
+                </head>
+                {% csrf_token %}
+                <body class="bg-gray-100">
+                    <div class="container mx-auto py-8">
+                        <!-- Header Section -->
+                        <div class="flex justify-between items-center mb-6">
+                            <h1 class="text-3xl font-bold text-gray-800">All Factures</h1>
+                            <a href="{% url 'facture_world_create' %}"
+                               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                                <svg class="w-4 h-4 mr-2"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Create New Facture
+                            </a>
+                        </div>
+                        <!-- Factures List -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {% for facture in factures %}
+                                <div class="bg-white rounded-lg shadow-md p-6">
+                                    <div class="flex items-start">
+                                        <div class="mr-4 text-blue-500">
+                                            <svg class="w-8 h-8"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 viewBox="0 0 24 24"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v2a2 2 0 002 2h2a2 2 0 002-2v-2m0-6V5a2 2 0 00-2-2H9a2 2 0 00-2 2v6m0 0h8m-8 0h8">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <a href="{% url 'facture_world_detail' facture.id %}">
+                                                <h2 class="text-xl font-bold text-gray-700">{{ facture.number_facture }}</h2>
+                                                <p class="text-gray-600">Date: {{ facture.created_date }}</p>
+                                                <p class="text-gray-600">Reference: {{ facture.reference }}</p>
+                                                <p class="text-gray-600">Total: {{ facture.total_payment_after_tax }}</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-center text-gray-500 col-span-3">No factures found.</p>
+                            {% endfor %}
+                        </div>
+                        <!-- Pagination Section -->
+                        <div class="mt-6">
+                            {% if is_paginated %}
+                                <div class="flex justify-center">
+                                    <span class="px-3 py-1 bg-gray-200 rounded">{{ page_obj.number }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div>
-                        <a href="{% url 'detail_world_facture' facture.id %}" >
-                        <h2 class="text-xl font-bold text-gray-700">{{ facture.number_facture }}</h2>
-
-                            <p class="text-gray-600">Date: {{ facture.created_date }}</p>
-                        <p class="text-gray-600">Reference: {{ facture.reference }}</p>
-                        <p class="text-gray-600">Total: {{ facture.total_payment_after_tax }}</p>
-                                </a>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <p class="text-center text-gray-500 col-span-3">No factures found.</p>
-            {% endfor %}
-        </div>
-
-        <!-- Pagination Section -->
-        <div class="mt-6">
-            {% if is_paginated %}
-            <div class="flex justify-center">
-                <span class="px-3 py-1 bg-gray-200 rounded">{{ page_obj.number }}</span>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-
-    {% block scripts %}
-        <script src="{% static 'facture/js/tools.js' %}"></script>
-    {% endblock scripts %}
-</body>
-</html>
-</title>
-</head>
-<body>
-
-</body>
+                    {% block scripts %}
+                        <script src="{% static 'facture/js/tools.js' %}"></script>
+                    {% endblock scripts %}
+                </body>
+            </html>
+        </title>
+    </head>
+    <body></body>
 </html>
