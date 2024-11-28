@@ -20,12 +20,16 @@ from django.urls import path, include
 from apps import facture
 from apps.facture.models import Facture, WorldFacture
 from apps.facture.views import LocalFactureListView, WorldFactureListView, LocalFactureDetailView, \
-    WorldFactureDetailView, AddLocalFacture, AddWorldFacture
+    WorldFactureDetailView, AddLocalFacture, AddWorldFacture, UpdateLocalFacture, UpdateWorldFacture
 
 urlpatterns = [
     # Facture creation
     path('facture/local/create/', AddLocalFacture.as_view(), name='facture_local_create'),
     path('facture/world/create/', AddWorldFacture.as_view(), name='facture_world_create'),
+
+    path('facture/local/update/<int:pk>/', UpdateLocalFacture.as_view(), name='facture_local_update'),
+
+    path('facture/world/update/<int:pk>/', UpdateWorldFacture.as_view(), name='facture_world_update'),
 
     # Facture listing
     path('facture/local/', LocalFactureListView.as_view(), name='facture_local_list'),

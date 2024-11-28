@@ -2,12 +2,14 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import date
 
-from apps.facture.constants import FACTURE_TYPE_CHOICES, LOCAL
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Facture(models.Model):
     address = models.TextField()
-    number_facture = models.IntegerField(default=date.today().year)
+    number_facture = models.CharField(default=date.today().year, unique=True)
     owner = models.ForeignKey(
         'auth.User',
         related_name='factures',
@@ -26,14 +28,20 @@ class Facture(models.Model):
     total_payment_after_tax = models.FloatField()
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # Use pk to check if instance is new
-            super().save(*args, **kwargs)  # Save the instance first
-            # Update number_facture with formatted id
-            if self.pk:
-                self.number_facture = int(f"{self.number_facture:04d}{self.pk:04d}")
-                self.save(update_fields=['number_facture'])  # Save updated number_facture
-        super().save(*args, **kwargs)  # Ensure final save
+        if not self.pk:
+            last_local_facture = LocalFacture.objects.all().order_by('number_facture').last()
+            last_world_facture = WorldFacture.objects.all().order_by('number_facture').last()
 
+            local_number = int(last_local_facture.number_facture) if last_local_facture else 0
+            world_number = int(last_world_facture.number_facture) if last_world_facture else 0
+
+            if local_number or world_number:
+                last_number_facture = max(local_number, world_number) + 1
+            else:
+                last_number_facture = int(f'{date.today().year}0001')
+            self.number_facture = str(last_number_facture)
+
+        super().save(*args, **kwargs)
 
 class LocalFacture(Facture):
     # check if this fucking shit has reason to exist

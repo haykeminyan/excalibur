@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from excalibur.mixins import JsonRequestMixin
 from .forms import LocalFactureForm, WorldFactureForm
@@ -75,41 +75,40 @@ class WorldFactureDetailView(DetailView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class AddLocalFacture(FormView):
+class AddLocalFacture(CreateView):
     form_class = LocalFactureForm
+    model = LocalFacture
     template_name = 'html/create_facture_local.html'
-    success_url = reverse_lazy('success')
+    success_url = reverse_lazy('facture_local_list')
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['facture_form'] = self.get_form()
-        return context
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print("Form errors:", form.errors)
-        return super().form_invalid(form)
+    extra_context = {
+        'title': 'Create Local Facture'
+    }
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class AddWorldFacture(FormView):
+class AddWorldFacture(CreateView):
     form_class = WorldFactureForm
+    model = WorldFacture
     template_name = 'html/create_facture_world.html'
-    success_url = reverse_lazy('success')
+    success_url = reverse_lazy('facture_world_list')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['facture_form'] = self.get_form()
-        return context
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateLocalFacture(UpdateView):
+    form_class = LocalFactureForm
+    model = LocalFacture
+    template_name = 'html/create_facture_local.html'
+    success_url = reverse_lazy('facture_local_list')
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+    extra_context = {
+        'title': 'Update Local Facture'
+    }
 
-    def form_invalid(self, form):
-        print("Form errors:", form.errors)
-        return super().form_invalid(form)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdateWorldFacture(UpdateView):
+    form_class = WorldFactureForm
+    model = WorldFacture
+    template_name = 'html/create_facture_world.html'
+    success_url = reverse_lazy('facture_world_list')
+

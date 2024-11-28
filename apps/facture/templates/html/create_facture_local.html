@@ -45,76 +45,56 @@
 
         <!-- Content Area -->
         <div class="w-4/5 p-10">
-            <h1 class="text-4xl font-bold text-blue-800 mb-6">Create New Facture</h1>
+            <h1 class="text-4xl font-bold text-blue-800 mb-6">{{title}}</h1>
 
             <!-- Form Section -->
-            <div class="bg-white p-8 rounded-lg shadow-md">
-                <form method="post" action="{% url 'facture_local_create' %}">
-                    {% csrf_token %}
+<div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+    <form method="post" action="">
+        {% csrf_token %}
 
-                    <div class="grid grid-cols-2 gap-6">
-                        <!-- Facture Owner -->
-                        <div class="col-span-1">
-                            <label for="owner" class="block text-gray-700 font-bold">{{ facture_form.owner.label }}</label>
-                            {{ facture_form.owner }}
-                        </div>
-
-                        <!-- Facture Number -->
-                        <div class="col-span-1">
-                            <label for="number_facture" class="block text-gray-700 font-bold">{{ facture_form.number_facture.label }}</label>
-                            <input type="number" name="number_facture" id="number_facture" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ facture_form.number_facture.value }}">
-                        </div>
-
-                        <!-- Facture Date -->
-                        <div class="col-span-1">
-                            <label for="date" class="block text-gray-700 font-bold">Date</label>
-                            <input type="date" name="date" id="date" value="{{ facture.date }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-
-                        <!-- Reference -->
-                        <div class="col-span-1">
-                            <label for="reference" class="block text-gray-700 font-bold">Reference</label>
-                            <input type="text" name="reference" id="reference" value="{{ facture.reference }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-
-                        <!-- Address -->
-                        <div class="col-span-2">
-                            <label for="address" class="block text-gray-700 font-bold">Address</label>
-                            <textarea name="address" id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ facture.address }}</textarea>
-                        </div>
-                    </div>
-
-                    <!-- Additional Form Fields -->
-                    <div class="grid grid-cols-2 gap-6 mt-6">
-                        <div class="col-span-1">
-                            <label for="quantity" class="block text-gray-700 font-bold">{{ facture_form.quantity.label }}</label>
-                            <input type="number" name="quantity" id="quantity" value="{{ facture.quantity }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-
-                        <div class="col-span-1">
-                            <label for="percent" class="block text-gray-700 font-bold">{{ facture_form.percent.label }}</label>
-                            <input type="number" step="0.01" name="percent" id="percent" value="{{ facture.percent }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-
-                        <div class="col-span-1">
-                            <label for="total_tax" class="block text-gray-700 font-bold">{{ facture_form.total_tax.label }}</label>
-                            <input type="number" step="0.01" name="total_tax" id="total_tax" value="{{ facture.total_tax }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-
-                        <div class="col-span-1">
-                            <label for="advance_payment" class="block text-gray-700 font-bold">Advance Payment</label>
-                            <input type="text" name="advance_payment" id="advance_payment" value="{{ facture.advance_payment }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="mt-8">
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
-                            Submit Facture
-                        </button>
-                    </div>
-                </form>
+        <!-- General form errors -->
+        {% if form.non_field_errors %}
+            <div class="bg-red-100 text-red-700 p-4 mb-6 rounded">
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
             </div>
+        {% endif %}
+
+        <!-- Form fields -->
+        {% for f in form %}
+            <div class="mb-6">
+                <label for="{{ f.id_for_label }}" class="block text-sm font-semibold text-gray-700">{{ f.label }}</label>
+
+                <div class="mt-2">
+                    <!-- Render the field as-is, and if it's a date field, it will render as an <input type="date"> -->
+                    {{ f }}
+                </div>
+
+                <!-- Field-specific errors -->
+                {% if f.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in f.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <!-- Submit button -->
+        <div class="mt-8">
+            <button type="submit" value="update" class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300">
+                Submit Facture
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
         </div>
     </div>
 
