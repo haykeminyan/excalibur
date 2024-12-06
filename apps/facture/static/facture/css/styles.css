@@ -1,3 +1,4 @@
+
 h1{
 text-align: center;
 }
@@ -75,3 +76,49 @@ text-align: center;
 .bg-blue-500{
     margin-top: 20px;
 }
+
+
+
+.list-pages {
+	text-align: center;
+	    position: fixed; /* Fixes the paginator relative to the viewport */
+    bottom: 0; /* Pushes it to the bottom */
+    left: 0; /* Align to the left edge */
+    width: 100%; /* Makes it span the full width */
+    margin: 0; /* Remove any default margin */
+    background-color: #fff; /* Optional: Add a background color */
+    padding: 10px 0; /* Optional: Add some padding for better visibility */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+.list-pages ul {
+	margin: 20px 0 0 0;
+	padding: 0;
+	list-style: none;
+}
+.list-pages ul li {
+	display: inline-block;
+	margin: 0 20px 0 0;
+}
+.list-pages a {
+	color: #000;
+	font-size: 24px;
+	text-decoration: none;
+}
+.list-pages .page-num, .page-num-selected {
+	display: inline-block;
+	width: 60px;
+	border: 1px solid #d0d0d0;
+	border-radius: 30px;
+}
+.list-pages .page-num:hover {
+	box-shadow: 3px 3px 1px #d0d0d0;
+}
+.list-pages .page-num-selected {
+	border: none;
+	color: #000;
+	font-size: 20px;
+}
+.list-pages .page-num-selected:hover {
+	box-shadow: none;
+}
+
