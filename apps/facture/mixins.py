@@ -39,10 +39,16 @@ class UpdateField:
 class BaseFactureListView(CSRFExemptMixin, ListView):
     title = None
     button_text = None
-    paginate_by = 1
+    paginate_by = 3
 
     def get_queryset(self):
-        return super().get_queryset().select_related('owner')
+        search_params = self.request.GET.dict()
+        queryset = super().get_queryset().select_related('owner')
+        page = search_params.pop('page', None)
+        if search_params:
+            queryset = queryset.filter(**search_params)
+
+        return queryset
 
     def get_extra_context(self):
         return UpdateField(title=self.title, button=self.button_text).get_new_values()
