@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,7 +34,8 @@ INTERNAL_IPS = [
 ]
 
 # Application definition
-
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'apps.deduction',
     'apps.facture',
+    'apps.users'
 ]
 
 LOGGING = {
@@ -131,6 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 HOME_TEMPLATES = [
     os.path.join(BASE_DIR, 'facture', 'templates'),
     os.path.join(BASE_DIR, 'deduction', 'templates'),
+    os.path.join(BASE_DIR, 'users', 'templates'),
 ]
 
 # Internationalization
@@ -150,7 +154,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Example directory for collected static files
-
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Your main static folder
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

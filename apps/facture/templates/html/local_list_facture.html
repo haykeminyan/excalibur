@@ -12,7 +12,7 @@
             <!-- Correct usage of static tag -->
             <link rel="stylesheet"
                   type="text/css"
-                  href="{% static 'facture/css/styles.css' %}">
+                  href="{% static 'facture/css/local_list_facture.css' %}">
         {% endblock stylesheets %}
     </head>
     {% csrf_token %}
@@ -55,39 +55,54 @@
 </form>
 
                  <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
-                <a href="{% url 'facture_local_create' %}"
-                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                    <svg class="w-4 h-4 mr-2"
-                         fill="none"
-                         stroke="currentColor"
-                         viewBox="0 0 24 24"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    Create New Facture
-                </a>
+<a href="{% url 'facture_local_create' %}"
+   class="create-filter-button">
+    <svg class="w-4 h-4 mr-2"
+         fill="none"
+         stroke="currentColor"
+         viewBox="0 0 24 24"
+         xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+    </svg>
+    Create New Facture
+</a>
+
+                    <a type="button" href="{% url 'users:logout' %}"  class="logout-button" >Logout</a>
             </div>
+<img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo">
             <!-- Factures List -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for facture in factures %}
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <div class="flex items-start">
                             <div class="mr-4 text-blue-500">
-                                <svg class="w-8 h-8"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     viewBox="0 0 24 24"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v2a2 2 0 002 2h2a2 2 0 002-2v-2m0-6V5a2 2 0 00-2-2H9a2 2 0 00-2 2v6m0 0h8m-8 0h8">
-                                    </path>
-                                </svg>
+<div class="mr-4 text-blue-500">
+    <img src="{% static 'facture/images/logo.png' %}" alt="Logo" class="w-8 h-8">
+</div>
                             </div>
                             <div>
                                 <a href="{% url 'facture_local_detail' facture.id %}">
-                                    <h2 class="text-xl font-bold text-gray-700">{{ facture.number_facture }}</h2>
-                                    <p class="text-gray-600">Date: {{ facture.created_date }}</p>
-                                    <p class="text-gray-600">Reference: {{ facture.reference }}</p>
-                                    <p class="text-gray-600">Total: {{ facture.total_payment_after_tax }}</p>
+<div class="facture-container">
+    <h2 class="facture-title">Number facture: {{ facture.number_facture }}</h2>
+
+    <!-- Displaying the existing fields -->
+    <p class="facture-details">Date: {{ facture.date }}</p>
+    <p class="facture-details">Reference: {{ facture.reference }}</p>
+    <p class="facture-details">Total: {{ facture.total_payment_after_tax }}</p>
+
+    <!-- Added missing fields -->
+    <p class="facture-details">Address: {{ facture.address }}</p>
+    <p class="facture-details">Quantity: {{ facture.quantity }}</p>
+    <p class="facture-details">Percent: {{ facture.percent }}</p>
+    <p class="facture-details">Quantity After Percent: {{ facture.quantity_after_percent }}</p>
+    <p class="facture-details">Total Tax: {{ facture.total_tax }}</p>
+
+    <!-- Owner details (if needed) -->
+
+    <!-- Update time (optional) -->
+    <p class="facture-details">Last Updated: {{ facture.update_time }}</p>
+</div>
+
                                 </a>
                             </div>
                         </div>
