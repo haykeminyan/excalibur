@@ -15,7 +15,6 @@ from .models import LocalFacture, WorldFacture
 
 logger = logging.getLogger(__name__)
 
-
 class LocalFactureListView(BaseFactureListView):
     model = LocalFacture
     template_name = 'html/local_list_facture.html'

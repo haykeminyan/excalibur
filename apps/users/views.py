@@ -18,5 +18,4 @@ class LoginUser(LoginView):
 
 
 class LogoutUser(LogoutView):
-    form_class = AuthenticationForm
     template_name = 'html/login.html'

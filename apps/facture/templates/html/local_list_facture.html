@@ -66,8 +66,10 @@
     </svg>
     Create New Facture
 </a>
-
-                    <a type="button" href="{% url 'users:logout' %}"  class="logout-button" >Logout</a>
+                <form method="post"  action="{% url 'users:logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="logout-button">logout</button>
+</form>
             </div>
 <img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo">
             <!-- Factures List -->
@@ -147,5 +149,6 @@
         {% block scripts %}
             <script src="{% static 'facture/js/tools.js' %}"></script>
         {% endblock scripts %}
+            <link rel="icon" href="{% static 'facture/images/favicon.ico' %}" type="image/x-icon">
     </body>
 </html>

@@ -1,19 +1,20 @@
 /* General Container Styling */
 .facture-container {
-    width: 100%;
-    max-width: 600px; /* Limiting the max width for better readability */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering the container */
+    background-color: #f9f9f9; /* Optional: Add a background color */
     text-align: center;
-    background-color: #fff; /* White background */
-    border-radius: 12px; /* Rounded corners for a soft, modern look */
-    padding: 20px; /* Padding around the content */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    margin: 20px auto; /* Centering the content */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    padding: 20px; /* Add some padding */
+    border-radius: 10px; /* Optional: Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
+    width: 80%; /* Optional: Set a width */
+    max-width: 600px; /* Optional: Set a max width */
 }
 
 /* Hover effect for the container */
 .facture-container:hover {
-    transform: translateY(-5px); /* Slight lift effect */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
 }
 

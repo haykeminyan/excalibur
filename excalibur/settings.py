@@ -34,8 +34,10 @@ INTERNAL_IPS = [
 ]
 
 # Application definition
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'facture_local_list'
+LOGOUT_REDIRECT_URL = 'facture_local_list'
+LOGIN_URL = 'users:login'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

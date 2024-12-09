@@ -10,6 +10,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class UpdateField:
         return self.context
 
 
-class BaseFactureListView(CSRFExemptMixin, ListView):
+class BaseFactureListView(CSRFExemptMixin, LoginRequiredMixin, ListView):
     title = None
     button_text = None
     paginate_by = 3
@@ -59,7 +60,7 @@ class BaseFactureListView(CSRFExemptMixin, ListView):
         return context
 
 
-class BaseFactureCreateView(CSRFExemptMixin, CreateView):
+class BaseFactureCreateView(CSRFExemptMixin, LoginRequiredMixin, CreateView):
     title = None
     button_text = None
 
@@ -73,7 +74,7 @@ class BaseFactureCreateView(CSRFExemptMixin, CreateView):
 
 
 # Base views for shared logic
-class BaseFactureUpdateView(CSRFExemptMixin, UpdateView):
+class BaseFactureUpdateView(CSRFExemptMixin, LoginRequiredMixin, UpdateView):
     title = None
     button_text = None
 
@@ -86,7 +87,7 @@ class BaseFactureUpdateView(CSRFExemptMixin, UpdateView):
         return context
 
 
-class BaseFactureDeleteView(CSRFExemptMixin, DeleteView):
+class BaseFactureDeleteView(CSRFExemptMixin, LoginRequiredMixin, DeleteView):
     title = None
     button_text = None
 
@@ -99,7 +100,7 @@ class BaseFactureDeleteView(CSRFExemptMixin, DeleteView):
         return context
 
 
-class BaseFactureDetailView(CSRFExemptMixin, DetailView):
+class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
     title = None
     button_text = None
     context_object_name = 'facture'
