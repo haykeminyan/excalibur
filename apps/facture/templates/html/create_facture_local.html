@@ -13,7 +13,7 @@
         {% block stylesheets %}
             <link rel="stylesheet"
                   type="text/css"
-                  href="{% static 'facture/css/styles.css' %}">
+                  href="{% static 'facture/css/create_facture_local.css' %}">
         {% endblock stylesheets %}
     </head>
     <body class="bg-gray-100">
@@ -27,68 +27,196 @@
                         <a href="{% url 'facture_local_create' %}"
                            class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
                             <i class="fas fa-file-invoice-dollar text-xl"></i>
-                            <span>Create Facture</span>
+                            <span>Create Local Facture</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{% url 'facture_local_list' %}"
                            class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
                             <i class="fas fa-chart-line text-xl"></i>
-                            <span>Reports</span>
+                            <span>Return to main menu</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                           class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
-                            <i class="fas fa-cogs text-xl"></i>
-                            <span>Settings</span>
-                        </a>
+                        <form method="post" action="{% url 'users:logout' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-left p-3 rounded-lg bg-transparent border-0 hover:bg-blue-600">
+                                <i class="fas fa-cogs text-xl"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
             <!-- Content Area -->
-            <div class="w-4/5 p-10">
-                <h1 class="text-4xl font-bold text-blue-800 mb-6">{{ title }}</h1>
-                <!-- Form Section -->
-                <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
-                    <form method="post" action="">
-                        {% csrf_token %}
-                        <!-- General form errors -->
-                        {% if form.non_field_errors %}
-                            <div class="bg-red-100 text-red-700 p-4 mb-6 rounded">
-                                <ul>
-                                    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
-                        <!-- Form fields -->
-                        {% for f in form %}
-                            <div class="mb-6">
-                                <label for="{{ f.id_for_label }}"
-                                       class="block text-sm font-semibold text-gray-700">{{ f.label }}</label>
-                                <div class="mt-2">
-                                    <!-- Render the field as-is, and if it's a date field, it will render as an <input type="date"> -->
-                                    {{ f }}
-                                </div>
-                                <!-- Field-specific errors -->
-                                {% if f.errors %}
-                                    <div class="text-red-600 text-sm mt-1">
-                                        {% for error in f.errors %}<p>{{ error }}</p>{% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                        <!-- Submit button -->
-                        <div class="mt-8">
-                            <button type="submit"
-                                    value="update"
-                                    class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300">
-                                {{ button }}
-                            </button>
-                        </div>
-                    </form>
+<div class="w-4/5 p-10">
+    <h1 class="text-4xl font-bold text-blue-800 mb-6">{{ title }}</h1>
+    <!-- Form Section -->
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <form method="post" action="">
+            {% csrf_token %}
+            <!-- General form errors -->
+            {% if form.non_field_errors %}
+                <div class="bg-red-100 text-red-700 p-4 mb-6 rounded">
+                    <ul>
+                        {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
                 </div>
+            {% endif %}
+            <!-- Field: Address -->
+            <div class="mb-6">
+                <label for="{{ form.address.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.address.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.address }}
+                </div>
+                {% if form.address.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.address.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
             </div>
+            <!-- Field: Number Facture -->
+            <div class="mb-6">
+                <label for="{{ form.number_facture.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.number_facture.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.number_facture }}
+                </div>
+                {% if form.number_facture.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.number_facture.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Owner -->
+            <div class="mb-6">
+                <label for="{{ form.owner.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.owner.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.owner }}
+                </div>
+                {% if form.owner.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.owner.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Date -->
+            <div class="mb-6">
+                <label for="{{ form.date.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.date.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.date }}
+                </div>
+                {% if form.date.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.date.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Reference -->
+            <div class="mb-6">
+                <label for="{{ form.reference.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.reference.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.reference }}
+                </div>
+                {% if form.reference.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.reference.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Quantity -->
+            <div class="mb-6">
+                <label for="{{ form.quantity.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.quantity.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.quantity }}
+                </div>
+                {% if form.quantity.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.quantity.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Percent -->
+            <div class="mb-6">
+                <label for="{{ form.percent.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.percent.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.percent }}
+                </div>
+                {% if form.percent.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.percent.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Quantity After Percent -->
+            <div class="mb-6">
+                <label for="{{ form.quantity_after_percent.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.quantity_after_percent.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.quantity_after_percent }}
+                </div>
+                {% if form.quantity_after_percent.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.quantity_after_percent.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Total Tax -->
+            <div class="mb-6">
+                <label for="{{ form.total_tax.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.total_tax.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.total_tax }}
+                </div>
+                {% if form.total_tax.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.total_tax.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Field: Total Payment After Tax -->
+            <div class="mb-6">
+                <label for="{{ form.total_payment_after_tax.id_for_label }}" class="block text-sm font-semibold text-gray-700">
+                    {{ form.total_payment_after_tax.label }}
+                </label>
+                <div class="mt-2">
+                    {{ form.total_payment_after_tax }}
+                </div>
+                {% if form.total_payment_after_tax.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.total_payment_after_tax.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Submit button -->
+            <div class="mt-8">
+                <button type="submit"
+                        value="update"
+                        class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300">
+                    {{ button }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
         </div>
      <link rel="icon" href="{% static 'facture/images/favicon.ico' %}" type="image/x-icon">
     </body>

@@ -53,8 +53,10 @@
     <button type="submit" class="search-button">Search</button>
     <button type="button" id="clear-filters-btn" class="clear-filters-button">Clear Filters</button>
 </form>
-
-                 <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
+        {% block scripts %}
+               <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
+                <script src="{% static 'facture/js/tools.js' %}"></script>
+        {% endblock scripts %}
 <a href="{% url 'facture_local_create' %}"
    class="create-filter-button">
     <svg class="w-4 h-4 mr-2"
@@ -73,18 +75,38 @@
             </div>
 <img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo">
             <!-- Factures List -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for facture in factures %}
-                    <div class="bg-white rounded-lg shadow-md p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for facture in factures %}
+    <div class="bg-white rounded-lg shadow-md p-6" style="position: relative;">
+      <!-- Kebab Menu (Dropdown) -->
+      <div class="dropdown" style="position: absolute; top: 10px; right: 10px;">
+        <button class="dropdown-toggle" aria-label="Actions" onclick="toggleDropdown(this)">
+          &#x22EE; <!-- Unicode for vertical ellipsis -->
+        </button>
+        <div class="dropdown-menu">
+          <!-- Update button -->
+          <button class="dropdown-item" id="update-button" onclick="updateItem({{ facture.pk }})">
+            Update
+          </button>
+          <!-- Delete button -->
+          <button class="dropdown-item" id="delete-button" onclick="deleteItem({{ facture.pk }})">
+            Delete
+          </button>
+        </div>
+      </div>
                         <div class="flex items-start">
+
                             <div class="mr-4 text-blue-500">
+
 <div class="mr-4 text-blue-500">
     <img src="{% static 'facture/images/logo.png' %}" alt="Logo" class="w-8 h-8">
 </div>
+
                             </div>
-                            <div>
-                                <a href="{% url 'facture_local_detail' facture.id %}">
-<div class="facture-container">
+
+   <div class="facture-container" style="position: relative;">
+
+  <a href="{% url 'facture_local_detail' facture.id %}">
     <h2 class="facture-title">Number facture: {{ facture.number_facture }}</h2>
 
     <!-- Displaying the existing fields -->
@@ -103,12 +125,15 @@
 
     <!-- Update time (optional) -->
     <p class="facture-details">Last Updated: {{ facture.update_time }}</p>
+  </a>
+
 </div>
 
-                                </a>
-                            </div>
+
                         </div>
+
                     </div>
+
                 {% empty %}
                     <p class="text-center text-gray-500 col-span-3">No factures found.</p>
                 {% endfor %}
@@ -146,9 +171,6 @@
 </nav>
 {% endif %}
         </div>
-        {% block scripts %}
-            <script src="{% static 'facture/js/tools.js' %}"></script>
-        {% endblock scripts %}
             <link rel="icon" href="{% static 'facture/images/favicon.ico' %}" type="image/x-icon">
     </body>
 </html>
