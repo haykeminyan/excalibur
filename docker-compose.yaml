@@ -7,10 +7,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=pmsolution_facture
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - '5433:5432'
+    networks:
+      - excalibur_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:latest
@@ -18,7 +25,15 @@ services:
     ports:
       - '6379:6379'  # Expose Redis on port 6379
     restart: always
-
+    networks:
+      - excalibur_network
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   excalibur:
     build:
@@ -30,19 +45,34 @@ services:
       - ./apps/deduction:/usr/src/app/apps/deduction
       - ./apps/users:/usr/src/app/apps/users
       - ./excalibur:/usr/src/app/excalibur
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
     restart: always
     environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_NAME=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DJANGO_SETTINGS_MODULE=excalibur.settings
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     expose:
       - 8000
     ports:
       - "8000:8000"
+    networks:
+      - excalibur_network
     working_dir: /usr/src/app
-
 
 volumes:
   postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  excalibur_network:
