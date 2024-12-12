@@ -1,0 +1,14 @@
+resources:
+  - database-deployment.yaml
+  - redis-deployment.yaml
+  - excalibur-deployment.yaml
+  - database-service.yaml
+  - redis-service.yaml
+  - excalibur-service.yaml
+  - excalibur-ingress.yaml
+  - postgres-pvc.yaml
+  - redis-pvc.yaml
+  - static-pvc.yaml
+  - media-pvc.yaml
+  - excalibur-secrets.yaml
+  - configmap.yaml

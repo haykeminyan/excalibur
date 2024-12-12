@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: excalibur
+  labels:
+    app: excalibur
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: excalibur
+  template:
+    metadata:
+      labels:
+        app: excalibur
+    spec:
+      imagePullSecrets:
+        - name: my-registry-secret
+      containers:
+        - name: excalibur
+          image: excalibur:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: POSTGRES_NAME
+              value: "pmsolution_facture"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: excalibur-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: excalibur-secrets
+                  key: POSTGRES_PASSWORD
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: DJANGO_SETTINGS_MODULE
+              value: "excalibur.settings"
+          volumeMounts:
+            - name: static-volume
+              mountPath: /usr/src/app/static
+            - name: media-volume
+              mountPath: /usr/src/app/media
+      volumes:
+        - name: static-volume
+          persistentVolumeClaim:
+            claimName: static-pvc
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: media-pvc

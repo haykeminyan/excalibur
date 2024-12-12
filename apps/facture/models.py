@@ -49,6 +49,7 @@ class LocalFacture(Facture):
     identification_number = models.IntegerField(blank=True, null=True)
     destination = models.CharField(max_length=255, default='Recharge express')
     deposit = models.FloatField(blank=True, null=True)
+    tax_ht = models.FloatField()
 
     def __str__(self) -> str:
         """Return model string representation."""

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: excalibur
+  namespace: excalibur
+spec:
+  ports:
+    - port: 8000
+      targetPort: 8000
+  selector:
+    app: excalibur

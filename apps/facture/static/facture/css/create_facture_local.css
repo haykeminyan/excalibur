@@ -227,3 +227,77 @@ th {
         text-align: center;
     }
 }
+body { widows:0; orphans:0; font-family:'Times New Roman'; font-size:12pt }
+h1, h2, h3, h4, h5, h6, p { margin:0pt }
+table { margin-top:15px; margin-bottom:8px }
+h1 { margin-top:18pt; margin-bottom:18pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-family:'Times New Roman'; font-size:24pt; font-weight:bold; color:#000000 }
+h2 { margin-top:18pt; margin-bottom:4pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-family:'Times New Roman'; font-size:18pt; font-weight:bold; color:#000000 }
+h3 { margin-top:14pt; margin-bottom:4pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-family:'Times New Roman'; font-size:14pt; font-weight:bold; color:#000000 }
+h4 { margin-top:12pt; margin-bottom:2pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-family:'Times New Roman'; font-size:12pt; font-weight:bold; font-style:normal; color:#000000 }
+h5 { margin-top:11pt; margin-bottom:2pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-family:'Times New Roman'; font-size:11pt; font-weight:bold; color:#000000 }
+h6 { margin-top:10pt; margin-bottom:2pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-family:'Times New Roman'; font-size:10pt; font-weight:bold; color:#000000 }
+.BodyText { margin-bottom:7pt; line-height:115%; widows:0; orphans:0; font-size:12pt }
+.Caption { margin-top:6pt; margin-bottom:6pt; widows:0; orphans:0; font-size:12pt; font-style:italic }
+.Footer { widows:0; orphans:0; font-size:12pt }
+.FrameContents { widows:0; orphans:0; font-size:12pt }
+.Header { widows:0; orphans:0; font-size:12pt }
+.HeaderandFooter { widows:0; orphans:0; font-size:12pt }
+.Heading { margin-top:12pt; margin-bottom:6pt; page-break-after:avoid; widows:0; orphans:0; font-family:'Liberation Sans'; font-size:14pt }
+.Index { widows:0; orphans:0; font-size:12pt }
+.LO-normal { widows:0; orphans:0; font-size:12pt }
+.List { margin-bottom:7pt; line-height:115%; widows:0; orphans:0; font-size:12pt }
+.PreformattedText { widows:0; orphans:0; font-family:'Liberation Mono'; font-size:10pt }
+.Subtitle { margin-top:18pt; margin-bottom:4pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-family:Georgia; font-size:24pt; font-style:italic; color:#666666 }
+.TableContents { widows:0; orphans:0; font-size:12pt }
+.TableHeading { text-align:center; widows:0; orphans:0; font-size:12pt; font-weight:bold }
+.Title { margin-top:24pt; margin-bottom:6pt; page-break-inside:avoid; page-break-after:avoid; widows:0; orphans:0; font-size:36pt; font-weight:bold }
+
+@media (max-width: 900px) {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  td, th {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+}
+
+#id_number_facture {
+margin: 5px 11px -9px 10px;
+}
+
+.top-left-logo {
+margin-left: 25px;
+}
+#id_percent {
+width: 85px;
+}
+#id_quantity {
+width: 130px;
+}
+#id_quantity_after_percent {
+width: 150px;
+}
+
+p.FrameContents:nth-child(10) {
+margin-left: 25px;
+}
+.footer{
+    margin-top: 25px;
+}
+#id_total_tax {
+margin-top: 7px;
+}

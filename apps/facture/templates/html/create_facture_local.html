@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
     <head>
         {% load static %}
         <!-- Load Django static template tag -->
@@ -15,12 +15,14 @@
                   type="text/css"
                   href="{% static 'facture/css/create_facture_local.css' %}">
         {% endblock stylesheets %}
+                {% block scripts %}
+               <script src="{% static 'facture/js/localFactureCalculations.js' %}"></script>
+        {% endblock scripts %}
     </head>
-    <body class="bg-gray-100">
-        <!-- Main Container -->
+<body>
         <div class="flex min-h-screen">
             <!-- Sidebar -->
-            <div class="w-1/5 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8">
+            <div class="w-1/6 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8">
                 <h2 class="text-2xl font-bold">Dashboard</h2>
                 <ul class="space-y-6">
                     <li>
@@ -48,40 +50,33 @@
                     </li>
                 </ul>
             </div>
-            <!-- Content Area -->
-<div class="w-4/5 p-10">
-    <h1 class="text-4xl font-bold text-blue-800 mb-6">{{ title }}</h1>
-    <!-- Form Section -->
-    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
-        <form method="post" action="">
-            {% csrf_token %}
-            <!-- General form errors -->
-            {% if form.non_field_errors %}
-                <div class="bg-red-100 text-red-700 p-4 mb-6 rounded">
-                    <ul>
-                        {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-            <!-- Field: Address -->
-            <div class="mb-6">
-                <label for="{{ form.address.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.address.label }}
-                </label>
-                <div class="mt-2">
-                    {{ form.address }}
-                </div>
-                {% if form.address.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.address.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            <!-- Field: Number Facture -->
-            <div class="mb-6">
-                <label for="{{ form.number_facture.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.number_facture.label }}
-                </label>
+		<div>
+            <img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo">
+			<table style="width:554.1pt; padding:0pt; border-collapse:collapse">
+				<tr style="height:0.45pt">
+
+						<table style="width:308.45pt; padding:0pt; border-collapse:collapse ;margin-left:25px">
+							<tr style="height:2.5pt">
+								<td style="width:206.15pt; border-bottom:1pt solid #000000; padding:10pt 5.4pt; vertical-align:middle">
+									<p class="LO-normal" style="text-align:center; font-size:8pt">
+										<span style="font-family:Arial">NUMERO</span>
+									</p>
+								</td>
+								<td style="width:74.65pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+									<p class="LO-normal" style="text-indent:7.2pt; text-align:center; font-size:8pt">
+										<span style="font-family:Arial">DATE</span>
+									</p>
+								</td>
+								<td style="width:95.25pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+									<p class="LO-normal" style="text-indent:7.2pt; text-align:center; font-size:8pt">
+										<span style="font-family:Arial">REFERENCE</span>
+									</p>
+								</td>
+							</tr>
+							<tr style="height:1.3pt">
+								<td style="width:6.15pt; border-top:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 0.4pt; vertical-align:middle">
+									<p class="LO-normal" style="text-align:center; font-size:10pt">
+										            <div class="mb-6">
                 <div class="mt-2">
                     {{ form.number_facture }}
                 </div>
@@ -91,26 +86,10 @@
                     </div>
                 {% endif %}
             </div>
-            <!-- Field: Owner -->
-            <div class="mb-6">
-                <label for="{{ form.owner.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.owner.label }}
-                </label>
-                <div class="mt-2">
-                    {{ form.owner }}
-                </div>
-                {% if form.owner.errors %}
-                    <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.owner.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            <!-- Field: Date -->
-            <div class="mb-6">
-                <label for="{{ form.date.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.date.label }}
-                </label>
-                <div class="mt-2">
+								</td>
+								<td style="width:74.65pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding: 0pt 7.4pt 6pt 4.9pt; vertical-align:middle">
+									<p class="LO-normal" style="text-indent:7.2pt; text-align:center; font-size:10pt">
+										                <div class="mt-2">
                     {{ form.date }}
                 </div>
                 {% if form.date.errors %}
@@ -118,12 +97,79 @@
                         {% for error in form.date.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
                 {% endif %}
-            </div>
-            <!-- Field: Reference -->
-            <div class="mb-6">
-                <label for="{{ form.reference.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.reference.label }}
-                </label>
+								</td>
+								<td style="width:95.25pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding: 0pt 5.4pt 21pt 4.9pt; vertical-align:top">
+									<p class="LO-normal" style="text-align:center; font-size:10pt">
+										<span style="font-family:Arial">&#xa0;</span>
+									</p>
+					                <div class="mt-2">
+                    {{ form.reference }}
+                </div>
+                {% if form.reference.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.reference.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+								</td>
+							</tr>
+						</table>
+						<p class="LO-normal">
+						</p>
+<!--					<td style="width:224pt; padding:0pt 5.4pt; vertical-align:top">-->
+<!--						<p class="LO-normal" style="margin-left:9pt; text-indent:63pt">-->
+<!--							&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;-->
+<!--						</p>-->
+<!--						<p class="LO-normal">-->
+<!--							&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;-->
+<!--						</p>-->
+<!--						<p class="LO-normal">-->
+<!--							&#xa0;&#xa0;&#xa0; 43-->
+<!--						</p>-->
+<!--						<p class="LO-normal">-->
+<!--							&#xa0;&#xa0;&#xa0; 23-->
+<!--						</p>-->
+<!--						<p class="LO-normal">-->
+<!--							&#xa0;-->
+<!--						</p>-->
+<!--						<p class="LO-normal">-->
+<!--							&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;-->
+<!--						</p>-->
+<!--					</td>-->
+				</tr>
+			</table>
+			<p class="LO-normal" style="margin-bottom:6pt; font-size:2pt">
+				&#xa0;
+			</p>
+			<table style="width:555.55pt; padding:0pt; border-collapse:collapse;margin-left: 25px;">
+				<tr style="height:35pt">
+					<td style="width:73.45pt; border-bottom:1pt solid #000000; padding:0pt 5.4pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:8pt">
+							<span style="font-family:Arial">Référence</span>
+						</p>
+					</td>
+					<td style="width:127.8pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:8pt">
+							<span style="font-family:Arial">Désignation</span>
+						</p>
+					</td>
+					<td style="width:109.7pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:8pt">
+							<span style="font-family:Arial">Quantit</span><span style="font-family:Verdana">é</span>
+						</p>
+					</td>
+					<td style="width:81.3pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:8pt">
+							<span style="font-family:Arial">P.U.TTC</span>
+						</p>
+					</td>
+					<td style="width:109.3pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:8pt">
+							<span style="font-family:Arial">Montant</span>
+						</p>
+					</td>
+				</tr>
+				<tr style="height:50pt">
+					<td style="width:73.45pt; border-top:1pt solid #000000; border-bottom:1pt solid #000000; padding:15pt 7.4pt 15pt 8pt; vertical-align:top">
                 <div class="mt-2">
                     {{ form.reference }}
                 </div>
@@ -132,92 +178,179 @@
                         {% for error in form.reference.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
                 {% endif %}
-            </div>
-            <!-- Field: Quantity -->
-            <div class="mb-6">
-                <label for="{{ form.quantity.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.quantity.label }}
-                </label>
-                <div class="mt-2">
-                    {{ form.quantity }}
+					</td>
+					<td style="width:127.8pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:15pt 7.4pt 15pt 8pt; vertical-align:top">
+	        <div class="mt-2">
+                    {{ form.destination }}
                 </div>
-                {% if form.quantity.errors %}
+                                        {% if form.quantity.errors %}
                     <div class="text-red-600 text-sm mt-1">
                         {% for error in form.quantity.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
                 {% endif %}
-            </div>
-            <!-- Field: Percent -->
-            <div class="mb-6">
-                <label for="{{ form.percent.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.percent.label }}
-                </label>
-                <div class="mt-2">
+					</td>
+					<td style="width:109.7pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:15pt 7.4pt 15pt 8pt; vertical-align:top">
+	        <div class="mt-2">
+                    {{ form.quantity }}
+                </div>
+                                        {% if form.quantity.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.quantity.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+					</td>
+					<td style="width:81.3pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:15pt 7.4pt 15pt 8pt; vertical-align:top">
+       <div class="mt-2">
                     {{ form.percent }}
                 </div>
-                {% if form.percent.errors %}
+                                        {% if form.percent.errors %}
                     <div class="text-red-600 text-sm mt-1">
                         {% for error in form.percent.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
-                {% endif %}
-            </div>
-            <!-- Field: Quantity After Percent -->
-            <div class="mb-6">
-                <label for="{{ form.quantity_after_percent.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.quantity_after_percent.label }}
-                </label>
-                <div class="mt-2">
+                        {%endif%}
+					</td>
+
+					<td style="width:109.3pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+					       <div class="mt-2">
                     {{ form.quantity_after_percent }}
                 </div>
-                {% if form.quantity_after_percent.errors %}
+                                        {% if form.quantity_after_percent.errors %}
                     <div class="text-red-600 text-sm mt-1">
                         {% for error in form.quantity_after_percent.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
-                {% endif %}
-            </div>
-            <!-- Field: Total Tax -->
-            <div class="mb-6">
-                <label for="{{ form.total_tax.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.total_tax.label }}
-                </label>
-                <div class="mt-2">
-                    {{ form.total_tax }}
+                        {%endif%}
+					</td>
+				</tr>
+			</table>
+			<p class="LO-normal">
+				&#xa0;
+			</p>
+			<table style="width:563.55pt; padding:0pt; border-collapse:collapse;margin-left: 25px;margin-top:0">
+				<tr style="height:50pt">
+					<td style="width:105.9pt; border-bottom:1pt solid #000000; padding:0pt 5.4pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:9pt">
+							<span style="font-family:Arial">Total H.T.</span>
+						</p>
+					</td>
+					<td style="width:92.9pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:9pt">
+							<span style="font-family:Arial">Total Taxe</span>
+						</p>
+					</td>
+					<td style="width:102.7pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:9pt">
+							<span style="font-family:Arial">Total T.T.C.</span>
+						</p>
+					</td>
+					<td style="width:96.25pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:9pt">
+							<span style="font-family:Arial">Acompte</span>
+						</p>
+					</td>
+					<td style="width:111.8pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+						<p class="LO-normal" style="text-align:center; font-size:9pt">
+							<span style="font-family:Arial">Net à payer</span>
+						</p>
+					</td>
+				</tr>
+				<tr style="height:73.45pt;width: 73.45pt;">
+					<td style="width:105.9pt; border-top:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt; vertical-align:middle">
+								       <div class="mt-2" style="width: 212px">
+                    {{ form.tax_ht }}
                 </div>
-                {% if form.total_tax.errors %}
+                                        {% if form.tax_ht.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.tax_ht.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                        {%endif%}
+					</td>
+					<td style="width:92.9pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+                    {{ form.total_tax }}
+                                        {% if form.total_tax.errors %}
                     <div class="text-red-600 text-sm mt-1">
                         {% for error in form.total_tax.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
-                {% endif %}
-            </div>
-            <!-- Field: Total Payment After Tax -->
-            <div class="mb-6">
-                <label for="{{ form.total_payment_after_tax.id_for_label }}" class="block text-sm font-semibold text-gray-700">
-                    {{ form.total_payment_after_tax.label }}
-                </label>
-                <div class="mt-2">
-                    {{ form.total_payment_after_tax }}
+                        {%endif%}
+					</td>
+					<td style="width:102.7pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+								       <div class="mt-2">
+                    {{ form.quantity_after_percent }}
                 </div>
-                {% if form.total_payment_after_tax.errors %}
+                                        {% if form.quantity_after_percent.errors %}
                     <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.total_payment_after_tax.errors %}<p>{{ error }}</p>{% endfor %}
+                        {% for error in form.quantity_after_percent.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
-                {% endif %}
-            </div>
-            <!-- Submit button -->
-            <div class="mt-8">
-                <button type="submit"
-                        value="update"
-                        class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300">
-                    {{ button }}
-                </button>
-            </div>
-        </form>
-    </div>
+                        {%endif%}
+					</td>
+					<td style="width:96.25pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+								       <div class="mt-2">
+                    {{ form.deposit }}
+                </div>
+                                        {% if form.deposit.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.deposit.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                        {%endif%}
+					</td>
+					<td style="width:111.8pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+								       <div class="mt-2">
+                    {{ form.quantity_after_percent }}
+                </div>
+                                        {% if form.quantity_after_percent.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.quantity_after_percent.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                        {%endif%}
+					</td>
+				</tr>
+			</table>
+<div class="flex items-center justify-center" style="margin-top: 28px">
+			<p class="FrameContents" style="line-height:12pt">
+				<strong><span style="font-family:Arial; font-size:10.5pt; ">&#xa0;</span></strong>
+			</p>
+			<p class="FrameContents" style="line-height:12pt">
+				<strong><span style="font-family:Arial; font-size:10.5pt; ">ARRETER LA PRESENTE FACTURE A LA SOMME DE:</span></strong><strong><em><span style="font-family:Arial; font-size:10.5pt; "> </span></em></strong>SIX MAD
+			</p>
 </div>
+            <div class="flex items-center justify-center">
+    <div class="mt-8">
+        <button type="submit"
+                value="update"
+                class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-10 rounded-lg shadow-lg transition duration-300">
+            {{ button }}
+        </button>
+    </div>
+            </div>
 
-
-
+			<div style="clear:both" class="footer">
+				<p class="LO-normal" style="text-align:center; font-size:8pt">
+					<span style="height:0pt; text-align:left; display:block; position:absolute; z-index:-65538"><img src="1733849766_facture-maroc-8-1/1733849766_facture-maroc-8-1-6.png" width="299" height="3" alt="" style="margin-top:5.4pt; margin-left:293.4pt; position:absolute" /></span><span style="height:0pt; text-align:left; display:block; position:absolute; z-index:-65539"><img src="1733849766_facture-maroc-8-1/1733849766_facture-maroc-8-1-5.png" width="307" height="3" alt="" style="margin-top:3.65pt; margin-left:-40.15pt; position:absolute" /></span><strong><span style="font-family:Arial; ">Système de Paiement</span></strong><span style="font-family:Arial"> </span>
+				</p>
+				<p class="LO-normal" style="text-align:center; line-height:115%; font-size:2pt">
+					<span style="font-family:Arial">&#xa0;</span>
+				</p>
+				<p class="LO-normal" style="text-align:center; line-height:115%; font-size:6pt">
+					<strong><span style="font-family:Arial; ">PM Solution SARL</span></strong><span style="font-family:Arial"> Rue Soumiya, Residence Shehrazade III, 5EME Etage, N22, Palmier – Casablanca</span>
+				</p>
+				<p class="LO-normal" style="text-align:center; line-height:115%; font-size:2pt">
+					<span style="font-family:Arial">&#xa0;</span>
+				</p>
+				<p class="LO-normal" style="text-align:center; line-height:115%; font-size:6pt">
+					<span style="font-family:Arial">Tél: 00 212 6 80 00 35 04</span><span style="font-family:Arial">&#xa0; </span><span style="font-family:Arial">- Rc 362615 Patente 34794459, IF 20693849, ICE 001816862000051</span>
+				</p>
+				<p class="LO-normal" style="text-align:center; line-height:115%; font-size:6pt">
+					<span style="font-family:Arial">http://pms.ican24.net – e-mail: ican24net@gmail.com</span>
+				</p>
+				<p class="LO-normal" style="text-align:center; font-size:8pt">
+					<span style="font-family:Arial">&#xa0;</span>
+				</p>
+				<p class="LO-normal" style="text-align:center; font-size:6pt">
+					<span style="font-family:Arial">Page 1 sur 1</span>
+				</p>
+			</div>
+		</div>
         </div>
      <link rel="icon" href="{% static 'facture/images/favicon.ico' %}" type="image/x-icon">
-    </body>
+
+</body>
 </html>
