@@ -11,6 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const percentInput = document.getElementById("id_percent");
     const quantityAfterPercentInput = document.getElementById("id_quantity_after_percent");
     const totalHtInput = document.getElementById('id_tax_ht');
+    const totalTaxInput = document.getElementById('id_total_tax');
+    const totalTtcInput = document.getElementById('id_total_ttc');
+    const netPayInput = document.getElementById('id_net_pay');
+    const totalSumFrInput =  document.getElementById('id_total_sum_fr');
 
     // Update dependent values based on active field
     const updateValues = () => {
@@ -40,7 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         totalHtInput.value = quantityAfterPercentInput.value;
-         console.log(quantityAfterPercentInput);
+        totalTtcInput.value = quantityAfterPercentInput.value;
+        totalTaxInput.value = (quantityAfterPercentInput.value / 6).toFixed(2);
+        totalTtcInput.value = quantityAfterPercentInput.value;
+        netPayInput.value = quantityAfterPercentInput.value;
+        // fix this string value need to appear all times autofilling
+        totalSumFrInput.value = numberToFrench(totalHtInput.value);
+        console.log(totalSumFrInput);
 
     };
 
@@ -61,8 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
             percentInput.value = (quantityAfterPercent / quantity).toFixed(2);
         }
       totalHt.value = quantityAfterPercentInput.value;
-            console.log(totalHtInput.value)
-    console.log(quantityAfterPercentInput.value)
+                totalTtcInput.value = quantityAfterPercentInput.value;
+        totalTaxInput.value = (quantityAfterPercentInput.value / 6).toFixed(2);
+        totalTtcInput.value = quantityAfterPercentInput.value;
+        netPayInput.value = quantityAfterPercentInput.value;
+        totalSumFrInput.value = numberToFrench(totalHtInput.value);
     };
 
     // Event listeners for all inputs

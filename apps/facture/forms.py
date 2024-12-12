@@ -11,6 +11,7 @@ class LocalFactureForm(forms.ModelForm):
     class Meta:
         model = LocalFacture
         widgets = {
+            'owner': forms.HiddenInput(),
             'date': forms.DateInput(attrs={'type': 'date'}),  # Explicitly specify date input type
         }
         fields = '__all__'

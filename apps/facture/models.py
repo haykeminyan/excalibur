@@ -3,19 +3,14 @@ from datetime import date
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
 
 class Facture(models.Model):
-    address = models.TextField()
     number_facture = models.CharField(default=date.today().year, unique=True)
-    owner = models.ForeignKey(
-        'auth.User',
-        related_name='factures',
-        on_delete=models.CASCADE,
-        null=True,
-    )
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,  null=True, blank=True)
     date = models.DateField(default=date.today())
     update_time = models.DateTimeField(auto_now=True)
     reference = models.CharField(default='', max_length=10, blank=True, null=True)
@@ -25,7 +20,6 @@ class Facture(models.Model):
     )
     quantity_after_percent = models.FloatField()
     total_tax = models.FloatField()
-    total_payment_after_tax = models.FloatField()
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -46,22 +40,32 @@ class Facture(models.Model):
 
 class LocalFacture(Facture):
     # check if this fucking shit has reason to exist
-    identification_number = models.IntegerField(blank=True, null=True)
     destination = models.CharField(max_length=255, default='Recharge express')
     deposit = models.FloatField(blank=True, null=True)
     tax_ht = models.FloatField()
+    total_ttc = models.FloatField()
+    net_pay = models.FloatField()
+    total_sum_fr = models.CharField(max_length=255)
 
     def __str__(self) -> str:
         """Return model string representation."""
         return f'{self.date} {self.id}'
 
+    def save(self, *args, **kwargs):
+        # Ensure the owner is set when saving a LocalFacture instance
+        if not self.owner:
+            self.owner = self.user  # or self.request.user if accessible
+        super().save(*args, **kwargs)
+
 
 class WorldFacture(Facture):
+    address = models.TextField()
     firm_name = models.TextField()
     account_number = models.IntegerField()
     sku = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     specification = models.IntegerField(blank=True, null=True)
+    total_sum_en = models.CharField(max_length=255)
 
     def __str__(self) -> str:
         """Return model string representation."""

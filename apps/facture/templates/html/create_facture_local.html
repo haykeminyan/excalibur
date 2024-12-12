@@ -17,6 +17,7 @@
         {% endblock stylesheets %}
                 {% block scripts %}
                <script src="{% static 'facture/js/localFactureCalculations.js' %}"></script>
+                       <script src="{% static 'facture/js/translateNumberToFrench.js' %}"></script>
         {% endblock scripts %}
     </head>
 <body>
@@ -50,11 +51,12 @@
                     </li>
                 </ul>
             </div>
+                     <form method="post" action="">
+                         {%csrf_token%}
 		<div>
             <img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo">
 			<table style="width:554.1pt; padding:0pt; border-collapse:collapse">
 				<tr style="height:0.45pt">
-
 						<table style="width:308.45pt; padding:0pt; border-collapse:collapse ;margin-left:25px">
 							<tr style="height:2.5pt">
 								<td style="width:206.15pt; border-bottom:1pt solid #000000; padding:10pt 5.4pt; vertical-align:middle">
@@ -76,7 +78,9 @@
 							<tr style="height:1.3pt">
 								<td style="width:6.15pt; border-top:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 0.4pt; vertical-align:middle">
 									<p class="LO-normal" style="text-align:center; font-size:10pt">
+
 										            <div class="mb-6">
+
                 <div class="mt-2">
                     {{ form.number_facture }}
                 </div>
@@ -86,6 +90,7 @@
                     </div>
                 {% endif %}
             </div>
+
 								</td>
 								<td style="width:74.65pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding: 0pt 7.4pt 6pt 4.9pt; vertical-align:middle">
 									<p class="LO-normal" style="text-indent:7.2pt; text-align:center; font-size:10pt">
@@ -115,26 +120,6 @@
 						</table>
 						<p class="LO-normal">
 						</p>
-<!--					<td style="width:224pt; padding:0pt 5.4pt; vertical-align:top">-->
-<!--						<p class="LO-normal" style="margin-left:9pt; text-indent:63pt">-->
-<!--							&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;-->
-<!--						</p>-->
-<!--						<p class="LO-normal">-->
-<!--							&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;-->
-<!--						</p>-->
-<!--						<p class="LO-normal">-->
-<!--							&#xa0;&#xa0;&#xa0; 43-->
-<!--						</p>-->
-<!--						<p class="LO-normal">-->
-<!--							&#xa0;&#xa0;&#xa0; 23-->
-<!--						</p>-->
-<!--						<p class="LO-normal">-->
-<!--							&#xa0;-->
-<!--						</p>-->
-<!--						<p class="LO-normal">-->
-<!--							&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;-->
-<!--						</p>-->
-<!--					</td>-->
 				</tr>
 			</table>
 			<p class="LO-normal" style="margin-bottom:6pt; font-size:2pt">
@@ -274,11 +259,11 @@
 					</td>
 					<td style="width:102.7pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
 								       <div class="mt-2">
-                    {{ form.quantity_after_percent }}
+                    {{ form.total_ttc }}
                 </div>
-                                        {% if form.quantity_after_percent.errors %}
+                                        {% if form.total_ttc.errors %}
                     <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.quantity_after_percent.errors %}<p>{{ error }}</p>{% endfor %}
+                        {% for error in form.total_ttc.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
                         {%endif%}
 					</td>
@@ -294,22 +279,23 @@
 					</td>
 					<td style="width:111.8pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
 								       <div class="mt-2">
-                    {{ form.quantity_after_percent }}
+                    {{ form.net_pay }}
                 </div>
-                                        {% if form.quantity_after_percent.errors %}
+                                        {% if form.net_pay.errors %}
                     <div class="text-red-600 text-sm mt-1">
-                        {% for error in form.quantity_after_percent.errors %}<p>{{ error }}</p>{% endfor %}
+                        {% for error in form.net_pay.errors %}<p>{{ error }}</p>{% endfor %}
                     </div>
                         {%endif%}
 					</td>
 				</tr>
 			</table>
-<div class="flex items-center justify-center" style="margin-top: 28px">
-			<p class="FrameContents" style="line-height:12pt">
+
+<div class="flex items-center justify-center" style="margin-top: 28px;">
+			<p class="FrameContents" style="line-height:12pt;">
 				<strong><span style="font-family:Arial; font-size:10.5pt; ">&#xa0;</span></strong>
 			</p>
-			<p class="FrameContents" style="line-height:12pt">
-				<strong><span style="font-family:Arial; font-size:10.5pt; ">ARRETER LA PRESENTE FACTURE A LA SOMME DE:</span></strong><strong><em><span style="font-family:Arial; font-size:10.5pt; "> </span></em></strong>SIX MAD
+			<p class="FrameContents" style="line-height:12pt;margin-right: 318px;">
+				<strong><span style="font-family:Arial; font-size:10.5pt; ">ARRETER LA PRESENTE FACTURE A LA SOMME DE:</span></strong><strong><em><span style="font-family:Arial; font-size:10.5pt; "> </span></em></strong>{{form.total_sum_fr}}
 			</p>
 </div>
             <div class="flex items-center justify-center">
@@ -317,11 +303,12 @@
         <button type="submit"
                 value="update"
                 class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-10 rounded-lg shadow-lg transition duration-300">
-            {{ button }}
+            Submit
         </button>
     </div>
-            </div>
 
+
+            </div>
 			<div style="clear:both" class="footer">
 				<p class="LO-normal" style="text-align:center; font-size:8pt">
 					<span style="height:0pt; text-align:left; display:block; position:absolute; z-index:-65538"><img src="1733849766_facture-maroc-8-1/1733849766_facture-maroc-8-1-6.png" width="299" height="3" alt="" style="margin-top:5.4pt; margin-left:293.4pt; position:absolute" /></span><span style="height:0pt; text-align:left; display:block; position:absolute; z-index:-65539"><img src="1733849766_facture-maroc-8-1/1733849766_facture-maroc-8-1-5.png" width="307" height="3" alt="" style="margin-top:3.65pt; margin-left:-40.15pt; position:absolute" /></span><strong><span style="font-family:Arial; ">Système de Paiement</span></strong><span style="font-family:Arial"> </span>
@@ -349,7 +336,29 @@
 				</p>
 			</div>
 		</div>
+                     </form>
         </div>
+
+{% if form.errors %}
+    <script>
+        const errors = [];
+        {% for field in form %}
+            {% for error in field.errors %}
+                errors.push("{{ field.label }}: {{ error|escapejs }}");
+            {% endfor %}
+        {% endfor %}
+
+        // Non-field errors
+        {% for error in form.non_field_errors %}
+            errors.push("{{ error|escapejs }}");
+        {% endfor %}
+
+        if (errors.length > 0) {
+            alert(errors.join("\n"));
+        }
+    </script>
+{% endif %}
+
      <link rel="icon" href="{% static 'facture/images/favicon.ico' %}" type="image/x-icon">
 
 </body>

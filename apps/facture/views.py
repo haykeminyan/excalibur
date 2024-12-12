@@ -43,11 +43,7 @@ class WorldFactureDetailView(BaseFactureDetailView):
 
 class AddLocalFacture(BaseFactureCreateView):
     form_class = LocalFactureForm
-    model = LocalFacture
-    template_name = 'html/create_facture_local.html'
     success_url = reverse_lazy('facture_local_list')
-    title = 'Create Local Facture'
-    button_text = 'Submit'
 
 
 class AddWorldFacture(BaseFactureCreateView):
