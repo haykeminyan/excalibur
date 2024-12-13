@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 class Facture(models.Model):
     number_facture = models.CharField(default=date.today().year, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE,  null=True, blank=True)
+    address = models.CharField(max_length=255)
+    firm_name = models.CharField(max_length=255)
     date = models.DateField(default=date.today())
     update_time = models.DateTimeField(auto_now=True)
     reference = models.CharField(default='', max_length=10, blank=True, null=True)
@@ -59,8 +61,6 @@ class LocalFacture(Facture):
 
 
 class WorldFacture(Facture):
-    address = models.TextField()
-    firm_name = models.TextField()
     account_number = models.IntegerField()
     sku = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)

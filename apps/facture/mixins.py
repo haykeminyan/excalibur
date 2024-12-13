@@ -12,8 +12,11 @@ from django.views.generic import (
     UpdateView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from asgiref.sync import sync_to_async
 from apps.facture.models import LocalFacture
+from .parsing_docx import process_and_save_docx
+from django.http import HttpResponse
+from django.forms.models import model_to_dict
 
 logger = logging.getLogger(__name__)
 
@@ -157,6 +160,7 @@ class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
     button_text = None
     context_object_name = 'facture'
     slug_url_kwarg = 'pk'
+    model = LocalFacture
 
     def get_object(self, **kwargs):
         """
@@ -171,3 +175,28 @@ class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context.update(self.get_extra_context())
         return context
+
+
+class BaseFactureExportDocx(BaseFactureDetailView):
+	def get_facture(self, pk):
+		return get_object_or_404(self.model, pk=pk)
+
+	def generate_docx_async(self, facture_object):
+		# Assuming process_and_save_docx can be sync or async
+		return process_and_save_docx(facture_object)
+
+	def get(self, request, *args, **kwargs):
+		# Fetch the facture object (synchronously)
+		facture_object = self.get_facture(kwargs.get('pk'))
+		facture_dict = model_to_dict(facture_object)
+		logger.error('!' * 100)
+		logger.error(facture_dict)
+		# Generate the DOCX file asynchronously if necessary
+		docx_file = self.generate_docx_async(facture_dict)
+
+		# Create the HTTP response for the file download
+		response = HttpResponse(docx_file,
+		                        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		response['Content-Disposition'] = f'attachment; filename="facture_{facture_object.pk}.docx"'
+
+		return response

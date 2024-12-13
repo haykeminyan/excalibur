@@ -1,4 +1,7 @@
+/* jshint esversion: 6 */
+
 const numberToFrench = (number) => {
+  "use strict";
   const ones = [
     "", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix",
     "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"
@@ -6,7 +9,7 @@ const numberToFrench = (number) => {
   const tens = [
     "", "", "vingt", "trente", "quarante", "cinquante", "soixante", "soixante-dix", "quatre-vingts", "quatre-vingt-dix"
   ];
-  const thousands = ["", "mille", "million", "milliard"]; // You can add more if needed
+  const thousands = ["", "mille", "million", "milliard"]; // Extend as needed
 
   const convertNumber = (num) => {
     if (num < 20) {
@@ -20,11 +23,9 @@ const numberToFrench = (number) => {
       const remainder = num % 100;
       return hundredsPart === 1 ? "cent" + (remainder > 0 ? " " + convertNumber(remainder) : "") : ones[hundredsPart] + " cent" + (remainder > 0 ? " " + convertNumber(remainder) : "");
     } else {
-      // Handle large numbers, thousands, millions, billions, etc.
       let numberString = "";
       let scaleIndex = 0;
 
-      // Process each group of three digits
       while (num > 0) {
         const group = num % 1000;
         if (group > 0) {
@@ -39,10 +40,21 @@ const numberToFrench = (number) => {
     }
   };
 
-  if (number < 0) return "moins " + convertNumber(Math.abs(number));
-  const result = convertNumber(number);
+  if (number < 0){
+     return "MOINS " + numberToFrench(Math.abs(number));
+  }
 
-  // Capitalize the first letter of the result
-  return result.toUpperCase() + ' MAD';
+  const [integerPart, fractionalPart] = number.toString().split(".");
+  let result = convertNumber(parseInt(integerPart, 10));
+
+  if (fractionalPart) {
+    const fractionalWords = fractionalPart
+      .split("")
+      .map(digit => ones[parseInt(digit, 10)])
+      .join(" ");
+    result += " virgule " + fractionalWords;
+  }
+
+  // Capitalize the first letter of the result and append "MAD"
+  return result.toUpperCase() + " MAD";
 };
-

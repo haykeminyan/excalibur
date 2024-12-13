@@ -304,3 +304,9 @@ margin-top: 7px;
 #id_total_sum_fr {
 width: 400px;
 }
+#id_firm_name {
+width: 150px;
+}
+#id_address {
+width: 310px;
+}

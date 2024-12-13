@@ -1,4 +1,7 @@
+/* jshint esversion: 6 */
+
 document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
     const percentStep = document.getElementById('id_percent');
     percentStep.step = 0.01;
     percentStep.min = 0.1;
@@ -7,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
     const quantityInput = document.getElementById("id_quantity");
     const percentInput = document.getElementById("id_percent");
     const quantityAfterPercentInput = document.getElementById("id_quantity_after_percent");
@@ -25,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (document.activeElement === quantityInput || document.activeElement === percentInput) {
             if (!quantityAfterPercentInput.value && quantity !== 0 && percent !== 0) {
                  quantityAfterPercentInput.value = (quantity * percent).toFixed(2);
-
             }
 
         }
@@ -34,23 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!percentInput.value && quantityAfterPercent !== 0 && quantity !== 0) {
              percentInput.value = (quantityAfterPercent / quantity).toFixed(2);
             }
-
         }
 
         if (document.activeElement === percentInput || document.activeElement === quantityAfterPercentInput) {
             if (!quantityInput.value && quantityAfterPercent !== 0 && percent !== 0) {
              quantityInput.value = (quantityAfterPercent / percent).toFixed(2);
-
             }
         }
-        totalHtInput.value = quantityAfterPercentInput.value;
-        totalTtcInput.value = quantityAfterPercentInput.value;
-        totalTaxInput.value = (quantityAfterPercentInput.value / 6).toFixed(2);
-        totalTtcInput.value = quantityAfterPercentInput.value;
-        netPayInput.value = quantityAfterPercentInput.value;
-        // fix this string value need to appear all times autofilling
+        totalHtInput.value = totalTtcInput.value = netPayInput.value = quantityAfterPercentInput.value;
         totalSumFrInput.value = numberToFrench(totalHtInput.value);
-        console.log(totalSumFrInput);
+        totalTaxInput.value = (quantityAfterPercentInput.value / 6).toFixed(2);
 
     };
 
@@ -70,12 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (quantity && quantityAfterPercent && !percent) {
             percentInput.value = (quantityAfterPercent / quantity).toFixed(2);
         }
-      totalHt.value = quantityAfterPercentInput.value;
-                totalTtcInput.value = quantityAfterPercentInput.value;
-        totalTaxInput.value = (quantityAfterPercentInput.value / 6).toFixed(2);
-        totalTtcInput.value = quantityAfterPercentInput.value;
-        netPayInput.value = quantityAfterPercentInput.value;
+        totalHtInput.value = totalTtcInput.value = netPayInput.value = quantityAfterPercentInput.value;
         totalSumFrInput.value = numberToFrench(totalHtInput.value);
+        totalTaxInput.value = (quantityAfterPercentInput.value / 6).toFixed(2);
+
     };
 
     // Event listeners for all inputs

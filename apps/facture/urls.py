@@ -29,6 +29,7 @@ from apps.facture.views import (
     WorldFactureDetailView,
     WorldFactureListView,
 )
+from apps.facture.mixins import BaseFactureExportDocx
 
 urlpatterns = [
     # Facture creation
@@ -60,4 +61,5 @@ urlpatterns = [
     # Facture details
     path('facture/local/<int:pk>/', LocalFactureDetailView.as_view(), name='facture_local_detail'),
     path('facture/world/<int:pk>/', WorldFactureDetailView.as_view(), name='facture_world_detail'),
+    path('facture/local/generate-docx/<int:pk>/', BaseFactureExportDocx.as_view(), name='generate-docx'),
 ]

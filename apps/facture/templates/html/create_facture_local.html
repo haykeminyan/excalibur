@@ -74,6 +74,15 @@
 										<span style="font-family:Arial">REFERENCE</span>
 									</p>
 								</td>
+                                								<td style="width:95.25pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+									<p class="LO-normal" style="text-indent:7.2pt; text-align:center; font-size:8pt">
+										<span style="font-family:Arial">Firm name</span>
+									</p>
+                                                                                                    								<td style="width:95.25pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
+									<p class="LO-normal" style="text-indent:7.2pt; text-align:center; font-size:8pt">
+										<span style="font-family:Arial">Address</span>
+									</p>
+								</td>
 							</tr>
 							<tr style="height:1.3pt">
 								<td style="width:6.15pt; border-top:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 0.4pt; vertical-align:middle">
@@ -116,6 +125,32 @@
                     </div>
                 {% endif %}
 								</td>
+                                								<td style="width:95.25pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding: 0pt 5.4pt 21pt 4.9pt; vertical-align:top">
+									<p class="LO-normal" style="text-align:center; font-size:10pt">
+										<span style="font-family:Arial">&#xa0;</span>
+									</p>
+					                <div class="mt-2">
+                    {{ form.firm_name }}
+                </div>
+                {% if form.firm_name.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.firm_name.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+								</td>
+                                								<td style="width:95.25pt; border-top:1pt solid #000000; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding: 0pt 5.4pt 21pt 4.9pt; vertical-align:top">
+									<p class="LO-normal" style="text-align:center; font-size:10pt">
+										<span style="font-family:Arial">&#xa0;</span>
+									</p>
+					                <div class="mt-2">
+                    {{ form.address }}
+                </div>
+                {% if form.address.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.address.errors %}<p>{{ error }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+								</td>
 							</tr>
 						</table>
 						<p class="LO-normal">
@@ -139,7 +174,7 @@
 					</td>
 					<td style="width:109.7pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
 						<p class="LO-normal" style="text-align:center; font-size:8pt">
-							<span style="font-family:Arial">Quantit</span><span style="font-family:Verdana">é</span>
+							<span style="font-family:Arial">Quantity</span><span style="font-family:Verdana">é</span>
 						</p>
 					</td>
 					<td style="width:81.3pt; border-left:1pt solid #000000; border-bottom:1pt solid #000000; padding:0pt 5.4pt 0pt 4.9pt; vertical-align:middle">
