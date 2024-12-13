@@ -1,62 +1,68 @@
-from django.http import HttpResponse
-from docx import Document
-from io import BytesIO
-import aiofiles
+import datetime
 import logging
-import re
+
+from docx.shared import Pt
+
 logger = logging.getLogger(__name__)
-from django.contrib.staticfiles import finders
 
 
-def generate_filled_document(template_path, output_path, json_calc):
-    # Load the Word document
-    doc = Document(template_path)
-    # Extract text from paragraphs
+def replace_placeholders_in_doc(doc, regex, replace_dict):
+    """
+    Replaces placeholders in the DOCX document with corresponding values from the replace_dict.
+    """
+    # Process paragraphs
+    for p in doc.paragraphs:
+        if p.text.strip():  # Only process non-empty paragraphs
+            full_text = p.text  # Get the full text of the paragraph
 
-    # Extract text from tables
-    for paragraph in doc.paragraphs:
-        for key, value in json_calc.items():
-            if value is None:
-                value = ""  # Replace None with an empty string
-            placeholder = key
-            if placeholder in paragraph.text:
-                paragraph.text = paragraph.text.replace(placeholder, str(value))
+            # Replace placeholders in the entire paragraph's text first
+            new_text = replace_in_text(full_text, regex, replace_dict)
+            p.clear()  # Clear existing runs to prevent overlapping styles
+            p.add_run(new_text)  # Add the updated text
 
-    # Replace placeholders in tables
+    # Process tables (cells within rows)
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
-                for key, value in json_calc.items():
-                    if value is None:
-                        value = ""  # Replace None with an empty string
-                    placeholder = key
-                    if placeholder in cell.text:
-                        cell.text = cell.text.replace(placeholder, str(value))
+                replace_placeholders_in_doc(cell, regex, replace_dict)
 
 
-    # Save the modified document to a buffer
-    buffer = BytesIO()
-    doc.save(buffer)
-    buffer.seek(0)
+def replace_in_text(text, regex, replace_dict):
+    """
+    Helper function to replace placeholders in a text using regex from replace_dict.
+    """
+    text = text.strip()  # Trim the text
+    logger.error(f'Original text: {text}')
+    logger.error('!' * 100)
 
-    # Save the modified document to the specified path
-    with open(output_path, 'wb') as f:
-        f.write(buffer.getvalue())
+    # Use regex to find placeholders and replace them with values from the replace_dict
+    for match in regex.finditer(text):
+        placeholder = match.group(0)
+        logger.error(f'Found placeholder: {placeholder}')
 
-    return buffer
+        # Check if the placeholder is in the replace_dict
+        if placeholder in replace_dict:
+            replacement_value = replace_dict[placeholder]
 
-def process_and_save_docx(json_calc):
-    template_path = '/usr/src/app/apps/facture/static/facture/file_templates/file_input/Facture_template_Maroc.docx'  # Path to your template file
-    output_path = '/usr/src/app/apps/facture/static/facture/file_templates/file_output/xer.docx'  # Output file path
+            # If the value is a datetime, convert it to string
+            if isinstance(replacement_value, datetime.date):
+                replacement_value = replacement_value.strftime('%Y-%m-%d')
+            # If the value is None, replace with an empty string or default value
+            elif replacement_value is None:
+                replacement_value = ''
 
-    # Generate the filled document
-    buffer = generate_filled_document(template_path, output_path, json_calc)
+            logger.error(f'Replacing {placeholder} with {replacement_value}')
+            text = text.replace(placeholder, str(replacement_value))
 
-    # Return the file as a downloadable response
-    response = HttpResponse(
-        buffer.getvalue(),
-        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    )
-    response['Content-Disposition'] = 'attachment; filename=modified_template.docx'
-    return response
+    return text
 
+
+def set_font_size(doc):
+    """Set the font size for the entire document to fit in one page."""
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                # Loop through each paragraph in the cell
+                for p in cell.paragraphs:
+                    for run in p.runs:  # Loop through each run in the paragraph
+                        run.font.size = Pt(10)  # Set

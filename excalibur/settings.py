@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,7 +47,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'apps.deduction',
     'apps.facture',
-    'apps.users'
+    'apps.users',
 ]
 
 LOGGING = {
@@ -69,9 +68,9 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "django.middleware.cache.UpdateCacheMiddleware",
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
-    "django.middleware.cache.FetchFromCacheMiddleware",
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -123,12 +122,12 @@ DATABASES = {
 
 
 CACHES = {
-    "default": {
+    'default': {
         # "BACKEND": "django.core.cache.backends.redis.RedisCache",
         # ! uncomment dummyCache for debug sql queries
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        "LOCATION": "redis://redis:6379",
-    }
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'LOCATION': 'redis://redis:6379',
+    },
 }
 
 # Password validation
@@ -173,7 +172,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Example directory for collected static files
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Your main static folder
+    BASE_DIR / 'static',  # Your main static folder
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

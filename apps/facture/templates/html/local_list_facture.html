@@ -1,176 +1,284 @@
-<!DOCTYPE html>
+<!doctype html>
 {% load custom_filters %}
 <html lang="en">
-    <head>
-        {% load static %}
-        <!-- Load Django static template tag -->
-        <meta charset="UTF-8">
-        <title>All Factures</title>
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-              rel="stylesheet">
-        {% block stylesheets %}
-            <!-- Correct usage of static tag -->
-            <link rel="stylesheet"
-                  type="text/css"
-                  href="{% static 'facture/css/local_list_facture.css' %}">
-        {% endblock stylesheets %}
-    </head>
-    {% csrf_token %}
-    <body class="bg-gray-100">
-        <div class="container mx-auto py-8">
-            <!-- Header Section -->
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl font-bold text-gray-800">All Factures</h1>
-    <!-- Dropdown for select options -->
-<form method="get" action="" class="search-form">
-    <!-- Preserve existing filters as hidden inputs -->
-    {% for key, value in request.GET.items %}
-        <input type="hidden" name="{{ key }}" value="{{ value }}">
-    {% endfor %}
-
-    <!-- Dropdown for select options -->
-    <select id="filter_option" class="filter-dropdown">
-        <option value="">--Select Filter--</option>
-        <option value="number_facture" {% if request.GET.number_facture %}selected{% endif %}>Number facture</option>
-        <option value="date" {% if request.GET.date %}selected{% endif %}>Created date</option>
-        <option value="reference" {% if request.GET.reference %}selected{% endif %}>Reference</option>
-        <option value="quantity" {% if request.GET.quantity %}selected{% endif %}>Quantity</option>
-        <option value="percent" {% if request.GET.percent %}selected{% endif %}>Percent</option>
-        <option value="total_tax" {% if request.GET.total_tax %}selected{% endif %}>Total Tax</option>
-        <option value="total_payment_after_tax" {% if request.GET.total_payment_after_tax %}selected{% endif %}>Total payment after tax</option>
-    </select>
-
-    <!-- Search box -->
-    <input
-        type="text"
-        id="search"
-        class="search-box"
-        placeholder="Search..."
-        value="{{ request.GET|get_current_filter_value }}">
-    <button type="button" id="add-filter-btn" class="add-filter-button">Add Filter</button>
-
-    <!-- Submit button -->
-    <button type="submit" class="search-button">Search</button>
-    <button type="button" id="clear-filters-btn" class="clear-filters-button">Clear Filters</button>
-</form>
+  <head>
+    {% load static %}
+    <!-- Load Django static template tag -->
+    <meta charset="UTF-8" />
+    <title>All Factures</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    {% block stylesheets %}
+    <!-- Correct usage of static tag -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'facture/css/local_list_facture.css' %}"
+    />
+    {% endblock stylesheets %}
+  </head>
+  {% csrf_token %}
+  <body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+      <!-- Header Section -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">All Factures</h1>
+        <!-- Dropdown for select options -->
+        <form method="get" action="" class="search-form">
+          <!-- Preserve existing filters as hidden inputs -->
+          {% for key, value in request.GET.items %}<input
+            type="hidden"
+            name="{{ key }}"
+            value="{{ value }}"
+          />{% endfor %}
+          <!-- Dropdown for select options -->
+          <select id="filter_option" class="filter-dropdown">
+            <option value="">--Select Filter--</option>
+            <option
+              value="number_facture"
+              {%
+              if
+              request.GET.number_facture
+              %}selected{%
+              endif
+              %}
+            >
+              Number facture
+            </option>
+            <option value="date" {% if request.GET.date %}selected{% endif %}>
+              Created date
+            </option>
+            <option
+              value="reference"
+              {%
+              if
+              request.GET.reference
+              %}selected{%
+              endif
+              %}
+            >
+              Reference
+            </option>
+            <option
+              value="quantity"
+              {%
+              if
+              request.GET.quantity
+              %}selected{%
+              endif
+              %}
+            >
+              Quantity
+            </option>
+            <option
+              value="percent"
+              {%
+              if
+              request.GET.percent
+              %}selected{%
+              endif
+              %}
+            >
+              Percent
+            </option>
+            <option
+              value="total_tax"
+              {%
+              if
+              request.GET.total_tax
+              %}selected{%
+              endif
+              %}
+            >
+              Total Tax
+            </option>
+            <option
+              value="total_payment_after_tax"
+              {%
+              if
+              request.GET.total_payment_after_tax
+              %}selected{%
+              endif
+              %}
+            >
+              Total payment after tax
+            </option>
+          </select>
+          <!-- Search box -->
+          <input
+            type="text"
+            id="search"
+            class="search-box"
+            placeholder="Search..."
+            value="{{ request.GET|get_current_filter_value }}"
+          />
+          <button type="button" id="add-filter-btn" class="add-filter-button">
+            Add Filter
+          </button>
+          <!-- Submit button -->
+          <button type="submit" class="search-button">Search</button>
+          <button
+            type="button"
+            id="clear-filters-btn"
+            class="clear-filters-button"
+          >
+            Clear Filters
+          </button>
+        </form>
         {% block scripts %}
-               <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
-                <script src="{% static 'facture/js/tools.js' %}"></script>
+        <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
+        <script src="{% static 'facture/js/tools.js' %}"></script>
         {% endblock scripts %}
-<a href="{% url 'facture_local_create' %}"
-   class="create-filter-button">
-    <svg class="w-4 h-4 mr-2"
-         fill="none"
-         stroke="currentColor"
-         viewBox="0 0 24 24"
-         xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-    </svg>
-    Create New Facture
-</a>
-                <form method="post"  action="{% url 'users:logout' %}">
-    {% csrf_token %}
-    <button type="submit" class="logout-button">logout</button>
-</form>
-            </div>
-<img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo">
-            <!-- Factures List -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {% for facture in factures %}
-    <div class="bg-white rounded-lg shadow-md p-6" style="position: relative;">
-      <!-- Kebab Menu (Dropdown) -->
-      <div class="dropdown" style="position: absolute; top: 10px; right: 10px;">
-        <button class="dropdown-toggle" aria-label="Actions" onclick="toggleDropdown(this)">
-          &#x22EE; <!-- Unicode for vertical ellipsis -->
-        </button>
-        <div class="dropdown-menu">
-          <!-- Update button -->
-          <button class="dropdown-item" id="update-button" onclick="updateItem({{ facture.pk }})">
-            Update
-          </button>
-          <!-- Delete button -->
-          <button class="dropdown-item" id="delete-button" onclick="deleteItem({{ facture.pk }})">
-            Delete
-          </button>
-        </div>
+        <a href="{% url 'facture_local_create' %}" class="create-filter-button">
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            ></path>
+          </svg>
+          Create New Facture
+        </a>
+        <form method="post" action="{% url 'users:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="logout-button">logout</button>
+        </form>
       </div>
-                        <div class="flex items-start">
-
-                            <div class="mr-4 text-blue-500">
-
-<div class="mr-4 text-blue-500">
-    <img src="{% static 'facture/images/logo.png' %}" alt="Logo" class="w-8 h-8">
-</div>
-
-                            </div>
-
-   <div class="facture-container" style="position: relative;">
-
-  <a href="{% url 'facture_local_detail' facture.id %}">
-    <h2 class="facture-title">Number facture: {{ facture.number_facture }}</h2>
-
-    <!-- Displaying the existing fields -->
-    <p class="facture-details">Date: {{ facture.date }}</p>
-    <p class="facture-details">Reference: {{ facture.reference }}</p>
-    <p class="facture-details">Total: {{ facture.total_payment_after_tax }}</p>
-
-    <!-- Added missing fields -->
-    <p class="facture-details">Address: {{ facture.address }}</p>
-    <p class="facture-details">Quantity: {{ facture.quantity }}</p>
-    <p class="facture-details">Percent: {{ facture.percent }}</p>
-    <p class="facture-details">Quantity After Percent: {{ facture.quantity_after_percent }}</p>
-    <p class="facture-details">Total Tax: {{ facture.total_tax }}</p>
-
-    <!-- Owner details (if needed) -->
-
-    <!-- Update time (optional) -->
-    <p class="facture-details">Last Updated: {{ facture.update_time }}</p>
-  </a>
-
-</div>
-
-
-                        </div>
-
-                    </div>
-
-                {% empty %}
-                    <p class="text-center text-gray-500 col-span-3">No factures found.</p>
-                {% endfor %}
+      <img
+        src="{% static 'facture/images/logo.png' %}"
+        alt="logo"
+        class="top-left-logo"
+      />
+      <!-- Factures List -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for facture in factures %}
+        <div
+          class="bg-white rounded-lg shadow-md p-6"
+          style="position: relative"
+        >
+          <!-- Kebab Menu (Dropdown) -->
+          <div
+            class="dropdown"
+            style="position: absolute; top: 10px; right: 10px"
+          >
+            <button
+              class="dropdown-toggle"
+              aria-label="Actions"
+              onclick="toggleDropdown(this)"
+            >
+              &#x22EE;
+              <!-- Unicode for vertical ellipsis -->
+            </button>
+            <div class="dropdown-menu">
+              <!-- Update button -->
+              <button
+                class="dropdown-item"
+                id="update-button"
+                onclick="updateItem({{ facture.pk }})"
+              >
+                Update
+              </button>
+              <!-- Delete button -->
+              <button
+                class="dropdown-item"
+                id="delete-button"
+                onclick="deleteItem({{ facture.pk }})"
+              >
+                Delete
+              </button>
             </div>
-            <!-- Pagination Section -->
-{% if page_obj.has_other_pages %}
-<nav class="list-pages">
-    <ul>
-
-
-
-        {% if page_obj.has_previous %}
-    <li class="page-num">
-        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">&lt;</a>
-    </li>
-{% endif %}
-
-        {% for p in paginator.page_range %}
-		{% if page_obj.number == p %}
-		<li class="page-num page-num-selected">{{ p }}</li>
-		{% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
-       <li class="page-num">
-        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ p }}">{{ p }}</a>
-    </li>
-		{% endif %}
-        {% endfor %}
-{% if page_obj.has_next %}
-    <li class="page-num">
-        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">&gt;</a>
-    </li>
-{% endif %}
-
-
-    </ul>
-</nav>
-{% endif %}
+          </div>
+          <div class="flex items-start">
+            <div class="mr-4 text-blue-500">
+              <div class="mr-4 text-blue-500">
+                <img
+                  src="{% static 'facture/images/logo.png' %}"
+                  alt="Logo"
+                  class="w-8 h-8"
+                />
+              </div>
+            </div>
+            <div class="facture-container" style="position: relative">
+              <a href="{% url 'facture_local_detail' facture.id %}">
+                <h2 class="facture-title">
+                  Number facture: {{ facture.number_facture }}
+                </h2>
+                <!-- Displaying the existing fields -->
+                <p class="facture-details">Date: {{ facture.date }}</p>
+                <p class="facture-details">
+                  Reference: {{ facture.reference }}
+                </p>
+                <p class="facture-details">
+                  Total: {{ facture.total_payment_after_tax }}
+                </p>
+                <!-- Added missing fields -->
+                <p class="facture-details">Address: {{ facture.address }}</p>
+                <p class="facture-details">Quantity: {{ facture.quantity }}</p>
+                <p class="facture-details">Percent: {{ facture.percent }}</p>
+                <p class="facture-details">
+                  Quantity After Percent: {{ facture.quantity_after_percent }}
+                </p>
+                <p class="facture-details">
+                  Total Tax: {{ facture.total_tax }}
+                </p>
+                <!-- Owner details (if needed) -->
+                <!-- Update time (optional) -->
+                <p class="facture-details">
+                  Last Updated: {{ facture.update_time }}
+                </p>
+              </a>
+            </div>
+          </div>
         </div>
-            <link rel="icon" href="{% static 'facture/images/favicon.ico' %}" type="image/x-icon">
-    </body>
+        {% empty %}
+        <p class="text-center text-gray-500 col-span-3">No factures found.</p>
+        {% endfor %}
+      </div>
+      <!-- Pagination Section -->
+      {% if page_obj.has_other_pages %}
+      <nav class="list-pages">
+        <ul>
+          {% if page_obj.has_previous %}
+          <li class="page-num">
+            <a
+              href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}"
+              >&lt;</a
+            >
+          </li>
+          {% endif %} {% for p in paginator.page_range %} {% if page_obj.number == p %}
+    <li class="page-num page-num-selected">{{ p }}</li>
+{% else %}
+    {% if p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+        <li class="page-num">
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ p }}">{{ p }}</a>
+        </li>
+    {% endif %}
+{% endif %}
+ {% endfor %} {% if page_obj.has_next %}
+          <li class="page-num">
+            <a
+              href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}"
+              >&gt;</a
+            >
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+    <link
+      rel="icon"
+      href="{% static 'facture/images/favicon.ico' %}"
+      type="image/x-icon"
+    />
+  </body>
 </html>

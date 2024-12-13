@@ -1,16 +1,16 @@
 import logging
 from datetime import date
 
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
 
 
 class Facture(models.Model):
     number_facture = models.CharField(default=date.today().year, unique=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE,  null=True, blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     address = models.CharField(max_length=255)
     firm_name = models.CharField(max_length=255)
     date = models.DateField(default=date.today())

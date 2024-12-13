@@ -2,25 +2,24 @@ function toggleDropdown(button) {
   const dropdownMenu = button.nextElementSibling;
 
   // Close other dropdowns if open
-  document.querySelectorAll('.dropdown-menu.show').forEach((menu) => {
+  document.querySelectorAll(".dropdown-menu.show").forEach((menu) => {
     if (menu !== dropdownMenu) {
-      menu.classList.remove('show');
+      menu.classList.remove("show");
     }
   });
 
   // Toggle the clicked dropdown
-  dropdownMenu.classList.toggle('show');
+  dropdownMenu.classList.toggle("show");
 }
 
 // Close the dropdown if clicking outside
-document.addEventListener('click', (event) => {
-  if (!event.target.closest('.dropdown')) {
-    document.querySelectorAll('.dropdown-menu.show').forEach((menu) => {
-      menu.classList.remove('show');
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".dropdown")) {
+    document.querySelectorAll(".dropdown-menu.show").forEach((menu) => {
+      menu.classList.remove("show");
     });
   }
 });
-
 
 function updateItem(pk) {
   const updateUrl = `/facture/local/update/${pk}/`; // Construct URL dynamically
