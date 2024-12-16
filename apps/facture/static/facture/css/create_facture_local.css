@@ -464,15 +464,7 @@ h6 {
 .top-left-logo {
   margin-left: 25px;
 }
-#id_percent {
-  width: 85px;
-}
-#id_quantity {
-  width: 130px;
-}
-#id_quantity_after_percent {
-  width: 150px;
-}
+
 
 p.FrameContents:nth-child(10) {
   margin-left: 25px;
@@ -486,9 +478,162 @@ p.FrameContents:nth-child(10) {
 #id_total_sum_fr {
   width: 400px;
 }
-#id_firm_name {
-  width: 150px;
-}
+
+
+
 #id_address {
   width: 310px;
 }
+/* Center the content in the container */
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.frame-contents {
+  line-height: 12pt;
+}
+
+.font-Arial {
+  font-family: Arial, serif;
+  font-size: 10.5pt;
+}
+
+/* Margin for the specific element */
+.margin-right-318 {
+  margin-right: 318px;
+}
+
+
+/* Button styling */
+.submit-btn {
+  width: 100%;
+  background-color: #1e40af; /* Blue background */
+  hover: background-color: #1d4ed8; /* Darker blue when hovering */
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Footer section */
+/* Footer section */
+.footer {
+  clear: both;
+  text-align: center;
+  font-size: 8pt;
+  margin-top: 20px; /* Adds space at the top of the footer */
+}
+
+.footer-text {
+  font-size: 8pt;
+  line-height: 115%;
+  margin-bottom: 7px; /* Adds space after the first footer text */
+}
+
+.footer-normal-text {
+  line-height: 85%;
+  font-size: 6pt;
+  margin-bottom: 10px; /* Adds space between footer lines */
+}
+
+/* Adding spaces between individual elements inside the footer */
+.footer-normal-text .font-Arial {
+  margin-right: 10px; /* Adds spacing between elements within the same line */
+}
+
+/* Optional: Add more space between paragraphs if needed */
+.footer-normal-text + .footer-normal-text {
+  margin-top: 15px; /* Adds space between paragraphs in the footer */
+}
+
+.footer {
+text-align: center;
+}
+
+.mt-8 {
+text-align: center;
+}
+
+
+.number-text {
+  text-align: center;
+  font-size: 8pt;
+  font-family: Arial, serif;
+}
+
+
+.label-text {
+  text-indent: 7.2pt;
+  text-align: center;
+  font-size: 8pt;
+  font-family: Arial;
+}
+/* Default layout for larger screens (1495px or above) */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 3 columns */
+  gap: 20px; /* Adds space between columns */
+  padding: 10px 0;
+}
+
+/* Style each <td> */
+td {
+  padding: 10px;
+  vertical-align: top;
+}
+
+/* Optional: Style adjustments for form elements */
+.label-text {
+  font-weight: bold;
+}
+
+.text-red-600 {
+  color: red;
+}
+
+.form-wrapper {
+  margin-top: 10px;
+}
+
+/* For smaller screens (less than 1495px) */
+@media (max-width: 1395px) {
+
+
+  .form-row {
+      grid-template-columns: repeat(4, 1fr); /* 3 columns */
+  }
+
+  td {
+    margin-bottom: 15px; /* Adds space between the stacked rows */
+  }
+}
+
+@media (max-width: 1140px) {
+  .form-row {
+      grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  }
+}
+@media (max-width: 1025px) {
+  .form-row {
+      grid-template-columns: repeat(2, 1fr); /* 3 columns */
+  }
+}
+
+
+/* Optional: For even smaller screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr; /* Stack fields in a single column */
+  }
+}
+
