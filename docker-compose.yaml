@@ -71,6 +71,25 @@ services:
       - excalibur_network
     working_dir: /usr/src/app
 
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "8100:80"
+      - "8443:443"
+    depends_on:
+      - excalibur
+    restart: always  # Auto-restart on failure or Docker daemon restart
+    healthcheck: # Add health checks to ensure service availability
+      test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks: # Define a custom network for better isolation
+      - excalibur_network
+
+
 volumes:
   postgres_data:
   redis_data:
