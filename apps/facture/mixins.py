@@ -82,6 +82,8 @@ class BaseFactureListView(CSRFExemptMixin, LoginRequiredMixin, ListView):
         search_params.pop('page', None)
         if search_params:
             queryset = queryset.filter(**search_params)
+        else:
+            queryset = queryset.order_by('-date')
 
         return queryset
 
