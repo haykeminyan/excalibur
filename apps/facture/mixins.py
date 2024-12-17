@@ -19,7 +19,6 @@ from django.views.generic import (
 )
 from docx import Document
 
-from apps.facture.models import LocalFacture
 
 from .parsing_docx import replace_placeholders_in_doc, set_font_size
 
@@ -58,22 +57,8 @@ class CSRFExemptMixin:
         return super().dispatch(*args, **kwargs)
 
 
-# naxer ubrat etu tupuy function and refactor as Create Facture Mixin
-class UpdateField:
-    """
-    A utility class for generating extra context dynamically.
-    """
-
-    def __init__(self, **fields):
-        self.context = fields
-
-    def get_new_values(self):
-        return self.context
-
-
 class BaseFactureListView(CSRFExemptMixin, LoginRequiredMixin, ListView):
-    title = None
-    button_text = None
+    context_object_name = 'factures'
     paginate_by = 3
 
     def get_queryset(self):
@@ -87,17 +72,12 @@ class BaseFactureListView(CSRFExemptMixin, LoginRequiredMixin, ListView):
 
         return queryset
 
-    def get_extra_context(self):
-        return UpdateField(title=self.title, button=self.button_text).get_new_values()
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.get_extra_context())
         return context
 
 
 class BaseFactureCreateView(CSRFExemptMixin, LoginRequiredMixin, CreateView):
-    model = LocalFacture
     template_name = 'html/create_facture_local.html'
     success_url = reverse_lazy('success_url')  # Update this as needed
 
@@ -140,15 +120,9 @@ class BaseFactureCreateView(CSRFExemptMixin, LoginRequiredMixin, CreateView):
 
 # Base views for shared logic
 class BaseFactureUpdateView(CSRFExemptMixin, LoginRequiredMixin, UpdateView):
-    title = None
-    button_text = None
-
-    def get_extra_context(self):
-        return UpdateField(title=self.title, button=self.button_text).get_new_values()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.get_extra_context())
         return context
 
     def form_valid(self, form):
@@ -174,15 +148,9 @@ class BaseFactureUpdateView(CSRFExemptMixin, LoginRequiredMixin, UpdateView):
 
 
 class BaseFactureDeleteView(CSRFExemptMixin, LoginRequiredMixin, DeleteView):
-    title = None
-    button_text = None
-
-    def get_extra_context(self):
-        return UpdateField(title=self.title, button=self.button_text).get_new_values()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.get_extra_context())
         return context
 
     def form_invalid(self, form):
@@ -197,11 +165,8 @@ class BaseFactureDeleteView(CSRFExemptMixin, LoginRequiredMixin, DeleteView):
 
 
 class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
-    title = None
-    button_text = None
     context_object_name = 'facture'
     slug_url_kwarg = 'pk'
-    model = LocalFacture
 
     def get_object(self, **kwargs):
         """
@@ -209,12 +174,8 @@ class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
         """
         return get_object_or_404(self.model, pk=self.kwargs.get(self.slug_url_kwarg))
 
-    def get_extra_context(self):
-        return UpdateField(title=self.title, button=self.button_text).get_new_values()
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.get_extra_context())
         return context
 
 
