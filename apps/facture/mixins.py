@@ -149,6 +149,17 @@ class BaseFactureUpdateView(CSRFExemptMixin, LoginRequiredMixin, UpdateView):
         context.update(self.get_extra_context())
         return context
 
+    def form_valid(self, form):
+        # Log the form instance before save to ensure the owner is set
+        logger.info(f'Form instance before save: {form.instance.owner}')
+
+        # Ensure 'owner' is set before saving
+        if not form.instance.owner:
+            form.instance.owner = self.request.user
+
+        logger.info(f'Form instance after owner set: {form.instance.owner}')
+        return super().form_valid(form)
+
     def form_invalid(self, form):
         # Log errors for debugging
         logger.error('Form submission failed. Errors: %s', form.errors.as_json())

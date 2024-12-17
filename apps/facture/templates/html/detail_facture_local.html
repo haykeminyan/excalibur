@@ -6,7 +6,43 @@
   href="{% static 'facture/css/detail_facture_local.css' %}"
 />
 {% endblock stylesheets %}
+        {% block scripts %}
+        <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
+        <script src="{% static 'facture/js/tools.js' %}"></script>
+        {% endblock scripts %}
 <div class="facture-container">
+          <!-- Kebab Menu (Dropdown) -->
+          <div
+            class="dropdown"
+            style="position: absolute; top: 10px; right: 10px"
+          >
+            <button
+              class="dropdown-toggle"
+              aria-label="Actions"
+              onclick="toggleDropdown(this)"
+            >
+              &#x22EE;
+              <!-- Unicode for vertical ellipsis -->
+            </button>
+            <div class="dropdown-menu">
+              <!-- Update button -->
+              <button
+                class="dropdown-item"
+                id="update-button"
+                onclick="updateItem({{ facture.pk }})"
+              >
+                Update
+              </button>
+              <!-- Delete button -->
+              <button
+                class="dropdown-item"
+                id="delete-button"
+                onclick="deleteItem({{ facture.pk }})"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
   <h2 class="facture-title">Number facture: {{ facture.number_facture }}</h2>
   <p class="facture-details">Firm name: {{ facture.firm_name }}</p>
   <p class="facture-details">Address: {{ facture.address }}</p>
