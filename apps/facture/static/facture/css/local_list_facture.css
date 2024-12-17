@@ -603,6 +603,21 @@ button:focus {
     max-width: 300px;
     font-size: 14px;
   }
+  #add-filter-btn, .search-button, #clear-filters-btn, .logout-button {
+  width: 200px;
+  }
+  .button-container {
+    display: flex;
+    flex-direction: column; /* Forces items into a column */
+    gap: 10px; /* Adds spacing between the buttons */
+  }
+
+  /* Optional: Ensures buttons don't override styles */
+  .create-filter-button,
+  .logout-button {
+    display: inline-block;
+    width: fit-content; /* Ensures buttons are the correct size */
+  }
 }
 
 @media (max-width: 480px) {
@@ -771,4 +786,12 @@ button:focus {
 }
 #update-button {
   background-color: green;
+}
+/* General Dropdown Styles */
+
+.dropdown-toggle{
+  z-index: 0;
+}
+.dropdown{
+  min-width: 20px;
 }

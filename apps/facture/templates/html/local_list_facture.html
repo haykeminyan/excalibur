@@ -131,27 +131,33 @@
         <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
         <script src="{% static 'facture/js/tools.js' %}"></script>
         {% endblock scripts %}
-        <a href="{% url 'facture_local_create' %}" class="create-filter-button">
-          <svg
-            class="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
-            ></path>
-          </svg>
-          Create New Facture
-        </a>
-        <form method="post" action="{% url 'users:logout' %}">
-          {% csrf_token %}
-          <button type="submit" class="logout-button">logout</button>
-        </form>
+<div class="button-container">
+  <!-- First button -->
+  <a href="{% url 'facture_local_create' %}" class="create-filter-button">
+    <svg
+      class="w-4 h-4 mr-2"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 4v16m8-8H4"
+      ></path>
+    </svg>
+    Create New Facture
+  </a>
+
+  <!-- Second button -->
+  <form method="post" action="{% url 'users:logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="logout-button">Logout</button>
+  </form>
+</div>
+
       </div>
       <img
         src="{% static 'facture/images/logo.png' %}"
