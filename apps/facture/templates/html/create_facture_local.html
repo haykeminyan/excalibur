@@ -29,7 +29,12 @@
       <div
         class="w-1/6 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8"
       >
-        <h2 class="text-2xl font-bold">Dashboard</h2>
+                      <a
+              href="{% url 'facture_local_list' %}"
+              class="flex items-center space-x-4 "
+            >
+<h2 class="text-2xl font-bold">Dashboard</h2>
+            </a>
         <ul class="space-y-6">
           <li>
             <a
@@ -168,7 +173,7 @@
     </div>
   </td>
 
-                    <td class="reference">
+                    <td class="reference-new">
     <p class="label-text">
       <span>REFERENCE</span>
     </p>
@@ -222,7 +227,7 @@
     {% endif %}
   </td>
 
-                        <td class="percent">
+                        <td class="quantity_after_percent">
     <p class="label-text">
       <span>Montant</span>
     </p>
@@ -314,7 +319,7 @@
   </p>
 </div>
 
-<div class="centered-container">
+<div class="centered-container-submit">
   <div class="mt-8">
     <button
       type="submit"
