@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     {% load static %}
     <!-- Load Django static template tag -->
@@ -16,18 +16,25 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{% static 'facture/css/styles.css' %}"
+      href="{% static 'facture/css/create_facture_world.css' %}"
     />
-    {% endblock stylesheets %}
+    {% endblock stylesheets %} {% block scripts %}
+    <script src="{% static 'facture/js/worldFactureCalculations.js' %}"></script>
+    <script src="{% static 'facture/js/translateNumberToEnglish.js' %}"></script>
+    {% endblock scripts %}
   </head>
-  <body class="bg-gray-100">
-    <!-- Main Container -->
+  <body>
     <div class="flex min-h-screen">
       <!-- Sidebar -->
       <div
-        class="w-1/5 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8"
+        class="w-1/6 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8"
       >
-        <h2 class="text-2xl font-bold">Dashboard</h2>
+                      <a
+              href="{% url 'facture_world_list' %}"
+              class="flex items-center space-x-4 "
+            >
+<h2 class="text-2xl font-bold">Dashboard</h2>
+            </a>
         <ul class="space-y-6">
           <li>
             <a
@@ -35,82 +42,323 @@
               class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg"
             >
               <i class="fas fa-file-invoice-dollar text-xl"></i>
-              <span>Create Facture</span>
+              <span>Create World Facture</span>
             </a>
           </li>
           <li>
             <a
-              href="#"
+              href="{% url 'facture_world_list' %}"
               class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg"
             >
               <i class="fas fa-chart-line text-xl"></i>
-              <span>Reports</span>
+              <span>Return to main menu</span>
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg"
+            <form
+              method="post"
+              action="{% url 'users:logout' %}"
+              style="display: inline"
             >
-              <i class="fas fa-cogs text-xl"></i>
-              <span>Settings</span>
-            </a>
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="text-left p-3 rounded-lg bg-transparent border-0 hover:bg-blue-600"
+              >
+                <i class="fas fa-cogs text-xl"></i>
+                <span>Logout</span>
+              </button>
+            </form>
           </li>
         </ul>
       </div>
-      <!-- Content Area -->
-      <div class="w-4/5 p-10">
-        <h1 class="text-4xl font-bold text-blue-800 mb-6">{{ title }}</h1>
-        <!-- Form Section -->
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
-          <form method="post" action="">
-            {% csrf_token %}
-            <!-- General form errors -->
-            {% if form.non_field_errors %}
-            <div class="bg-red-100 text-red-700 p-4 mb-6 rounded">
-              <ul>
-                {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-              </ul>
-            </div>
-            {% endif %}
-            <!-- Form fields -->
-            {% for f in form %}
-            <div class="mb-6">
-              <label
-                for="{{ f.id_for_label }}"
-                class="block text-sm font-semibold text-gray-700"
-                >{{ f.label }}</label
+      <form method="post" action="">
+        {% csrf_token %}
+        <div>
+          <img
+            src="{% static 'facture/images/logo.png' %}"
+            alt="logo"
+            class="top-left-logo"
+          />
+          <table
+            style="width: 554.1pt; padding: 0pt; border-collapse: collapse"
+          >
+            <tr style="height: 0.45pt">
+              <table
+                style="
+                  width: 308.45pt;
+                  padding: 0pt;
+                  border-collapse: collapse;
+                  margin-left: 25px;
+                "
               >
-              <div class="mt-2">
-                <!-- Render the field as-is, and if it's a date field, it will render as an <input type="date"> -->
-                {{ f }}
-              </div>
-              <!-- Field-specific errors -->
-              {% if f.errors %}
-              <div class="text-red-600 text-sm mt-1">
-                {% for error in f.errors %}
-                <p>{{ error }}</p>
-                {% endfor %}
-              </div>
-              {% endif %}
-            </div>
-            {% endfor %}
-            <!-- Submit button -->
-            <div class="mt-8">
-              <button
-                type="submit"
-                value="update"
-                class="w-full bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg transition duration-300"
-              >
-                {{ button }}
-              </button>
-            </div>
-          </form>
-        </div>
+                <tr style="height: 1.3pt">
+
+<tr class="form-row">
+  <td class="receiver">
+    <p class="number-text">
+      <span>Bill to</span>
+    </p>
+    <div class="mb-6">
+      <div class="mt-2">{{ form.receiver }}</div>
+      {% if form.receiver.errors %}
+      <div class="text-red-600 text-sm mt-1">
+        {% for error in form.receiver.errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
       </div>
+      {% endif %}
     </div>
+  </td>
+  <td class="number-facture">
+    <p class="number-text">
+      <span>Number facture</span>
+    </p>
+    <div class="mb-6">
+      <div class="mt-2">{{ form.number_facture }}</div>
+      {% if form.number_facture.errors %}
+      <div class="text-red-600 text-sm mt-1">
+        {% for error in form.number_facture.errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </td>
+  <td class="date">
+    <p class="label-text">
+      <span>DATE</span>
+    </p>
+    <div class="mt-2">{{ form.date }}</div>
+    {% if form.date.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.date.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+
+
+  <td class="firm-name">
+    <p class="label-text">
+      <span>Firm name</span>
+    </p>
+    <div class="mt-2">{{ form.firm_name }}</div>
+    {% if form.firm_name.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.firm_name.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+
+  <td class="address">
+    <p class="label-text">
+      <span>Address</span>
+    </p>
+    <div class="form-wrapper">
+      <div class="mt-2 form-field">
+        {{ form.address }}
+      </div>
+      {% if form.address.errors %}
+      <div class="error-messages">
+        {% for error in form.address.errors %}
+        <p class="break-words">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </td>
+
+                    <td class="sku">
+    <p class="label-text">
+      <span>SKU</span>
+    </p>
+    <div class="mt-2">{{ form.sku }}</div>
+    {% if form.sku.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.sku.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+                    <td class="description">
+    <p class="label-text">
+      <span>Description</span>
+    </p>
+    <div class="mt-2">{{ form.description }}</div>
+    {% if form.description.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.description.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+
+                    <td class="specification">
+    <p class="label-text">
+      <span>Specification</span>
+    </p>
+    <div class="mt-2">{{ form.specification }}</div>
+    {% if form.specification.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.specification.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+
+                  <td class="quantity">
+    <p class="label-text">
+      <span>QTY</span>
+    </p>
+    <div class="mt-2">{{ form.quantity }}</div>
+    {% if form.quantity.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.quantity.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+
+      <td class="percent">
+    <p class="label-text">
+      <span>UNIT PRICE USD</span>
+    </p>
+    <div class="mt-2">{{ form.percent }}</div>
+    {% if form.percent.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.percent.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+
+                        <td class="quantity_after_percent">
+    <p class="label-text">
+      <span>AMOUNT</span>
+    </p>
+    <div class="mt-2">{{ form.quantity_after_percent }}</div>
+    {% if form.quantity_after_percent.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.quantity_after_percent.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+
+                                          <td class="total_tax">
+    <p class="label-text">
+      <span>Shipping fee</span>
+    </p>
+    <div class="mt-2">{{ form.total_tax }}</div>
+    {% if form.total_tax.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.total_tax.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+                  <td class="net_pay">
+    <p class="label-text">
+      <span>Total</span>
+    </p>
+    <div class="mt-2">{{ form.net_pay }}</div>
+    {% if form.net_pay.errors %}
+    <div class="text-red-600 text-sm mt-1">
+      {% for error in form.net_pay.errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </td>
+                    <td class="account_number">
+    <p class="number-text">
+      <span>Account number</span>
+    </p>
+    <div class="mb-6">
+      <div class="mt-2">{{ form.account_number }}</div>
+      {% if form.account_number.errors %}
+      <div class="text-red-600 text-sm mt-1">
+        {% for error in form.account_number.errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </td>
+
+          </table>
+<div class="centered-container">
+  <p class="frame-contents">
+    <strong><span class="font-Arial"> </span></strong>
+  </p>
+  <p class="frame-contents margin-right-318">
+    <strong><span class="font-Arial">Say Total:</span></strong>
+    <strong><em><span class="font-Arial"></span></em></strong>
+    {{ form.total_sum_en }}
+  </p>
+</div>
+
+<div class="centered-container-submit">
+  <div class="mt-8">
+    <button
+      type="submit"
+      value="update"
+      class="submit-btn"
+    >
+      Submit
+    </button>
+  </div>
+</div>
+
+<div class="footer">
+  <p class="footer-text">
+    <strong><span class="font-Arial">Système de Paiement</span></strong>
+  </p>
+  <p class="footer-normal-text small-font">
+    <strong><span class="font-Arial">PM Solution SARL</span></strong>
+    <span class="font-Arial">Rue Soumiya, Residence Shehrazade III, 5EME Etage, N22, Palmier – Casablanca</span>
+  </p>
+  <p class="footer-normal-text small-font">
+    <span class="font-Arial">Tél: 00 212 6 80 00 35 04</span>&nbsp;&nbsp;&nbsp;
+    <span class="font-Arial">- Rc 362615 Patente 34794459, IF 20693849, ICE 001816862000051</span>
+  </p>
+  <p class="footer-normal-text small-font">
+    <span class="font-Arial">http://pms.ican24.net – e-mail: ican24net@gmail.com</span>
+  </p>
+  <p class="footer-normal-text">
+    <span class="font-Arial">Page 1 sur 1</span>
+  </p>
+</div>
+
+
+      </form>
+    </div>
+    {% if form.errors %}
+    <script>
+      const errors = [];
+      {% for field in form %}
+          {% for error in field.errors %}errors.push("{{ field.label }}: {{ error|escapejs }}");{% endfor %}
+      {% endfor %}
+
+      // Non-field errors
+      {% for error in form.non_field_errors %}errors.push("{{ error|escapejs }}");{% endfor %}
+
+      if (errors.length > 0) {
+          alert(errors.join("\n"));
+      }
+    </script>
+    {% endif %}
     <link
       rel="icon"
       href="{% static 'facture/images/favicon.ico' %}"

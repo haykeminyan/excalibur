@@ -585,6 +585,9 @@ text-align: center;
   font-size: 8pt;
   font-family: Arial, serif;
 }
+#id_quantity{
+  width: 100%;
+}
 /* Default layout for larger screens (1495px or above) */
 .form-row {
   display: grid;
@@ -612,10 +615,12 @@ td {
   margin-top: 10px;
 }
 
+
+
 /* For smaller screens (less than 1495px) */
 @media (max-width: 1498px) {
 
-#id_total_ttc, #id_date{
+#id_total_ttc, #id_date, #id_quantity, #id_receiver, #id_specification{
   width: 100%;
 }
 
@@ -627,6 +632,7 @@ td {
     margin-bottom: 15px; /* Adds space between the stacked rows */
   }
 }
+
 
 
 @media (max-width: 1250px) {
@@ -666,37 +672,14 @@ td {
 
 }
 @media (max-width: 1005px) {
- .date, .firm-name, .reference-new, .quantity, .quantity_after_percent, .total_tax, .deposit {
-width: 200%;
-}
 
   .form-row {
       grid-template-columns: repeat(2, 1fr); /* 3 columns */
   }
 
-  .text-2xl {
-font-size: 16px;
-}
-    .frame-contents.margin-right-318{
-#id_total_sum_fr{
-  width: 90%;
-}
-}
-
-
-
-    .form-row input,
-.form-row select,
-.form-row textarea {
-  width: 100%; /* Full width */
-  height: 38px; /* Consistent height */
-  padding: 8px; /* Inner padding for usability */
-  box-sizing: border-box; /* Ensure padding doesn't increase total dimensions */
-  font-size: 14px; /* Uniform text size */
-  line-height: 1.5; /* Consistent line height */
-  border: 1px solid #ccc; /* Optional: Add a border */
-  border-radius: 4px; /* Optional: Rounded corners */
-}
+  #id_description{
+    width: 100%;
+  }
 }
 
 
@@ -705,6 +688,9 @@ font-size: 16px;
    .date, .firm-name, .reference-new, .quantity, .quantity_after_percent, .total_tax, .deposit {
 width: 100%;
 }
+  #id_firm_name, #id_sku, #id_shipping_fee{
+    width: 100%;
+  }
   .frame-contents.margin-right-318{
     margin-right: 300px;
 #id_total_sum_fr{
@@ -720,7 +706,7 @@ transform: scale(0.6);
   .centered-container-submit{
     margin-right: 250px;
   }
-  #id_address{
+  #id_address, #id_account_number, #id_total_tax{
     width: 100%;
   }
 
@@ -728,6 +714,12 @@ transform: scale(0.6);
     grid-template-columns: 1fr; /* Stack fields in a single column */
   }
 }
-#id_date {
-width: 100%;
+#id_total_sum_en {
+  width: 400px;
+}
+
+@media (max-width: 1005px) {
+  .text-2xl {
+    font-size: 16px;
+  }
 }

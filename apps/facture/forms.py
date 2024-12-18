@@ -27,11 +27,12 @@ class LocalFactureForm(forms.ModelForm):
 class WorldFactureForm(forms.ModelForm):
     class Meta:
         model = WorldFacture
+        widgets = {
+            'owner': forms.HiddenInput(),
+            'date': forms.DateInput(attrs={'type': 'date'}),  # Explicitly specify date input type
+        }
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(WorldFactureForm, self).__init__(*args, **kwargs)
-        self.fields['number_facture'].label = 'Numero'
-        self.fields['quantity'].label = 'Quantityé'
-        self.fields['percent'].label = 'P.U.TTC'
-        self.fields['total_tax'].label = 'Total H.T.'
+        self.fields['receiver'].label = 'Bill to'

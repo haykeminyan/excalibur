@@ -22,6 +22,7 @@ class Facture(models.Model):
     )
     quantity_after_percent = models.FloatField()
     total_tax = models.FloatField()
+    net_pay = models.FloatField()
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -46,7 +47,6 @@ class LocalFacture(Facture):
     deposit = models.FloatField(blank=True, null=True)
     tax_ht = models.FloatField()
     total_ttc = models.FloatField()
-    net_pay = models.FloatField()
     total_sum_fr = models.CharField(max_length=255)
 
     def __str__(self) -> str:
@@ -62,9 +62,11 @@ class LocalFacture(Facture):
 
 class WorldFacture(Facture):
     account_number = models.IntegerField()
+    receiver = models.CharField(max_length=200, blank=True, null=True)
     sku = models.IntegerField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    description = models.CharField(max_length=255, default='Recharge Card and Express')
     specification = models.IntegerField(blank=True, null=True)
+    shipping_fee = models.FloatField(blank=True, null=True)
     total_sum_en = models.CharField(max_length=255)
 
     def __str__(self) -> str:
