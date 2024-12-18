@@ -15,7 +15,7 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{% static 'facture/css/local_list_facture.css' %}"
+      href="{% static 'facture/css/world_list_facture.css' %}"
     />
     {% endblock stylesheets %}
   </head>
@@ -133,6 +133,10 @@
         {% endblock scripts %}
 <div class="button-container">
   <!-- First button -->
+          <a href="{% url 'facture_local_list' %}" class="switch-facture">
+
+    Local Facture
+  </a>
   <a href="{% url 'facture_world_create' %}" class="create-filter-button">
     <svg
       class="w-4 h-4 mr-2"
