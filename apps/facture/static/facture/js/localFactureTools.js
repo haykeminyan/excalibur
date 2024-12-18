@@ -39,7 +39,7 @@ function deleteItem(pk) {
       .then((response) => {
         if (response.ok) {
           alert("Facture deleted successfully!");
-          location.reload(); // Refresh the page or handle as needed
+          window.location.href = '/facture/local/';
         } else {
           alert("Failed to delete facture.");
         }
