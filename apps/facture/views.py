@@ -32,7 +32,7 @@ class LocalFactureDetailView(BaseFactureDetailView):
 
 class WorldFactureDetailView(BaseFactureDetailView):
     model = WorldFacture
-    template_name = 'html/detail_world_local.html'
+    template_name = 'html/detail_facture_world.html'
 
 
 class AddLocalFacture(BaseFactureCreateView):

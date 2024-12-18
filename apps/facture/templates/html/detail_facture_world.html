@@ -1,9 +1,73 @@
-{{ facture }} xer
-<div>
-  <h2 class="text-xl font-bold text-gray-700">{{ facture.number_facture }}</h2>
-  <p class="text-gray-600">Date: {{ facture.created_date }}</p>
-  <p class="text-gray-600">Reference: {{ facture.reference }}</p>
-  <p class="text-gray-600">Total: {{ facture.total_payment_after_tax }}</p>
+{% load static %} {% block stylesheets %}
+<!-- Correct usage of static tag -->
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'facture/css/detail_facture_local.css' %}"
+/>
+{% endblock stylesheets %}
+        {% block scripts %}
+        <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
+        <script src="{% static 'facture/js/worldFactureTools.js' %}"></script>
+        {% endblock scripts %}
+<div class="facture-container">
+          <!-- Kebab Menu (Dropdown) -->
+          <div
+            class="dropdown"
+            style="position: absolute; top: 10px; right: 10px"
+          >
+            <button
+              class="dropdown-toggle"
+              aria-label="Actions"
+              onclick="toggleDropdown(this)"
+            >
+              &#x22EE;
+              <!-- Unicode for vertical ellipsis -->
+            </button>
+            <div class="dropdown-menu">
+              <!-- Update button -->
+              <button
+                class="dropdown-item"
+                id="update-button"
+                onclick="updateItem({{ facture.pk }})"
+              >
+                Update
+              </button>
+              <!-- Delete button -->
+              <button
+                class="dropdown-item"
+                id="delete-button"
+                onclick="deleteItem({{ facture.pk }})"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+  <h2 class="facture-title">Number facture: {{ facture.number_facture }}</h2>
+  <p class="facture-details">Firm name: {{ facture.firm_name }}</p>
+  <p class="facture-details">Address: {{ facture.address }}</p>
+  <!-- Displaying the existing fields -->
+  <p class="facture-details">Created Date: {{ facture.date }}</p>
+  <p class="facture-details">Reference: {{ facture.reference }}</p>
+  <p class="facture-details">Destination: {{ facture.description }}</p>
+  <p class="facture-details">Quantity: {{ facture.quantity }}</p>
+  <p class="facture-details">Percent: {{ facture.percent }}</p>
+  <p class="facture-details">
+    Quantity after percent: {{ facture.quantity_after_percent }}
+  </p>
+  <p class="facture-details">Total H.T.: {{ facture.total_ht }}</p>
+  <p class="facture-details">Total Tax: {{ facture.total_tax }}</p>
+  <p class="facture-details">
+    Total T.T.C: {{ facture.quantity_after_percent }}
+  </p>
+  <p class="facture-details">Deposit: {{ facture.deposit }}</p>
+  <p class="facture-details">Net a payer: {{ facture.net_pay }}</p>
+  <!-- Added missing fields -->
+  <!-- Update time (optional) -->
+  <p class="facture-details">Last Updated: {{ facture.update_time }}</p>
+  <a href="{% url 'generate-world-docx' facture.pk %}" class="btn btn-primary"
+    >Download DOCX</a
+  >
 </div>
 <link
   rel="icon"

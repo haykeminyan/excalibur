@@ -1,7 +1,46 @@
-LOCAL = 'local'
-WORLD = 'world'
 
-FACTURE_TYPE_CHOICES = [
-    (LOCAL, 'Local'),
-    (WORLD, 'World'),
+LOCAL_FIELDS = [
+    'number_facture',
+    'address',
+    'owner',
+    'date',
+    'firm_name',
+    'update_time',
+    'reference',
+    'destination',
+    'net_pay',
+    'quantity_after_percent',
+    'quantity',
+    'percent',
+    'deposit',
+    'tax_ht',
+    'total_tax',
+    'total_sum_fr',
+    'total_ttc',
+    'contract_date',
+    'account_number',
+]
+
+WORLD_FIELDS = [
+    'number_facture',
+    'address',
+    'owner',
+    'date',
+    'firm_name',
+    'update_time',
+    'reference',
+    'net_pay',
+    'quantity_after_percent',
+    'quantity',
+    'percent',
+    'deposit',
+    'total_tax',
+    'total_sum_en',
+    'total_ttc',
+    'contract_date',
+    'account_number',
+    'receiver',
+    'description',
+    'specification',
+    'sku',
 ]

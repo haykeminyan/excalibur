@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.urls import path
 
-from apps.facture.mixins import BaseFactureExportDocx
+from apps.facture.mixins import BaseFactureLocalExportDocx, BaseFactureWorldExportDocx
 from apps.facture.views import (
     AddLocalFacture,
     AddWorldFacture,
@@ -28,7 +28,7 @@ from apps.facture.views import (
     UpdateLocalFacture,
     UpdateWorldFacture,
     WorldFactureDetailView,
-    WorldFactureListView,
+    WorldFactureListView
 )
 
 urlpatterns = [
@@ -63,7 +63,12 @@ urlpatterns = [
     path('facture/world/<int:pk>/', WorldFactureDetailView.as_view(), name='facture_world_detail'),
     path(
         'facture/local/generate-docx/<int:pk>/',
-        BaseFactureExportDocx.as_view(),
-        name='generate-docx',
+        BaseFactureLocalExportDocx.as_view(),
+        name='generate-local-docx',
+    ),
+    path(
+        'facture/world/generate-docx/<int:pk>/',
+        BaseFactureWorldExportDocx.as_view(),
+        name='generate-world-docx',
     ),
 ]

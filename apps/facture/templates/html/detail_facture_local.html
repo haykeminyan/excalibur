@@ -8,7 +8,7 @@
 {% endblock stylesheets %}
         {% block scripts %}
         <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
-        <script src="{% static 'facture/js/tools.js' %}"></script>
+        <script src="{% static 'facture/js/localFactureTools.js' %}"></script>
         {% endblock scripts %}
 <div class="facture-container">
           <!-- Kebab Menu (Dropdown) -->
@@ -65,7 +65,7 @@
   <!-- Added missing fields -->
   <!-- Update time (optional) -->
   <p class="facture-details">Last Updated: {{ facture.update_time }}</p>
-  <a href="{% url 'generate-docx' facture.pk %}" class="btn btn-primary"
+  <a href="{% url 'generate-local-docx' facture.pk %}" class="btn btn-primary"
     >Download DOCX</a
   >
 </div>

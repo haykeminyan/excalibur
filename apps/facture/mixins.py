@@ -15,36 +15,16 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
-    UpdateView,
+    UpdateView, View,
 )
 from docx import Document
 
-
+from .constants import LOCAL_FIELDS, WORLD_FIELDS
+from .models import LocalFacture, WorldFacture
 from .parsing_docx import replace_placeholders_in_doc, set_font_size
 
 logger = logging.getLogger(__name__)
 
-ARRAY_OF_FIELDS = [
-    'number_facture',
-    'address',
-    'owner',
-    'date',
-    'firm_name',
-    'update_time',
-    'reference',
-    'destination',
-    'net_pay',
-    'quantity_after_percent',
-    'quantity',
-    'percent',
-    'deposit',
-    'tax_ht',
-    'total_tax',
-    'total_sum_fr',
-    'total_ttc',
-    'contract_date',
-    'account_number',
-]
 
 
 class CSRFExemptMixin:
@@ -177,43 +157,37 @@ class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+class BaseFactureLocalExportDocx(View):
+    local_template = 'facture/file_templates/file_input/Facture_template_Maroc.docx'
 
-class BaseFactureExportDocx(BaseFactureDetailView):
-    def get_facture(self, pk):
+    def generate_docx(self, facture_object, template_path):
         """
-        Fetch the facture object based on the provided pk (primary key).
+        Generate a DOCX file from the template and return it as a BytesIO stream.
         """
-        return get_object_or_404(self.model, pk=pk)
+        facture_dict = model_to_dict(facture_object)
+        template_path = finders.find(template_path)
+        doc = Document(template_path)
+
+        for field in LOCAL_FIELDS:
+            regex = re.compile(rf'{re.escape(field)}')
+            replace_placeholders_in_doc(doc, regex, facture_dict)
+
+        set_font_size(doc)
+        file_stream = io.BytesIO()
+        doc.save(file_stream)
+        file_stream.seek(0)
+        return file_stream
 
     def get(self, request, *args, **kwargs):
         """
         Handles the GET request to generate the DOCX file and return it as a downloadable response.
         """
-        # Fetch facture object and prepare the replace_dict as before
-        facture_object = self.get_facture(kwargs.get('pk'))
-        facture_dict = model_to_dict(facture_object)
+        # Fetch facture object
+        facture_object = get_object_or_404(LocalFacture, pk=kwargs.get('pk'))
 
-        # Load the DOCX template
-        template_path = finders.find(
-            'facture/file_templates/file_input/Facture_template_Maroc.docx',
-        )
-        doc = Document(template_path)
 
-        # Regex for placeholder matching with boundaries
-        # (handles optional spaces inside the curly braces)
-        for field in ARRAY_OF_FIELDS:
-            # Using \s* to match optional spaces inside the {{field}} placeholders
-            # Add word boundaries to ensure we match the entire placeholder exactly
-            regex = re.compile(rf'{re.escape(field)}')  # Matches {{field}} or {{ field }}
-
-            # Replace placeholders in the document
-            replace_placeholders_in_doc(doc, regex, facture_dict)
-        set_font_size(doc)
-
-        # Save the document to a BytesIO stream (in-memory file)
-        file_stream = io.BytesIO()
-        doc.save(file_stream)
-        file_stream.seek(0)  # Reset the pointer to the start of the file stream
+        # Generate the DOCX file
+        file_stream = self.generate_docx(facture_object, self.local_template)
 
         # Create the HTTP response for file download
         response = HttpResponse(
@@ -223,5 +197,47 @@ class BaseFactureExportDocx(BaseFactureDetailView):
         response['Content-Disposition'] = (
             f'attachment; filename="facture_{facture_object.pk}.docx"'
         )
+        return response
 
+
+class BaseFactureWorldExportDocx(View):
+    local_template = 'facture/file_templates/file_input/Facture_template_World.docx'
+
+    def generate_docx(self, facture_object, template_path):
+        """
+        Generate a DOCX file from the template and return it as a BytesIO stream.
+        """
+        facture_dict = model_to_dict(facture_object)
+        template_path = finders.find(template_path)
+        doc = Document(template_path)
+
+        for field in WORLD_FIELDS:
+            regex = re.compile(rf'{re.escape(field)}')
+            replace_placeholders_in_doc(doc, regex, facture_dict)
+
+        set_font_size(doc)
+        file_stream = io.BytesIO()
+        doc.save(file_stream)
+        file_stream.seek(0)
+        return file_stream
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles the GET request to generate the DOCX file and return it as a downloadable response.
+        """
+        # Fetch facture object
+        facture_object = get_object_or_404(WorldFacture, pk=kwargs.get('pk'))
+
+
+        # Generate the DOCX file
+        file_stream = self.generate_docx(facture_object, self.local_template)
+
+        # Create the HTTP response for file download
+        response = HttpResponse(
+            file_stream,
+            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        )
+        response['Content-Disposition'] = (
+            f'attachment; filename="facture_{facture_object.pk}.docx"'
+        )
         return response
