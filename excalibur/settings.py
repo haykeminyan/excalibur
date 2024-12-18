@@ -112,15 +112,13 @@ WSGI_APPLICATION = 'excalibur.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pmsolution_facture',  # Same as POSTGRES_DB
-        'USER': 'postgres',  # Same as POSTGRES_USER
-        'PASSWORD': 'postgres',  # Same as POSTGRES_PASSWORD
-        'HOST': 'database',  # Docker service name for PostgreSQL
-        'PORT': '5432',
-    },
+        'NAME': os.getenv('DB_NAME', 'default_db_name'),
+        'USER': os.getenv('DB_USER', 'default_user'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'default_password'),
+        'HOST': os.getenv('DB_HOST', 'default_database'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+    }
 }
-
-
 CACHES = {
     'default': {
         # "BACKEND": "django.core.cache.backends.redis.RedisCache",
