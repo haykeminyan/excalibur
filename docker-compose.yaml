@@ -102,7 +102,7 @@ services:
     volumes:
       - ./html:/var/www/html
       - ./ssl:/etc/letsencrypt
-      - ./challenge:/var/www/html/.well-known/acme-challenge
+      - ./html/.well-known/acme-challenge:/var/www/html/.well-known/acme-challenge
 
 
   certbot:
