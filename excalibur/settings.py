@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+dmib-8)00(@_hq$-8^mwx*dj@7m2*0#f^o%1+0_wij+^zy7+s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['pmsolution-facture.org', 'www.pmsolution-facture.org', 'localhost']
 INTERNAL_IPS = [
     '127.0.0.1',  # Localhost
     '172.17.0.1',  # Default Docker gateway (adjust if using a custom network)
@@ -163,7 +163,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 

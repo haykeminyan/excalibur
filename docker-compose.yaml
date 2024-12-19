@@ -98,6 +98,8 @@ services:
       retries: 3
     networks:
       - excalibur_network
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl  # Mount SSL certificates
 
 volumes:
   postgres_data:
