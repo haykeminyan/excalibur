@@ -112,7 +112,7 @@ WSGI_APPLICATION = 'excalibur.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'postgres'),
+        'NAME': os.getenv('POSTGRES_DB', 'pmsolution_facture'),
         'USER': os.getenv('POSTGRES_USER', 'default_user'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'default_password'),
         'HOST': os.getenv('POSTGRES_HOST', 'database'),

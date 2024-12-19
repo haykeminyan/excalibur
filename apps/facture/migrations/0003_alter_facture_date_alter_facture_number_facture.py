@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('facture', '0002_remove_facture_facture_type_alter_facture_date'),
+        ('facture', '0001_initial'),
     ]
 
     operations = [

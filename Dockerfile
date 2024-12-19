@@ -1,5 +1,5 @@
 # Stage 1: Builder Image
-FROM python:3.12 AS builder
+FROM python:3.13.1 AS builder
 
 # Set work directory
 WORKDIR /usr/src/app
@@ -20,7 +20,7 @@ COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
 
 # Stage 2: Production Image
-FROM python:3.12-slim
+FROM python:3.13.1-slim
 
 # Set work directory
 WORKDIR /usr/src/app
