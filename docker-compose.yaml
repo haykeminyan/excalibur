@@ -99,7 +99,7 @@ services:
     networks:
       - excalibur_network
     volumes:
-      - ./ssl:/etc/nginx/ssl  # Mount SSL certificates
+      - ./ssl:/usr/src/app/nginx/ssl  # Mount SSL certificates
 
 volumes:
   postgres_data:
