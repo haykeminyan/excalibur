@@ -54,8 +54,8 @@ services:
       - ./excalibur:/usr/src/app/excalibur
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
-      - ./nginx/ssl:/usr/src/app/nginx/ssl
-      - shared_ssl:/usr/src/app/nginx/ssl
+      - ./nginx/ssl:/usr/src/app/nginx/ssl  # Mount SSL directory from host to the container
+      - shared_ssl:/usr/src/app/nginx/ssl   # Mount shared volume containing the SSL files
     restart: always
     environment:
       - POSTGRES_NAME=${POSTGRES_DB}
@@ -101,14 +101,14 @@ services:
     networks:
       - excalibur_network
     volumes:
-      - shared_ssl:/usr/src/app/nginx/ssl  # Mount SSL certificates
+      - shared_ssl:/usr/src/app/nginx/ssl  # Mount shared volume containing the SSL files
 
 volumes:
+  shared_ssl:
   postgres_data:
   redis_data:
   static_volume:
   media_volume:
-  shared_ssl:
 
 networks:
   excalibur_network:
