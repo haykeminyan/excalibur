@@ -103,7 +103,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'options': '-c statement_timeout=10000'
         },
 
     },
