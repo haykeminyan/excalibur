@@ -818,4 +818,13 @@ background: linear-gradient( 90deg, rosybrown, brown );
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-
+@media (max-width: 1016px) {
+  .create-filter-button {
+    margin-left: 80px;
+  }
+}
+@media (max-width: 650px) {
+  .create-filter-button {
+    left: 350px;
+  }
+}
