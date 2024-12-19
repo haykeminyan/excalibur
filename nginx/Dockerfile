@@ -12,9 +12,9 @@ RUN apt-get update -y && \
 EXPOSE 80 443
 
 # Copy Nginx configuration and SSL certificates
-COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./ssl/cert.crt /etc/nginx/ssl/cert.crt
-COPY ./ssl/privkey.pem /etc/nginx/ssl/privkey.pem
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY ssl/cert.crt /etc/nginx/ssl/cert.crt
+COPY ssl/privkey.pem /etc/nginx/ssl/privkey.pem
 
 # Set stop signal
 STOPSIGNAL SIGTERM
