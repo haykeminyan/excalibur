@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   database:
     image: postgres:16
@@ -37,7 +39,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "
+        if [ $ENVIRONMENT = 'production' ]; then
+          gunicorn excalibur.wsgi:application --bind 0.0.0.0:8000;
+        else
+          python manage.py runserver 0.0.0.0:8000;
+        fi
+      "
     volumes:
       - ./apps/facture:/usr/src/app/apps/facture
       - ./apps/deduction:/usr/src/app/apps/deduction
@@ -53,6 +62,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DJANGO_SETTINGS_MODULE=excalibur.settings
+      - ENVIRONMENT=${ENVIRONMENT:-development}  # Default to 'development' if ENVIRONMENT is not set
     depends_on:
       database:
         condition: service_healthy
@@ -80,15 +90,14 @@ services:
       - "8443:443"
     depends_on:
       - excalibur
-    restart: always  # Auto-restart on failure or Docker daemon restart
-    healthcheck: # Add health checks to ensure service availability
+    restart: always
+    healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:80" ]
       interval: 30s
       timeout: 10s
       retries: 3
-    networks: # Define a custom network for better isolation
+    networks:
       - excalibur_network
-
 
 volumes:
   postgres_data:
@@ -98,4 +107,4 @@ volumes:
 
 networks:
   excalibur_network:
-    driver: bridge  # Explicitly define the network driver if needed (default: bridge)
+    driver: bridge
