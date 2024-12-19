@@ -100,7 +100,17 @@ services:
     networks:
       - excalibur_network
     volumes:
-      - shared_ssl:/usr/src/app/nginx/ssl  # Use the shared volume containing the SSL files
+      - ./nginx/ssl:/etc/letsencrypt
+      - ./nginx/html:/usr/share/nginx/html
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./nginx/ssl:/etc/letsencrypt  # Save certificates
+      - ./nginx/html:/var/www/html    # Path for challenges
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do sleep 5; done;'
+
 
 volumes:
   postgres_data:
