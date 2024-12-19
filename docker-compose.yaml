@@ -100,8 +100,10 @@ services:
     networks:
       - excalibur_network
     volumes:
+      - ./nginx/html:/var/www/html
       - ./nginx/ssl:/etc/letsencrypt
-      - ./nginx/html:/usr/share/nginx/html
+      - ./challenge:/var/www/html/.well-known/acme-challenge
+
 
   certbot:
     image: certbot/certbot:latest
