@@ -105,10 +105,7 @@ services:
 
 volumes:
   shared_ssl:
-  postgres_data:
-  redis_data:
-  static_volume:
-  media_volume:
+
 
 networks:
   excalibur_network:
