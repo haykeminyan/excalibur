@@ -55,12 +55,16 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
     },
 }
 
@@ -99,7 +103,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'options': '-c statement_timeout=10000'
         },
+
     },
 ]
 
