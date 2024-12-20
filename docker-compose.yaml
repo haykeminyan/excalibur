@@ -103,6 +103,7 @@ services:
       - ./html:/var/www/html
       - ./ssl:/etc/letsencrypt
       - ./html/.well-known/acme-challenge:/var/www/html/.well-known/acme-challenge
+    working_dir: /var/www/html
 
 
   certbot:
