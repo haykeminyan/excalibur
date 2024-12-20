@@ -23,6 +23,9 @@ RUN mkdir -p /etc/nginx/ssl && \
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY html/ /var/www/html/
 
+RUN apt-get update -y && \
+    apt-get install -y cron
+
 # Ensure permissions are correct for Certbot and Nginx
 RUN chmod -R 755 /var/www/html && \
     chmod -R 755 /etc/nginx/ssl
