@@ -22,6 +22,7 @@ RUN mkdir -p /etc/nginx/ssl && \
 
 # Copy Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY ./html/index.html /var/www/html/index.html
 
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443
