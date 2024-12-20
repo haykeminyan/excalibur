@@ -100,10 +100,9 @@ services:
     networks:
       - excalibur_network
     volumes:
-      - ./html:/var/www/html
-      - ./ssl:/etc/letsencrypt
-      - ./html/.well-known/acme-challenge:/var/www/html/.well-known/acme-challenge
-    working_dir: /var/www/html
+      - ./nginx/html:/var/www/html  # Ensure ./html on the host has the right files
+      - ./nginx/ssl:/etc/letsencrypt  # Path for certificates
+      - ./nginx/html/.well-known/acme-challenge:/var/www/html/.well-known/acme-challenge  # Challenge files directory
 
 
   certbot:
