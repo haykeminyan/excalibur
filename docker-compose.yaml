@@ -100,7 +100,7 @@ services:
       - excalibur_network
     volumes:
       - ./html:/var/www/html  # Mount ./html to serve .well-known
-      - ./nginx/ssl:/etc/nginx/ssl  # Mount SSL directory for certs
+      - ./ssl:/etc/nginx/ssl  # Mount SSL directory for certs
 
 volumes:
   postgres_data:
