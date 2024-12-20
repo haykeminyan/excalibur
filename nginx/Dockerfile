@@ -24,7 +24,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY html/ /var/www/html/
 
 RUN apt-get update -y && \
-    apt-get install -y cron && apt-get install vim
+    apt-get install -y cron && apt-get install -y vim
 
 # Ensure permissions are correct for Certbot and Nginx
 RUN chmod -R 755 /var/www/html && \
