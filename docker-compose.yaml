@@ -99,7 +99,7 @@ services:
     networks:
       - excalibur_network
     volumes:
-      - ./html:/var/www/html  # Ensure ./html on the host has the right files
+      - ./html:/usr/share/nginx/html  # Ensure ./html on the host has the right files
 
 
 volumes:
