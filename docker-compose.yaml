@@ -54,7 +54,6 @@ services:
       - ./excalibur:/usr/src/app/excalibur
       - static_volume:/usr/src/app/static
       - media_volume:/usr/src/app/media
-      - shared_ssl:/usr/src/app/nginx/ssl  # Mount the shared volume for SSL certificates
     restart: always
     environment:
       - POSTGRES_NAME=${POSTGRES_DB}
