@@ -8,13 +8,19 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* || { echo "Installation failed"; exit 1; }
 
-# Expose HTTP and HTTPS ports
-EXPOSE 80 443
+
+RUN mkdir -p /etc/nginx/ssl && \
+    openssl genpkey -algorithm RSA -out /etc/nginx/ssl/selfsigned.key && \
+    openssl req -new -key /etc/nginx/ssl/selfsigned.key -out /etc/nginx/ssl/selfsigned.csr && \
+    openssl req -x509 -key /etc/nginx/ssl/selfsigned.key -in /etc/nginx/ssl/selfsigned.csr -out /etc/nginx/ssl/selfsigned.crt -days 365
 
 # Copy Nginx configuration and SSL certificates
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY ssl/cert.crt /etc/nginx/ssl/cert.crt
-COPY ssl/privkey.pem /etc/nginx/ssl/privkey.pem
+
+
+
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
 
 # Set stop signal
 STOPSIGNAL SIGTERM

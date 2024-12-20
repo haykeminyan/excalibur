@@ -101,17 +101,6 @@ services:
       - excalibur_network
     volumes:
       - ./html:/var/www/html  # Ensure ./html on the host has the right files
-      - ./html/.well-known/acme-challenge:/var/www/html/.well-known/acme-challenge  # Challenge files directory
-      - ./ssl:/etc/letsencrypt  # Path for certificates
-
-
-  certbot:
-    image: certbot/certbot:latest
-    container_name: certbot
-    volumes:
-      - ./nginx/ssl:/etc/letsencrypt  # Save certificates
-      - ./nginx/html:/var/www/html    # Path for challenges
-    entrypoint: /bin/sh -c 'trap exit TERM; while :; do sleep 5; done;'
 
 
 volumes:
@@ -119,7 +108,6 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
-  shared_ssl:  # Shared volume for SSL certificates
 
 networks:
   excalibur_network:
