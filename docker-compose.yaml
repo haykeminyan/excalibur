@@ -101,8 +101,8 @@ services:
       - excalibur_network
     volumes:
       - ./html:/var/www/html  # Ensure ./html on the host has the right files
-      - ./ssl:/etc/letsencrypt  # Path for certificates
       - ./html/.well-known/acme-challenge:/var/www/html/.well-known/acme-challenge  # Challenge files directory
+      - ./ssl:/etc/letsencrypt  # Path for certificates
 
 
   certbot:
