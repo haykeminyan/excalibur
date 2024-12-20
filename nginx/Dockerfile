@@ -23,6 +23,10 @@ RUN mkdir -p /etc/nginx/ssl && \
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY html/ /var/www/html/
 
+# Ensure permissions are correct for Certbot and Nginx
+RUN chmod -R 755 /var/www/html && \
+    chmod -R 755 /etc/nginx/ssl
+
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443
 
