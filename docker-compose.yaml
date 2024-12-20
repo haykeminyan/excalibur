@@ -99,8 +99,8 @@ services:
     networks:
       - excalibur_network
     volumes:
-      - ./html:/var/www/html # Ensure ./html on the host has the right files
-
+      - ./html:/var/www/html  # Ensure ./html on the host has the right files
+      - ./nginx/ssl:/etc/nginx/ssl  # Mount SSL directory for certs
 
 volumes:
   postgres_data:
