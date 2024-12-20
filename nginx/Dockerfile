@@ -5,8 +5,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install required packages
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends python3-certbot-nginx nginx openssl && \
+    apt-get upgrade -y openssl nginx && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* || { echo "Installation failed"; exit 1; }
+
 
 # Create SSL directory and generate self-signed certificate with OpenSSL
 RUN mkdir -p /etc/nginx/ssl && \
