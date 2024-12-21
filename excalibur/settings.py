@@ -34,7 +34,7 @@ INTERNAL_IPS = [
 
 # Application definition
 LOGIN_REDIRECT_URL = 'main:main_menu'
-LOGOUT_REDIRECT_URL = 'main:main_menu'
+LOGOUT_REDIRECT_URL = 'users:login'
 LOGIN_URL = 'users:login'
 
 INSTALLED_APPS = [
