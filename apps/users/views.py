@@ -12,7 +12,7 @@ class LoginUser(LoginView):
     extra_context = {'title': 'Authorization'}
 
     def get_success_url(self):
-        return reverse_lazy('local_list')
+        return reverse_lazy('apps.facture:local_list')
 
 
 class LogoutUser(LogoutView):
