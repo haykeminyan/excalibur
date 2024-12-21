@@ -33,8 +33,8 @@ INTERNAL_IPS = [
 ]
 
 # Application definition
-LOGIN_REDIRECT_URL = 'users:main_menu'
-LOGOUT_REDIRECT_URL = 'users:main_menu'
+LOGIN_REDIRECT_URL = 'main:main_menu'
+LOGOUT_REDIRECT_URL = 'main:main_menu'
 LOGIN_URL = 'users:login'
 
 INSTALLED_APPS = [
