@@ -43,37 +43,37 @@ class AddLocalFacture(BaseFactureCreateView):
     model = LocalFacture
     form_class = LocalFactureForm
     template_name = 'html/create_facture_local.html'
-    success_url = reverse_lazy('local_list')
+    success_url = reverse_lazy('apps.facture:local_list')
 
 
 class AddWorldFacture(BaseFactureCreateView):
     model = WorldFacture
     form_class = WorldFactureForm
     template_name = 'html/create_facture_world.html'
-    success_url = reverse_lazy('world_list')
+    success_url = reverse_lazy('apps.facture:world_list')
 
 
 class UpdateLocalFacture(BaseFactureUpdateView):
     model = LocalFacture
     form_class = LocalFactureForm
     template_name = 'html/create_facture_local.html'
-    success_url = reverse_lazy('local_list')
+    success_url = reverse_lazy('apps.facture:local_list')
 
 
 class UpdateWorldFacture(BaseFactureUpdateView):
     model = WorldFacture
     form_class = WorldFactureForm
     template_name = 'html/create_facture_world.html'
-    success_url = reverse_lazy('world_list')
+    success_url = reverse_lazy('apps.facture:world_list')
 
 
 class DeleteLocalFacture(BaseFactureDeleteView):
     model = LocalFacture
     template_name = 'html/create_facture_local.html'
-    success_url = reverse_lazy('local_list')
+    success_url = reverse_lazy('apps.facture:local_list')
 
 
 class DeleteWorldFacture(BaseFactureDeleteView):
     model = WorldFacture
     template_name = 'html/create_facture_world.html'
-    success_url = reverse_lazy('world_list')
+    success_url = reverse_lazy('apps.facture:world_list')
