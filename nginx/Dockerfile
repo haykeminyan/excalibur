@@ -4,19 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install required packages
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends \
-    python3-certbot-nginx \
-    openssl \
-    cron \
-    vim \
-    ca-certificates \
-    curl && \
-    # Add the official Nginx repository
-    curl -fsSL https://nginx.org/packages/keys/nginx.asc | tee /etc/apt/trusted.gpg.d/nginx.asc && \
-    echo "deb http://nginx.org/packages/mainline/ubuntu/ $(lsb_release -cs) nginx" > /etc/apt/sources.list.d/nginx.list && \
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends nginx && \
-    # Upgrade Nginx and OpenSSL to latest version
+    apt-get install -y --no-install-recommends python3-certbot-nginx nginx openssl && \
     apt-get upgrade -y openssl nginx && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* || { echo "Installation failed"; exit 1; }
@@ -34,6 +22,9 @@ RUN mkdir -p /etc/nginx/ssl && \
 # Copy Nginx configuration and HTML files
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY html/ /var/www/html/
+
+RUN apt-get update -y && \
+    apt-get install -y cron && apt-get install -y vim
 
 # Ensure permissions are correct for Certbot and Nginx
 RUN chmod -R 755 /var/www/html && \
