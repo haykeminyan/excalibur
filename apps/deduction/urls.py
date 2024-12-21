@@ -15,16 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
-from django.shortcuts import redirect
-from django.urls import include, path
+from django.urls import path
 
+from apps.deduction import views
+
+
+app_name = 'apps.deduction'
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', lambda request: redirect('/main/')),  # This will redirect to /main
-    path('facture/', include('apps.facture.urls', namespace='facture')),
-    path('deduction/', include('apps.deduction.urls', namespace='deduction')),
-    path('main/', include('apps.main.urls', namespace='main')),
-    path('users/', include('apps.users.urls', namespace='users')),
-    path('__debug__/', include('debug_toolbar.urls')),
+    path('', views.DeductionList.as_view(), name='deduction_list')
 ]

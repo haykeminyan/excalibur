@@ -33,8 +33,8 @@ INTERNAL_IPS = [
 ]
 
 # Application definition
-LOGIN_REDIRECT_URL = 'facture_local_list'
-LOGOUT_REDIRECT_URL = 'facture_local_list'
+LOGIN_REDIRECT_URL = 'main_menu'
+LOGOUT_REDIRECT_URL = 'main_menu'
 LOGIN_URL = 'users:login'
 
 INSTALLED_APPS = [
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'apps.main',
     'apps.deduction',
     'apps.facture',
     'apps.users',
@@ -155,6 +156,7 @@ HOME_TEMPLATES = [
     os.path.join(BASE_DIR, 'facture', 'templates'),
     os.path.join(BASE_DIR, 'deduction', 'templates'),
     os.path.join(BASE_DIR, 'users', 'templates'),
+    os.path.join(BASE_DIR, 'main', 'templates'),
 ]
 
 # Internationalization

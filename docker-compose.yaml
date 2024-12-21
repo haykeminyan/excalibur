@@ -51,6 +51,7 @@ services:
       - ./apps/facture:/usr/src/app/apps/facture
       - ./apps/deduction:/usr/src/app/apps/deduction
       - ./apps/users:/usr/src/app/apps/users
+      - ./apps/main:/usr/src/app/apps/main
       - ./excalibur:/usr/src/app/excalibur
       - static_volume:/var/www/staticfiles  # This is where the static files will be stored
       - media_volume:/usr/src/app/media

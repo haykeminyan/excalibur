@@ -133,11 +133,7 @@
         {% endblock scripts %}
 <div class="button-container">
   <!-- First button -->
-      <a href="{% url 'facture_world_list' %}" class="switch-facture">
-
-    World Facture
-  </a>
-  <a href="{% url 'facture_local_create' %}" class="create-filter-button">
+  <a href="{% url 'apps.facture:local_create' %}" class="create-filter-button">
     <svg
       class="w-4 h-4 mr-2"
       fill="none"
@@ -156,18 +152,16 @@
   </a>
 
   <!-- Second button -->
-  <form method="post" action="{% url 'users:logout' %}">
+  <form method="post" action="{% url 'apps.users:logout' %}">
     {% csrf_token %}
     <button type="submit" class="logout-button">Logout</button>
   </form>
 </div>
 
       </div>
-      <img
-        src="{% static 'facture/images/logo.png' %}"
-        alt="logo"
-        class="top-left-logo"
-      />
+<a href="{% url 'apps.main:main_menu' %}">
+    <img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo" />
+</a>
       <!-- Factures List -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for facture in factures %}
@@ -218,7 +212,7 @@
               </div>
             </div>
             <div class="facture-container" style="position: relative">
-              <a href="{% url 'facture_local_detail' facture.id %}">
+              <a href="{% url 'apps.facture:local_detail' facture.id %}">
                 <h2 class="facture-title">
                   Number facture: {{ facture.number_facture }}
                 </h2>

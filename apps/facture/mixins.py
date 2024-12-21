@@ -37,7 +37,7 @@ class CSRFExemptMixin:
         return super().dispatch(*args, **kwargs)
 
 
-class BaseFactureListView(CSRFExemptMixin, LoginRequiredMixin, ListView):
+class BaseFactureListView(LoginRequiredMixin, ListView):
     context_object_name = 'factures'
     paginate_by = 3
 
@@ -57,7 +57,7 @@ class BaseFactureListView(CSRFExemptMixin, LoginRequiredMixin, ListView):
         return context
 
 
-class BaseFactureCreateView(CSRFExemptMixin, LoginRequiredMixin, CreateView):
+class BaseFactureCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('success_url')  # Update this as needed
 
     def get_context_data(self, **kwargs):
@@ -98,7 +98,7 @@ class BaseFactureCreateView(CSRFExemptMixin, LoginRequiredMixin, CreateView):
 
 
 # Base views for shared logic
-class BaseFactureUpdateView(CSRFExemptMixin, LoginRequiredMixin, UpdateView):
+class BaseFactureUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -126,7 +126,7 @@ class BaseFactureUpdateView(CSRFExemptMixin, LoginRequiredMixin, UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class BaseFactureDeleteView(CSRFExemptMixin, LoginRequiredMixin, DeleteView):
+class BaseFactureDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -143,7 +143,7 @@ class BaseFactureDeleteView(CSRFExemptMixin, LoginRequiredMixin, DeleteView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
+class BaseFactureDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'facture'
     slug_url_kwarg = 'pk'
 
@@ -157,7 +157,7 @@ class BaseFactureDetailView(CSRFExemptMixin, LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
-class BaseFactureLocalExportDocx(View):
+class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
     local_template = 'facture/file_templates/file_input/Facture_template_Maroc.docx'
 
     def generate_docx(self, facture_object, template_path):
@@ -195,12 +195,12 @@ class BaseFactureLocalExportDocx(View):
             content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         )
         response['Content-Disposition'] = (
-            f'attachment; filename="facture_{facture_object.pk}.docx"'
+            f'attachment; filename="facture_{facture_object.number_facture}.docx"'
         )
         return response
 
 
-class BaseFactureWorldExportDocx(View):
+class BaseFactureWorldExportDocx(LoginRequiredMixin, View):
     local_template = 'facture/file_templates/file_input/Facture_template_World.docx'
 
     def generate_docx(self, facture_object, template_path):
@@ -238,6 +238,6 @@ class BaseFactureWorldExportDocx(View):
             content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         )
         response['Content-Disposition'] = (
-            f'attachment; filename="facture_{facture_object.pk}.docx"'
+            f'attachment; filename="facture_{facture_object.number_facture}.docx"'
         )
         return response

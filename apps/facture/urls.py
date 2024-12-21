@@ -31,43 +31,44 @@ from apps.facture.views import (
     WorldFactureListView
 )
 
+app_name = 'apps.facture'
 urlpatterns = [
     # Facture creation
-    path('facture/local/create/', AddLocalFacture.as_view(), name='facture_local_create'),
-    path('facture/world/create/', AddWorldFacture.as_view(), name='facture_world_create'),
+    path('local/create/', AddLocalFacture.as_view(), name='local_create'),
+    path('world/create/', AddWorldFacture.as_view(), name='world_create'),
     path(
-        'facture/local/update/<int:pk>/',
+        'local/update/<int:pk>/',
         UpdateLocalFacture.as_view(),
-        name='facture_local_update',
+        name='local_update',
     ),
     path(
-        'facture/world/update/<int:pk>/',
+        'world/update/<int:pk>/',
         UpdateWorldFacture.as_view(),
-        name='facture_world_update',
+        name='world_update',
     ),
     path(
-        'facture/local/delete/<int:pk>/',
+        'local/delete/<int:pk>/',
         DeleteLocalFacture.as_view(),
-        name='facture_local_delete',
+        name='local_delete',
     ),
     path(
-        'facture/world/delete/<int:pk>/',
+        'world/delete/<int:pk>/',
         DeleteWorldFacture.as_view(),
-        name='facture_world_update',
+        name='world_update',
     ),
     # Facture listing
-    path('facture/local/', LocalFactureListView.as_view(), name='facture_local_list'),
-    path('facture/world/', WorldFactureListView.as_view(), name='facture_world_list'),
+    path('local/', LocalFactureListView.as_view(), name='local_list'),
+    path('world/', WorldFactureListView.as_view(), name='world_list'),
     # Facture details
-    path('facture/local/<int:pk>/', LocalFactureDetailView.as_view(), name='facture_local_detail'),
-    path('facture/world/<int:pk>/', WorldFactureDetailView.as_view(), name='facture_world_detail'),
+    path('local/<int:pk>/', LocalFactureDetailView.as_view(), name='local_detail'),
+    path('world/<int:pk>/', WorldFactureDetailView.as_view(), name='world_detail'),
     path(
-        'facture/local/generate-docx/<int:pk>/',
+        'local/generate-docx/<int:pk>/',
         BaseFactureLocalExportDocx.as_view(),
         name='generate-local-docx',
     ),
     path(
-        'facture/world/generate-docx/<int:pk>/',
+        'world/generate-docx/<int:pk>/',
         BaseFactureWorldExportDocx.as_view(),
         name='generate-world-docx',
     ),

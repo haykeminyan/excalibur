@@ -795,22 +795,7 @@ button:focus {
 .dropdown{
   min-width: 20px;
 }
-  .switch-facture {
-    position: fixed;  /* Fix it to the screen */
-top: 26px;
-  left: 200px;
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;  /* Some padding around the text */
-background: linear-gradient( 90deg, rosybrown, brown );
-  border: none;
-  border-radius: 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    font-weight: bold;
-    text-decoration: none; /* Remove underline */
-    color: #333;          /* Text color */
 
-  }
 
 /* Active (click) effect */
 .create-filter-button:active {

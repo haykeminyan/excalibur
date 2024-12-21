@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block stylesheets %}
+    <!-- Correct usage of static tag -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'main/css/main_menu.css' %}"
+    />
+    {% endblock stylesheets %}
+</head>
+<body>
+      <img
+        src="{% static 'facture/images/logo.png' %}"
+        alt="logo"
+        class="top-left-logo"
+      />
+    <div class="menu-container">
+
+        <!-- Button 1 with link -->
+        <a href="{% url 'apps.facture:local_list' %}" class="menu-button">Local Facture</a>
+
+        <!-- Button 2 with link -->
+        <a href="{% url 'apps.facture:world_list' %}" class="menu-button">World Facture</a>
+         <a href="{% url 'apps.deduction:deduction_list' %}" class="menu-button">Deductions</a>
+
+    </div>
+</body>
+</html>
