@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+dmib-8)00(@_hq$-8^mwx*dj@7m2*0#f^o%1+0_wij+^zy7+s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['pmsolution-facture.org', 'www.pmsolution-facture.org', 'localhost', '127.0.0.1', '66.29.142.34', '0.0.0.0']
 INTERNAL_IPS = [
