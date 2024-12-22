@@ -3,6 +3,9 @@
 # Start Nginx in the background
 nginx &
 
+# Capture the Nginx process PID so we can wait on it later
+NGINX_PID=$!
+
 # Wait for Nginx to start fully
 sleep 5
 
@@ -12,5 +15,5 @@ certbot --nginx -d pmsolution-facture.org -d www.pmsolution-facture.org --email 
 # Reload Nginx to apply the new SSL certificates
 nginx -s reload
 
-# Keep the Nginx process running in the foreground
-wait $(cat /var/run/nginx.pid)
+# Wait for Nginx to stop gracefully
+wait $NGINX_PID
