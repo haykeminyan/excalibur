@@ -100,9 +100,8 @@ services:
     networks:
       - excalibur_network
     volumes:
-      - ./nginx/html:/var/www/html  # For Let's Encrypt challenges
-      - ./nginx/ssl:/etc/nginx/ssl  # For SSL certificates
-      - ./letsencrypt:/etc/letsencrypt  # Persist certificates
+      - ./nginx:/etc/nginx  # Mount Nginx config
+      - ./letsencrypt:/etc/letsencrypt  # Mount Certbot certificates
     environment:
       - CERTBOT_DOMAIN=pmsolution-facture.org
       - CERTBOT_EMAIL=ibhayk@gmail.com
