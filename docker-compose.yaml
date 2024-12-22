@@ -86,7 +86,7 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    command: /bin/bash
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -102,15 +102,6 @@ services:
     volumes:
       - ./nginx:/etc/nginx   # Mount Nginx config
       - ./letsencrypt:/etc/letsencrypt  # Mount Certbot certificates
-    environment:
-      - CERTBOT_DOMAIN=pmsolution-facture.org
-      - CERTBOT_EMAIL=ibhayk@gmail.com
-    entrypoint: >
-      sh -c "
-        nginx &&
-        certbot --nginx -d $CERTBOT_DOMAIN --email $CERTBOT_EMAIL --agree-tos --no-eff-email &&
-        nginx -s reload || exit 1
-      "
 
 
 volumes:
