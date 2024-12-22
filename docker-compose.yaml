@@ -92,7 +92,6 @@ services:
       - "443:443"
     depends_on:
       - excalibur
-    restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "https://127.0.0.1"]
       interval: 30s
