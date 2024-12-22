@@ -102,6 +102,17 @@ services:
     volumes:
       - ./nginx/html:/var/www/html  # For Let's Encrypt challenges
       - ./nginx/ssl:/etc/nginx/ssl  # For SSL certificates
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot/ --email ibhayk@gmail.com --agree-tos --no-eff-email -d pmsolution-facture.org -d www.pmsolution-facture.org
+    depends_on:
+      - nginx
 
 volumes:
   postgres_data:
