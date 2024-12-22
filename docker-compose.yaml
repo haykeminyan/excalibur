@@ -102,12 +102,23 @@ services:
     volumes:
       - ./nginx/html:/var/www/html  # For Let's Encrypt challenges
       - ./nginx/ssl:/etc/nginx/ssl  # For SSL certificates
+      - ./letsencrypt:/etc/letsencrypt  # Persist certificates
+    environment:
+      - CERTBOT_DOMAIN=pmsolution-facture.org
+      - CERTBOT_EMAIL=ibhayk@gmail.com
+    entrypoint: >
+      sh -c "
+        nginx &&
+        certbot --nginx -d $CERTBOT_DOMAIN --email $CERTBOT_EMAIL --agree-tos --no-eff-email &&
+        nginx -s reload
+      "
 
 volumes:
   postgres_data:
   redis_data:
   static_volume:
   media_volume:
+  letsencrypt:
 
 networks:
   excalibur_network:
