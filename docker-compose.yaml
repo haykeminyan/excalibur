@@ -102,7 +102,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx   # Mount Nginx config
       - ./letsencrypt:/etc/letsencrypt  # Mount Certbot certificates
-
+    entrypoint: /bin/bash /entrypoint.sh
 
 volumes:
   postgres_data:

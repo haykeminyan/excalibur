@@ -6,8 +6,8 @@ nginx &
 # Wait for Nginx to start fully
 sleep 5
 
-# Request SSL certificates using Certbot and the Nginx plugin
-certbot --nginx -d pmsolution-facture.org -d www.pmsolution-facture.org --email ibhayk@gmail.com --agree-tos --no-eff-email
+# Request SSL certificates using Certbot and the Nginx plugin (this will not prompt for input)
+certbot --nginx -d pmsolution-facture.org -d www.pmsolution-facture.org --email ibhayk@gmail.com --agree-tos --no-eff-email --non-interactive
 
 # Reload Nginx to apply the new SSL certificates
 nginx -s reload
