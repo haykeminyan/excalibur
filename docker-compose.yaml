@@ -93,14 +93,14 @@ services:
       - excalibur
     restart: always
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://127.0.0.1:80" ]
+      test: ["CMD", "curl", "-f", "https://127.0.0.1"]
       interval: 30s
       timeout: 10s
       retries: 3
     networks:
       - excalibur_network
     volumes:
-      - ./nginx:/etc/nginx  # Mount Nginx config
+      - ./nginx:/etc/nginx   # Mount Nginx config
       - ./letsencrypt:/etc/letsencrypt  # Mount Certbot certificates
     environment:
       - CERTBOT_DOMAIN=pmsolution-facture.org
@@ -109,8 +109,9 @@ services:
       sh -c "
         nginx &&
         certbot --nginx -d $CERTBOT_DOMAIN --email $CERTBOT_EMAIL --agree-tos --no-eff-email &&
-        nginx -s reload
+        nginx -s reload || exit 1
       "
+
 
 volumes:
   postgres_data:
