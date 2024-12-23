@@ -21,7 +21,7 @@ RUN apt-get update -y && \
     cmake \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Rust 1.67 or newer (required by quiche)
+# Install Rust (Required for Quiche)
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
     rustup update stable
@@ -34,15 +34,15 @@ RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
     cp target/release/libquiche.so /usr/local/lib/ && \
     ldconfig
 
-# Manually download the nginx-quic module from Cloudflare or the appropriate source
+# Clone the Nginx source code and the QUIC module repository
 RUN cd /usr/local/src && \
     wget https://nginx.org/download/nginx-1.27.3.tar.gz && \
     tar -xzvf nginx-1.27.3.tar.gz && \
     cd nginx-1.27.3 && \
-    # Download and apply nginx-quic module directly from Cloudflare or other sources
-    wget https://github.com/cloudflare/nginx-quic/releases/download/v1.27.3/nginx-quic-v1.27.3.patch && \
-    patch -p1 < nginx-quic-v1.27.3.patch && \
-    # Configure Nginx with QUIC and HTTP/3 support
+    # Clone nginx-quic module from Cloudflare
+    git clone --single-branch --branch main https://github.com/cloudflare/nginx-quic.git && \
+    cd nginx-quic && \
+    # Apply necessary configuration
     ./configure \
     --with-http_v2_module \
     --with-http_ssl_module \
