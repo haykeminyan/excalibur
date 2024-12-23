@@ -53,8 +53,7 @@ services:
       - ./apps/users:/usr/src/app/apps/users
       - ./apps/main:/usr/src/app/apps/main
       - ./excalibur:/usr/src/app/excalibur
-      - static_volume:/var/www/staticfiles  # This is where the static files will be stored
-      - media_volume:/usr/src/app/media
+      - ./staticfiles:/usr/src/app/staticfiles
     restart: always
     environment:
       - POSTGRES_NAME=${POSTGRES_DB}
@@ -102,6 +101,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx   # Mount Nginx config
       - ./letsencrypt:/etc/letsencrypt  # Mount Certbot certificates
+      - ./staticfiles:/usr/src/app/staticfiles
     entrypoint: /bin/bash /entrypoint.sh
     command: ["nginx", "-g", "daemon off;"]  # keep nginx running in foreground
 
