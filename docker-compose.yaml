@@ -77,30 +77,6 @@ services:
       - excalibur_network
     working_dir: /usr/src/app
 
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    restart: "on-failure"
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - excalibur
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "https://127.0.0.1" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - excalibur_network
-    volumes:
-      - ./nginx:/etc/nginx   # Mount Nginx config
-      - ./letsencrypt:/etc/letsencrypt  # Mount Certbot certificates
-      - ./staticfiles:/usr/src/app/staticfiles
-    entrypoint: /bin/bash /entrypoint.sh
-    command: [ "nginx", "-g", "daemon off;" ]  # keep nginx running in foreground
-
 
 volumes:
   postgres_data:

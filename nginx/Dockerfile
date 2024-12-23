@@ -2,13 +2,13 @@ FROM nginx:latest
 
 # Reinstall Nginx to ensure mime.types is available
 RUN apt-get update -y && \
-    apt-get install --reinstall nginx && \
+    apt-get install --reinstall nginx -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Certbot and Nginx plugin for Certbot
 RUN apt-get update -y && \
-    apt-get install -y certbot python3-certbot-nginx && \
+    apt-get install -y certbot python3-certbot-nginx cron && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -25,7 +25,7 @@ COPY mime.types /etc/nginx/mime.types
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443
 
-# Create an entrypoint script to start Nginx, generate certificates, and reload Nginx
+# Copy the entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

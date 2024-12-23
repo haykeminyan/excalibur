@@ -35,6 +35,15 @@ else
   exit 1
 fi
 
+# Set up cron job for automatic SSL certificate renewal
+echo "Setting up automatic SSL certificate renewal..."
+
+# Add a cron job that runs twice a day (adjust if needed)
+echo "0 0,12 * * * root certbot renew --quiet && nginx -s reload" >> /etc/crontab
+
+# Start the cron service
+service cron start
+
 # Keep the Nginx process running in the foreground
 echo "Keeping Nginx running in the foreground..."
 wait $NGINX_PID
