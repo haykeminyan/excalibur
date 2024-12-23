@@ -19,6 +19,12 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
 
+# Copy the application files
+COPY . .
+
+# Run collectstatic to collect the static files in the build stage
+RUN python manage.py collectstatic --noinput
+
 # Stage 2: Production Image
 FROM python:3.12-slim
 
@@ -40,8 +46,8 @@ COPY --from=builder /root/.local /root/.local
 # Set PATH to include local pip installations
 ENV PATH=/root/.local/bin:$PATH
 
-# Copy the rest of the application
-COPY . .
+# Copy the rest of the application (including collected static files)
+COPY --from=builder /usr/src/app /usr/src/app
 
 # Add healthcheck for Docker
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD ["./healthcheck.sh"]
