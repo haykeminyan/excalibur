@@ -38,3 +38,6 @@ fi
 # Keep the Nginx process running in the foreground
 echo "Keeping Nginx running in the foreground..."
 wait $NGINX_PID
+
+# Keep the container running by running an infinite loop or dummy process
+tail -f /dev/null
