@@ -35,13 +35,13 @@ RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
     cp target/release/libquiche.so /usr/local/lib/ && \
     ldconfig
 
-# Clone and build Nginx with QUIC and HTTP/3 support
+# Clone and build Nginx with QUIC and HTTP/3 support from public repository
 RUN cd /usr/local/src && \
-    wget https://nginx.org/download/nginx-1.25.1.tar.gz && \
-    tar -xzvf nginx-1.25.1.tar.gz && \
+    wget https://nginx.org/download/nginx-1.27.3.tar.gz && \
+    tar -xzvf nginx-1.27.3.tar.gz && \
     cd nginx-1.25.1 && \
-    # Clone the nginx-quic repo for QUIC support
-    git clone --single-branch --branch main https://github.com/nginx/nginx-quic.git && \
+    # Clone Nginx QUIC module from the public repository
+    git clone --single-branch --branch main https://github.com/nginx/quic.git nginx-quic && \
     cd nginx-quic && \
     # Configure Nginx with HTTP/3 and QUIC support
     ./configure \
