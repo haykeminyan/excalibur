@@ -16,13 +16,6 @@ def healthcheck(request):
     return JsonResponse({"status": "healthy", "database": db_health})
 
 
-def robots_txt(request):
-    lines = [
-        "User-agent: *",
-        "Disallow: /private/",
-        "Allow: /",
-    ]
-    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 # Create your views here.
 class MainMenuListView(TemplateView, LoginRequiredMixin):
