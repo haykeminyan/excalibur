@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db import connections
 from django.db.utils import OperationalError
 
@@ -14,6 +14,15 @@ def healthcheck(request):
     except OperationalError:
         db_health = "unhealthy"
     return JsonResponse({"status": "healthy", "database": db_health})
+
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Disallow: /private/",
+        "Allow: /",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 # Create your views here.
 class MainMenuListView(TemplateView, LoginRequiredMixin):
