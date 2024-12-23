@@ -9,18 +9,11 @@ NGINX_PID=$!
 # Wait for Nginx to start fully
 sleep 5
 
-# Try to request SSL certificates using Certbot, check if it succeeded
+# Run Certbot to obtain the SSL certificates and deploy them
 certbot --nginx -d pmsolution-facture.org -d www.pmsolution-facture.org --email ibhayk@gmail.com --agree-tos --no-eff-email --non-interactive
 
-# Check if Certbot was successful
-if [ $? -eq 0 ]; then
-  echo "SSL certificates successfully obtained!"
-  # Reload Nginx to apply the new SSL certificates
-  nginx -s reload
-else
-  echo "Certbot failed. Not reloading Nginx."
-  exit 1
-fi
+# Reload Nginx to apply the new certificates
+nginx -s reload
 
-# Wait for Nginx to stop gracefully
+# Ensure the Nginx process stays running in the foreground
 wait $NGINX_PID
