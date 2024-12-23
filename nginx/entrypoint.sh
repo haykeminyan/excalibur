@@ -12,8 +12,5 @@ sleep 5
 # Run Certbot to obtain the SSL certificates and deploy them
 certbot --nginx -d pmsolution-facture.org -d www.pmsolution-facture.org --email ibhayk@gmail.com --agree-tos --no-eff-email --non-interactive
 
-# Reload Nginx to apply the new certificates
-nginx -s reload
-
-# Ensure the Nginx process stays running in the foreground
+# Keep the Nginx process running in the foreground
 wait $NGINX_PID
