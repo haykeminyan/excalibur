@@ -18,9 +18,11 @@ Including another URLconf
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico', permanent=True)),
     path('', lambda request: redirect('/main/')),  # This will redirect to /main
     path('facture/', include('apps.facture.urls', namespace='facture')),
     path('deduction/', include('apps.deduction.urls', namespace='deduction')),
