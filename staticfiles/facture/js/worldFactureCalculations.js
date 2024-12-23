@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const quantityInput = document.getElementById("id_quantity");
   const percentInput = document.getElementById("id_percent");
   const quantityAfterPercentInput = document.getElementById(
-    "id_quantity_after_percent"
+    "id_quantity_after_percent",
   );
   const totalTaxInput = document.getElementById("id_total_tax");
   const netPayInput = document.getElementById("id_net_pay");
@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const percent = parseFloat(percentInput.value) || 0;
     const quantityAfterPercent =
       parseFloat(quantityAfterPercentInput.value) || 0;
-    const netPay = parseFloat(netPayInput.value) ||0;
-    const totalTax  =parseFloat(totalTaxInput.value)||0;
+    const netPay = parseFloat(netPayInput.value) || 0;
+    const totalTax = parseFloat(totalTaxInput.value) || 0;
     if (
       document.activeElement === quantityInput ||
       document.activeElement === percentInput
@@ -54,18 +54,16 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-        if (
+    if (
       document.activeElement === netPayInput ||
       document.activeElement === totalTaxInput ||
-            document.activeElement === quantityAfterPercentInput
+      document.activeElement === quantityAfterPercentInput
     ) {
       if (quantityAfterPercent !== 0 && totalTax) {
         netPayInput.value = (quantityAfterPercent - totalTax).toFixed(2);
-      }
-      else if (quantityAfterPercent !== 0 && netPay) {
+      } else if (quantityAfterPercent !== 0 && netPay) {
         totalTaxInput.value = (quantityAfterPercent - netPay).toFixed(2);
-      }
-      else if (totalTax !== 0 && netPay){
+      } else if (totalTax !== 0 && netPay) {
         quantityAfterPercentInput.value = (netPay + totalTax).toFixed(2);
       }
     }
@@ -79,8 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const percent = parseFloat(percentInput.value) || 0;
     const quantityAfterPercent =
       parseFloat(quantityAfterPercentInput.value) || 0;
-    const totalTax = parseFloat(totalTaxInput.value)||0;
-  const netPay = parseFloat(netPayInput.value)||0;
+    const totalTax = parseFloat(totalTaxInput.value) || 0;
+    const netPay = parseFloat(netPayInput.value) || 0;
 
     if (quantity && percent && !quantityAfterPercent) {
       quantityAfterPercentInput.value = (quantity * percent).toFixed(2);
@@ -91,16 +89,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (quantity && quantityAfterPercent && !percent) {
       percentInput.value = (quantityAfterPercent / quantity).toFixed(2);
     }
-          if (quantityAfterPercent !== 0 && totalTax) {
-        netPayInput.value = (quantityAfterPercent - totalTax).toFixed(2);
-      }
-      else if (quantityAfterPercent !== 0 && netPay) {
-        totalTaxInput.value = (quantityAfterPercent - netPay).toFixed(2);
-      }
-      else if (totalTax !== 0 && netPay){
-        quantityAfterPercentInput.value = (netPay + totalTax).toFixed(2);
-      }
-          totalSumEnInput.value = numberToEnglish(netPayInput.value);
+    if (quantityAfterPercent !== 0 && totalTax) {
+      netPayInput.value = (quantityAfterPercent - totalTax).toFixed(2);
+    } else if (quantityAfterPercent !== 0 && netPay) {
+      totalTaxInput.value = (quantityAfterPercent - netPay).toFixed(2);
+    } else if (totalTax !== 0 && netPay) {
+      quantityAfterPercentInput.value = (netPay + totalTax).toFixed(2);
+    }
+    totalSumEnInput.value = numberToEnglish(netPayInput.value);
   };
 
   // Event listeners for all inputs
@@ -108,8 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
     quantityInput,
     percentInput,
     quantityAfterPercentInput,
-      totalTaxInput,
-      netPayInput,
+    totalTaxInput,
+    netPayInput,
   ].forEach((input) => {
     input.addEventListener("input", () => {
       updateValues();

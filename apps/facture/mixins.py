@@ -15,7 +15,8 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
-    UpdateView, View,
+    UpdateView,
+    View,
 )
 from docx import Document
 
@@ -24,7 +25,6 @@ from .models import LocalFacture, WorldFacture
 from .parsing_docx import replace_placeholders_in_doc, set_font_size
 
 logger = logging.getLogger(__name__)
-
 
 
 class CSRFExemptMixin:
@@ -157,6 +157,7 @@ class BaseFactureDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+
 class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
     local_template = 'facture/file_templates/file_input/Facture_template_Maroc.docx'
 
@@ -184,7 +185,6 @@ class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
         """
         # Fetch facture object
         facture_object = get_object_or_404(LocalFacture, pk=kwargs.get('pk'))
-
 
         # Generate the DOCX file
         file_stream = self.generate_docx(facture_object, self.local_template)
@@ -227,7 +227,6 @@ class BaseFactureWorldExportDocx(LoginRequiredMixin, View):
         """
         # Fetch facture object
         facture_object = get_object_or_404(WorldFacture, pk=kwargs.get('pk'))
-
 
         # Generate the DOCX file
         file_stream = self.generate_docx(facture_object, self.local_template)

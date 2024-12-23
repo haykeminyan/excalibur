@@ -1,4 +1,3 @@
-
 LOCAL_FIELDS = [
     'number_facture',
     'address',

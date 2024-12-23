@@ -28,7 +28,7 @@ from apps.facture.views import (
     UpdateLocalFacture,
     UpdateWorldFacture,
     WorldFactureDetailView,
-    WorldFactureListView
+    WorldFactureListView,
 )
 
 app_name = 'apps.facture'

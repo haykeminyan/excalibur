@@ -19,8 +19,7 @@ from django.urls import path
 
 from apps.deduction import views
 
-
 app_name = 'apps.deduction'
 urlpatterns = [
-    path('', views.DeductionList.as_view(), name='deduction_list')
+    path('', views.DeductionList.as_view(), name='deduction_list'),
 ]

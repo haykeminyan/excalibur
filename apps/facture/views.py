@@ -1,7 +1,6 @@
 import logging
 
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
 
 from .forms import LocalFactureForm, WorldFactureForm
 from .mixins import (
@@ -12,10 +11,6 @@ from .mixins import (
     BaseFactureUpdateView,
 )
 from .models import LocalFacture, WorldFacture
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +18,7 @@ logger = logging.getLogger(__name__)
 class LocalFactureListView(BaseFactureListView):
     model = LocalFacture
     template_name = 'html/local_list_facture.html'
+
 
 class WorldFactureListView(BaseFactureListView):
     model = WorldFacture

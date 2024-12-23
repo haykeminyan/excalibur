@@ -1,361 +1,284 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-GB">
-  <head>
-    {% load static %}
-    <!-- Load Django static template tag -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Facture</title>
-    <!-- Import Tailwind CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <!-- Import FontAwesome for icons -->
-    {% block stylesheets %}
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'facture/css/create_facture_local.css' %}"
-    />
-    {% endblock stylesheets %} {% block scripts %}
-    <script src="{% static 'facture/js/localFactureCalculations.js' %}"></script>
-    <script src="{% static 'facture/js/translateNumberToFrench.js' %}"></script>
-    {% endblock scripts %}
-  </head>
-  <body>
-    <div class="flex min-h-screen">
-      <!-- Sidebar -->
-      <div
-        class="w-1/6 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8"
-      >
-                      <a
-              href="{% url 'apps.facture:local_list' %}"
-              class="flex items-center space-x-4 "
-            >
-<h2 class="text-2xl font-bold">Dashboard</h2>
-            </a>
-        <ul class="space-y-6">
-          <li>
-            <a
-              href="{% url 'apps.facture:local_create' %}"
-              class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg"
-            >
-              <i class="fas fa-file-invoice-dollar text-xl"></i>
-              <span>Create Local Facture</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="{% url 'apps.facture:local_list' %}"
-              class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg"
-            >
-              <i class="fas fa-chart-line text-xl"></i>
-              <span>Return to main menu</span>
-            </a>
-          </li>
-          <li>
-            <form
-              method="post"
-              action="{% url 'apps.users:logout' %}"
-              style="display: inline"
-            >
-              {% csrf_token %}
-              <button
-                type="submit"
-                class="text-left p-3 rounded-lg bg-transparent border-0 hover:bg-blue-600"
-              >
-                <i class="fas fa-cogs text-xl"></i>
-                <span>Logout</span>
-              </button>
-            </form>
-          </li>
-        </ul>
-      </div>
-      <form method="post" action="">
-        {% csrf_token %}
-        <div>
-          <img
-            src="{% static 'facture/images/logo.png' %}"
-            alt="logo"
-            class="top-left-logo"
-          />
-          <table
-            style="width: 554.1pt; padding: 0pt; border-collapse: collapse"
-          >
-            <tr style="height: 0.45pt">
-              <table
-                style="
-                  width: 308.45pt;
-                  padding: 0pt;
-                  border-collapse: collapse;
-                  margin-left: 25px;
-                "
-              >
-
-
-                <tr style="height: 1.3pt">
-
-<tr class="form-row">
-  <td class="number-facture">
-    <p class="number-text">
-      <span>NUMERO</span>
-    </p>
-    <div class="mb-6">
-      <div class="mt-2">{{ form.number_facture }}</div>
-      {% if form.number_facture.errors %}
-      <div class="text-red-600 text-sm mt-1">
-        {% for error in form.number_facture.errors %}
-        <p>{{ error }}</p>
-        {% endfor %}
-      </div>
-      {% endif %}
-    </div>
-  </td>
-
-  <td class="date">
-    <p class="label-text">
-      <span>DATE</span>
-    </p>
-    <div class="mt-2">{{ form.date }}</div>
-    {% if form.date.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.date.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-
-  <td class="reference">
-    <p class="label-text">
-      <span>REFERENCE</span>
-    </p>
-    <div class="mt-2">{{ form.reference }}</div>
-    {% if form.reference.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.reference.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-
-  <td class="firm-name">
-    <p class="label-text">
-      <span>Firm name</span>
-    </p>
-    <div class="mt-2">{{ form.firm_name }}</div>
-    {% if form.firm_name.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.firm_name.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-
-  <td class="address">
-    <p class="label-text">
-      <span>Address</span>
-    </p>
-    <div class="form-wrapper">
-      <div class="mt-2 form-field">
-        {{ form.address }}
-      </div>
-      {% if form.address.errors %}
-      <div class="error-messages">
-        {% for error in form.address.errors %}
-        <p class="break-words">{{ error }}</p>
-        {% endfor %}
-      </div>
-      {% endif %}
-    </div>
-  </td>
-
-                    <td class="reference-new">
-    <p class="label-text">
-      <span>REFERENCE</span>
-    </p>
-    <div class="mt-2">{{ form.reference }}</div>
-    {% if form.reference.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.reference.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-                    <td class="destination">
-    <p class="label-text">
-      <span>Désignation</span>
-    </p>
-    <div class="mt-2">{{ form.destination }}</div>
-    {% if form.destination.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.destination.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-                    <td class="quantity">
-    <p class="label-text">
-      <span>Quantityé</span>
-    </p>
-    <div class="mt-2">{{ form.quantity }}</div>
-    {% if form.quantity.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.quantity.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-
-      <td class="percent">
-    <p class="label-text">
-      <span>P.U.TTC</span>
-    </p>
-    <div class="mt-2">{{ form.percent }}</div>
-    {% if form.percent.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.percent.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-
-                        <td class="quantity_after_percent">
-    <p class="label-text">
-      <span>Montant</span>
-    </p>
-    <div class="mt-2">{{ form.quantity_after_percent }}</div>
-    {% if form.quantity_after_percent.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.quantity_after_percent.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-                                          <td class="tax_ht">
-    <p class="label-text">
-      <span>Total H.T.</span>
-    </p>
-    <div class="mt-2">{{ form.tax_ht }}</div>
-    {% if form.tax_ht.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.tax_ht.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-                                          <td class="total_tax">
-    <p class="label-text">
-      <span>Total Taxe</span>
-    </p>
-    <div class="mt-2">{{ form.total_tax }}</div>
-    {% if form.total_tax.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.total_tax.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-
-                                                            <td class="total_ttc">
-    <p class="label-text">
-      <span>Total T.T.C</span>
-    </p>
-    <div class="mt-2">{{ form.total_ttc }}</div>
-    {% if form.total_ttc.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.total_ttc.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-                                                            <td class="deposit">
-    <p class="label-text">
-      <span>Acompte</span>
-    </p>
-    <div class="mt-2">{{ form.deposit }}</div>
-    {% if form.deposit.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.deposit.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-                                                                              <td class="net_pay">
-    <p class="label-text">
-      <span>Net à payer</span>
-    </p>
-    <div class="mt-2">{{ form.net_pay }}</div>
-    {% if form.net_pay.errors %}
-    <div class="text-red-600 text-sm mt-1">
-      {% for error in form.net_pay.errors %}
-      <p>{{ error }}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </td>
-
-          </table>
-<div class="centered-container">
-  <p class="frame-contents">
-    <strong><span class="font-Arial"> </span></strong>
-  </p>
-  <p class="frame-contents margin-right-318">
-    <strong><span class="font-Arial">ARRETER LA PRESENTE FACTURE A LA SOMME DE:</span></strong>
-    <strong><em><span class="font-Arial"></span></em></strong>
-    {{ form.total_sum_fr }}
-  </p>
-</div>
-
-<div class="centered-container-submit">
-  <div class="mt-8">
-    <button
-      type="submit"
-      value="update"
-      class="submit-btn"
-    >
-      Submit
-    </button>
-  </div>
-</div>
-
-<div class="footer">
-  <p class="footer-text">
-    <strong><span class="font-Arial">Système de Paiement</span></strong>
-  </p>
-  <p class="footer-normal-text small-font">
-    <strong><span class="font-Arial">PM Solution SARL</span></strong>
-    <span class="font-Arial">Rue Soumiya, Residence Shehrazade III, 5EME Etage, N22, Palmier – Casablanca</span>
-  </p>
-  <p class="footer-normal-text small-font">
-    <span class="font-Arial">Tél: 00 212 6 80 00 35 04</span>&nbsp;&nbsp;&nbsp;
-    <span class="font-Arial">- Rc 362615 Patente 34794459, IF 20693849, ICE 001816862000051</span>
-  </p>
-  <p class="footer-normal-text small-font">
-    <span class="font-Arial">http://pms.ican24.net – e-mail: ican24net@gmail.com</span>
-  </p>
-  <p class="footer-normal-text">
-    <span class="font-Arial">Page 1 sur 1</span>
-  </p>
-</div>
-
-
-      </form>
-    </div>
-    {% if form.errors %}
-    <script>
+    <head>
+        {% load static %}
+        <!-- Load Django static template tag -->
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Create Facture</title>
+        <!-- Import Tailwind CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+              rel="stylesheet" />
+        <!-- Import FontAwesome for icons -->
+        {% block stylesheets %}
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="{% static 'facture/css/create_facture_local.css' %}" />
+        {% endblock stylesheets %}
+        {% block scripts %}
+            <script src="{% static 'facture/js/localFactureCalculations.js' %}"></script>
+            <script src="{% static 'facture/js/translateNumberToFrench.js' %}"></script>
+        {% endblock scripts %}
+    </head>
+    <body>
+        <div class="flex min-h-screen">
+            <!-- Sidebar -->
+            <div class="w-1/6 bg-blue-800 text-white flex flex-col items-center py-8 space-y-8">
+                <a href="{% url 'apps.facture:local_list' %}"
+                   class="flex items-center space-x-4 ">
+                    <h2 class="text-2xl font-bold">Dashboard</h2>
+                </a>
+                <ul class="space-y-6">
+                    <li>
+                        <a href="{% url 'apps.facture:local_create' %}"
+                           class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
+                            <i class="fas fa-file-invoice-dollar text-xl"></i>
+                            <span>Create Local Facture</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'apps.facture:local_list' %}"
+                           class="flex items-center space-x-4 hover:bg-blue-600 p-3 rounded-lg">
+                            <i class="fas fa-chart-line text-xl"></i>
+                            <span>Return to main menu</span>
+                        </a>
+                    </li>
+                    <li>
+                        <form method="post"
+                              action="{% url 'apps.users:logout' %}"
+                              style="display: inline">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="text-left p-3 rounded-lg bg-transparent border-0 hover:bg-blue-600">
+                                <i class="fas fa-cogs text-xl"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div>
+                    <img src="{% static 'facture/images/logo.png' %}"
+                         alt="logo"
+                         class="top-left-logo" />
+                    <table style="width: 554.1pt; padding: 0pt; border-collapse: collapse">
+                        <tr style="height: 0.45pt">
+                            <table style="width: 308.45pt;
+                                          padding: 0pt;
+                                          border-collapse: collapse;
+                                          margin-left: 25px">
+                                <tr style="height: 1.3pt">
+                                    <tr class="form-row">
+                                        <td class="number-facture">
+                                            <p class="number-text">
+                                                <span>NUMERO</span>
+                                            </p>
+                                            <div class="mb-6">
+                                                <div class="mt-2">{{ form.number_facture }}</div>
+                                                {% if form.number_facture.errors %}
+                                                    <div class="text-red-600 text-sm mt-1">
+                                                        {% for error in form.number_facture.errors %}<p>{{ error }}</p>{% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td class="date">
+                                            <p class="label-text">
+                                                <span>DATE</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.date }}</div>
+                                            {% if form.date.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.date.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="reference">
+                                            <p class="label-text">
+                                                <span>REFERENCE</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.reference }}</div>
+                                            {% if form.reference.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.reference.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="firm-name">
+                                            <p class="label-text">
+                                                <span>Firm name</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.firm_name }}</div>
+                                            {% if form.firm_name.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.firm_name.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="address">
+                                            <p class="label-text">
+                                                <span>Address</span>
+                                            </p>
+                                            <div class="form-wrapper">
+                                                <div class="mt-2 form-field">{{ form.address }}</div>
+                                                {% if form.address.errors %}
+                                                    <div class="error-messages">
+                                                        {% for error in form.address.errors %}<p class="break-words">{{ error }}</p>{% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td class="reference-new">
+                                            <p class="label-text">
+                                                <span>REFERENCE</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.reference }}</div>
+                                            {% if form.reference.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.reference.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="destination">
+                                            <p class="label-text">
+                                                <span>Désignation</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.destination }}</div>
+                                            {% if form.destination.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.destination.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="quantity">
+                                            <p class="label-text">
+                                                <span>Quantityé</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.quantity }}</div>
+                                            {% if form.quantity.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.quantity.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="percent">
+                                            <p class="label-text">
+                                                <span>P.U.TTC</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.percent }}</div>
+                                            {% if form.percent.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.percent.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="quantity_after_percent">
+                                            <p class="label-text">
+                                                <span>Montant</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.quantity_after_percent }}</div>
+                                            {% if form.quantity_after_percent.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.quantity_after_percent.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="tax_ht">
+                                            <p class="label-text">
+                                                <span>Total H.T.</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.tax_ht }}</div>
+                                            {% if form.tax_ht.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.tax_ht.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="total_tax">
+                                            <p class="label-text">
+                                                <span>Total Taxe</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.total_tax }}</div>
+                                            {% if form.total_tax.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.total_tax.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="total_ttc">
+                                            <p class="label-text">
+                                                <span>Total T.T.C</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.total_ttc }}</div>
+                                            {% if form.total_ttc.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.total_ttc.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="deposit">
+                                            <p class="label-text">
+                                                <span>Acompte</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.deposit }}</div>
+                                            {% if form.deposit.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.deposit.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="net_pay">
+                                            <p class="label-text">
+                                                <span>Net à payer</span>
+                                            </p>
+                                            <div class="mt-2">{{ form.net_pay }}</div>
+                                            {% if form.net_pay.errors %}
+                                                <div class="text-red-600 text-sm mt-1">
+                                                    {% for error in form.net_pay.errors %}<p>{{ error }}</p>{% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </table>
+                                    <div class="centered-container">
+                                        <p class="frame-contents">
+                                            <strong><span class="font-Arial"></span></strong>
+                                        </p>
+                                        <p class="frame-contents margin-right-318">
+                                            <strong><span class="font-Arial">ARRETER LA PRESENTE FACTURE A LA SOMME DE:</span></strong>
+                                            <strong><em><span class="font-Arial"></span></em></strong>
+                                            {{ form.total_sum_fr }}
+                                        </p>
+                                    </div>
+                                    <div class="centered-container-submit">
+                                        <div class="mt-8">
+                                            <button type="submit" value="update" class="submit-btn">Submit</button>
+                                        </div>
+                                    </div>
+                                    <div class="footer">
+                                        <p class="footer-text">
+                                            <strong><span class="font-Arial">Système de Paiement</span></strong>
+                                        </p>
+                                        <p class="footer-normal-text small-font">
+                                            <strong><span class="font-Arial">PM Solution SARL</span></strong>
+                                            <span class="font-Arial">Rue Soumiya, Residence Shehrazade III, 5EME Etage, N22, Palmier – Casablanca</span>
+                                        </p>
+                                        <p class="footer-normal-text small-font">
+                                            <span class="font-Arial">Tél: 00 212 6 80 00 35 04</span>&nbsp;&nbsp;&nbsp;
+                                            <span class="font-Arial">- Rc 362615 Patente 34794459, IF 20693849, ICE 001816862000051</span>
+                                        </p>
+                                        <p class="footer-normal-text small-font">
+                                            <span class="font-Arial">http://pms.ican24.net – e-mail: ican24net@gmail.com</span>
+                                        </p>
+                                        <p class="footer-normal-text">
+                                            <span class="font-Arial">Page 1 sur 1</span>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
+                            {% if form.errors %}
+                                <script>
       const errors = [];
       {% for field in form %}
           {% for error in field.errors %}errors.push("{{ field.label }}: {{ error|escapejs }}");{% endfor %}
@@ -367,12 +290,10 @@
       if (errors.length > 0) {
           alert(errors.join("\n"));
       }
-    </script>
-    {% endif %}
-    <link
-      rel="icon"
-      href="{% static 'facture/images/favicon.ico' %}"
-      type="image/x-icon"
-    />
-  </body>
-</html>
+                                </script>
+                            {% endif %}
+                            <link rel="icon"
+                                  href="{% static 'facture/images/favicon.ico' %}"
+                                  type="image/x-icon" />
+                        </body>
+                    </html>

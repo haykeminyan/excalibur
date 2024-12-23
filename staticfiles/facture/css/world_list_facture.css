@@ -603,8 +603,11 @@ button:focus {
     max-width: 300px;
     font-size: 14px;
   }
-  #add-filter-btn, .search-button, #clear-filters-btn, .logout-button {
-  width: 200px;
+  #add-filter-btn,
+  .search-button,
+  #clear-filters-btn,
+  .logout-button {
+    width: 200px;
   }
   .button-container {
     display: flex;
@@ -789,13 +792,12 @@ button:focus {
 }
 /* General Dropdown Styles */
 
-.dropdown-toggle{
+.dropdown-toggle {
   z-index: 0;
 }
-.dropdown{
+.dropdown {
   min-width: 20px;
 }
-
 
 /* Active (click) effect */
 .create-filter-button:active {

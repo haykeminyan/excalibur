@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-+dmib-8)00(@_hq$-8^mwx*dj@7m2*0#f^o%1+0_wij+^zy7+s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pmsolution-facture.org', 'www.pmsolution-facture.org', 'localhost', '127.0.0.1', '66.29.142.34', '0.0.0.0']
+ALLOWED_HOSTS = [
+    'pmsolution-facture.org',
+    'www.pmsolution-facture.org',
+    'localhost',
+    '127.0.0.1',
+    '66.29.142.34',
+    '0.0.0.0',
+]
 INTERNAL_IPS = [
     '127.0.0.1',  # Localhost
     '172.17.0.1',  # Default Docker gateway (adjust if using a custom network)
@@ -109,7 +116,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-
     },
 ]
 
@@ -127,11 +133,11 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'default_password'),
         'HOST': os.getenv('POSTGRES_HOST', 'database'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
-    }
+    },
 }
 CACHES = {
     'default': {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         # ! uncomment dummyCache for debug sql queries
         # 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         'LOCATION': 'redis://redis:6379',

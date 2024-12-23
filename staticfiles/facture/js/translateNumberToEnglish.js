@@ -99,5 +99,5 @@ const numberToEnglish = (number) => {
   }
 
   // Capitalize the first letter of the result
-  return result.toUpperCase() + ' DOLLARS';
+  return result.toUpperCase() + " DOLLARS";
 };
