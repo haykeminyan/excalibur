@@ -39,7 +39,7 @@ RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
 RUN cd /usr/local/src && \
     wget https://nginx.org/download/nginx-1.27.3.tar.gz && \
     tar -xzvf nginx-1.27.3.tar.gz && \
-    cd nginx-1.25.1 && \
+    cd nginx-1.27.3 && \
     # Clone Nginx QUIC module from the public repository
     git clone --single-branch --branch main https://github.com/nginx/quic.git nginx-quic && \
     cd nginx-quic && \
