@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ensure the logs directory exists
+mkdir -p /usr/src/app/logs
+
 # Start Nginx in the background and capture the process ID
 echo "Starting Nginx..."
 nginx &

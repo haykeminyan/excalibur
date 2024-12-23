@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
+RUN mkdir -p /usr/src/app/logs
 # Upgrade pip and install dependencies from requirements.txt
 COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
@@ -36,9 +36,6 @@ RUN apt-get update && apt-get install -y libpq5 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Add a health check script
-COPY healthcheck.sh /usr/src/app/
-RUN chmod +x healthcheck.sh
 
 # Copy installed dependencies from builder stage
 COPY --from=builder /root/.local /root/.local
@@ -49,8 +46,6 @@ ENV PATH=/root/.local/bin:$PATH
 # Copy the rest of the application (including collected static files)
 COPY --from=builder /usr/src/app /usr/src/app
 
-# Add healthcheck for Docker
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD ["./healthcheck.sh"]
 
 # Ensure entrypoint script is executable
 RUN chmod +x entrypoint.sh

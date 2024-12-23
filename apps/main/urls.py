@@ -1,9 +1,10 @@
 from django.urls import path
 
-from apps.main.views import MainMenuListView
+from apps.main.views import MainMenuListView, healthcheck
 
 app_name = 'apps.main'
 
 urlpatterns = [
+    path('healthcheck/', healthcheck),
     path('', MainMenuListView.as_view(), name='main_menu'),
 ]
