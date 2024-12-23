@@ -1,6 +1,7 @@
+# Use the latest Nginx image
 FROM nginx:latest
 
-# Reinstall Nginx and install necessary build dependencies
+# Install required dependencies for building Nginx with HTTP/3 support
 RUN apt-get update -y && \
     apt-get install -y \
     build-essential \
@@ -17,66 +18,74 @@ RUN apt-get update -y && \
     gcc \
     g++ \
     ca-certificates \
-    cargo \
     cmake \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Rust (Required for Quiche)
+# Install Rust (Required for Quiche and ngtcp2)
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
     rustup update stable
 
-# Install QUICHE (QUIC and HTTP/3 support for Nginx)
+# Install ngtcp2 (QUIC transport library) and quiche (QUIC and HTTP/3 library)
+RUN git clone --recursive https://github.com/ngtcp2/ngtcp2 /tmp/ngtcp2 && \
+    cd /tmp/ngtcp2 && \
+    mkdir build && cd build && \
+    cmake .. && make && make install && \
+    cd / && rm -rf /tmp/ngtcp2
+
 RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
     cd /tmp/quiche && \
     export PATH="$HOME/.cargo/bin:$PATH" && \
     cargo build --release && \
     cp target/release/libquiche.so /usr/local/lib/ && \
-    ldconfig
+    ldconfig && \
+    rm -rf /tmp/quiche
 
-# Clone the Nginx source code and the QUIC module repository
+# Clone the Nginx source code
 RUN cd /usr/local/src && \
     wget https://nginx.org/download/nginx-1.27.3.tar.gz && \
     tar -xzvf nginx-1.27.3.tar.gz && \
-    cd nginx-1.27.3 && \
-    # Clone nginx-quic module from Cloudflare
-    git clone --single-branch --branch main https://github.com/cloudflare/nginx-quic.git && \
+    cd nginx-1.27.3
+
+# Patch Nginx to include QUIC and HTTP/3 support from the Nginx QUIC module
+RUN cd /usr/local/src/nginx-1.27.3 && \
+    git clone --single-branch --branch main https://github.com/nginx/nginx-quic.git && \
     cd nginx-quic && \
-    # Apply necessary configuration
     ./configure \
     --with-http_v2_module \
     --with-http_ssl_module \
     --with-http_quic_module \
-    --with-cc-opt="-I/usr/local/src/quiche/include" \
-    --with-ld-opt="-L/usr/local/src/quiche/lib" && \
+    --with-openssl=/usr/local/src/nginx-1.27.3/openssl \
+    --with-ngtcp2=/usr/local/lib \
+    --with-quiche=/usr/local/lib && \
     make && \
     make install
 
-# Install Certbot and Nginx plugin for Certbot
+# Install Certbot and Nginx plugin for Certbot to handle SSL certificates
 RUN apt-get update -y && \
     apt-get install -y certbot python3-certbot-nginx cron && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Create directories for SSL certificates and the challenge
+# Create directories for SSL certificates and the challenge directory for Certbot
 RUN mkdir -p /etc/nginx/ssl /var/www/certbot
 
-# Copy Nginx configuration and your HTML directory
+# Copy custom Nginx configuration and your HTML directory
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY html/ /var/www/html/
 
-# Copy mime.types if needed (or use the default Nginx one)
+# Copy mime.types (optional, or use default Nginx one)
 COPY mime.types /etc/nginx/mime.types
 
 # Expose HTTP and HTTPS ports
 EXPOSE 80 443
 
-# Copy the entrypoint script
+# Copy and set permissions for the entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Use the custom entrypoint script to manage Nginx and Certbot
+# Use the entrypoint script to manage Nginx and Certbot
 ENTRYPOINT ["/entrypoint.sh"]
 
-# Ensure that Nginx runs in the foreground (entrypoint script will handle reloading)
+# Ensure Nginx runs in the foreground
 CMD ["nginx", "-g", "daemon off;"]
