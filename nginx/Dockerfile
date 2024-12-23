@@ -20,6 +20,11 @@ RUN apt-get update -y && \
     cargo \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Rust 1.67 or newer (required by quiche)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    source $HOME/.cargo/env && \
+    rustup update stable
+
 # Install QUICHE (QUIC and HTTP/3 support for Nginx)
 RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
     cd /tmp/quiche && \
