@@ -23,7 +23,6 @@ RUN apt-get update -y && \
 
 # Install Rust 1.67 or newer (required by quiche)
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-    # Directly modify PATH to include Cargo's bin directory
     export PATH="$HOME/.cargo/bin:$PATH" && \
     rustup update stable
 
@@ -35,15 +34,15 @@ RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
     cp target/release/libquiche.so /usr/local/lib/ && \
     ldconfig
 
-# Clone and build Nginx with QUIC and HTTP/3 support from public repository
+# Manually download the nginx-quic module from Cloudflare or the appropriate source
 RUN cd /usr/local/src && \
     wget https://nginx.org/download/nginx-1.27.3.tar.gz && \
     tar -xzvf nginx-1.27.3.tar.gz && \
     cd nginx-1.27.3 && \
-    # Clone Nginx QUIC module from the public repository
-    git clone --single-branch --branch main https://github.com/nginx/quic.git nginx-quic && \
-    cd nginx-quic && \
-    # Configure Nginx with HTTP/3 and QUIC support
+    # Download and apply nginx-quic module directly from Cloudflare or other sources
+    wget https://github.com/cloudflare/nginx-quic/releases/download/v1.27.3/nginx-quic-v1.27.3.patch && \
+    patch -p1 < nginx-quic-v1.27.3.patch && \
+    # Configure Nginx with QUIC and HTTP/3 support
     ./configure \
     --with-http_v2_module \
     --with-http_ssl_module \
