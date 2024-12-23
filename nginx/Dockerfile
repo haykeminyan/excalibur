@@ -1,11 +1,49 @@
 FROM nginx:latest
 
-# Reinstall Nginx to ensure mime.types is available
+# Reinstall Nginx and install necessary build dependencies
 RUN apt-get update -y && \
-    apt-get install --reinstall nginx -y && \
-    apt-get install -y libnginx-mod-http3 quiche libssl-dev libpcre3-dev zlib1g-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    libpcre3-dev \
+    libssl-dev \
+    zlib1g-dev \
+    wget \
+    libtool \
+    automake \
+    libevent-dev \
+    pkg-config \
+    gcc \
+    g++ \
+    ca-certificates \
+    cargo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install QUICHE (QUIC and HTTP/3 support for Nginx)
+RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
+    cd /tmp/quiche && \
+    cargo build --release && \
+    cp target/release/libquiche.so /usr/local/lib/ && \
+    ldconfig
+
+# Clone and build Nginx with QUIC and HTTP/3 support
+RUN cd /usr/local/src && \
+    wget https://nginx.org/download/nginx-1.25.1.tar.gz && \
+    tar -xzvf nginx-1.25.1.tar.gz && \
+    cd nginx-1.25.1 && \
+    # Clone the nginx-quic repo for QUIC support
+    git clone --single-branch --branch main https://github.com/nginx/nginx-quic.git && \
+    cd nginx-quic && \
+    # Configure Nginx with HTTP/3 and QUIC support
+    ./configure \
+    --with-http_v2_module \
+    --with-http_ssl_module \
+    --with-http_quic_module \
+    --with-cc-opt="-I/usr/local/src/quiche/include" \
+    --with-ld-opt="-L/usr/local/src/quiche/lib" && \
+    make && \
+    make install
 
 # Install Certbot and Nginx plugin for Certbot
 RUN apt-get update -y && \
