@@ -19,10 +19,15 @@ RUN apt-get update -y && \
     ca-certificates \
     cron \
     cmake \
+    lsb-release \
+    gnupg2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Certbot and Nginx plugin for Certbot
-RUN apt-get install -y certbot python3-certbot-nginx && \
+# Install Certbot and Nginx plugin for Certbot from official repository
+RUN echo "deb http://ppa.launchpad.net/certbot/certbot/ubuntu $(lsb_release -c | awk '{print $2}') main" > /etc/apt/sources.list.d/certbot-ubuntu-certbot.list && \
+    curl -fsSL https://dl.eff.org/certbot-auto.asc | tee /etc/apt/trusted.gpg.d/certbot.asc && \
+    apt-get update -y && \
+    apt-get install -y certbot python3-certbot-nginx && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
