@@ -103,6 +103,7 @@ services:
       - ./nginx:/etc/nginx   # Mount Nginx config
       - ./letsencrypt:/etc/letsencrypt  # Mount Certbot certificates
     entrypoint: /bin/bash /entrypoint.sh
+    command: ["nginx", "-g", "daemon off;"]  # keep nginx running in foreground
 
 volumes:
   postgres_data:
