@@ -3,6 +3,7 @@ FROM nginx:latest
 # Reinstall Nginx to ensure mime.types is available
 RUN apt-get update -y && \
     apt-get install --reinstall nginx -y && \
+    apt-get install -y libnginx-mod-http3 quiche libssl-dev libpcre3-dev zlib1g-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
