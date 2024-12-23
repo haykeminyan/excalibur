@@ -1,14 +1,27 @@
-{% load static %}
-{% block stylesheets %}
-    <!-- Correct usage of static tag -->
-    <link rel="stylesheet"
-          type="text/css"
-          href="{% static 'facture/css/detail_facture_local.css' %}" />
-{% endblock stylesheets %}
-{% block scripts %}
+<!DOCTYPE html>
+{% load custom_filters %}
+<html lang="en">
+    <head>
+        {% load static %}
+        <!-- Load Django static template tag -->
+        <meta charset="UTF-8" />
+        <title>All Factures</title>
+            <link rel="icon" href="{% static 'facture/images/favicon.ico' %}" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+              rel="stylesheet" />
+    {% block stylesheets %}
+        <!-- Correct usage of static tag -->
+        <link rel="stylesheet"
+              type="text/css"
+              href="{% static 'facture/css/detail_facture_world.css' %}" />
+    {% endblock stylesheets %}
+        {% block scripts %}
     <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
     <script src="{% static 'facture/js/worldFactureTools.js' %}"></script>
 {% endblock scripts %}
+    </head>
+<body>
+    {% csrf_token %}
 <div class="facture-container">
     <!-- Kebab Menu (Dropdown) -->
     <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
@@ -50,6 +63,5 @@
     <a href="{% url 'apps.facture:generate-world-docx' facture.pk %}"
        class="btn btn-primary">Download DOCX</a>
 </div>
-<link rel="icon"
-      href="{% static 'facture/images/favicon.ico' %}"
-      type="image/x-icon" />
+</body>
+</html>
