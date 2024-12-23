@@ -18,6 +18,7 @@ RUN apt-get update -y && \
     g++ \
     ca-certificates \
     cargo \
+    cmake \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Rust 1.67 or newer (required by quiche)
