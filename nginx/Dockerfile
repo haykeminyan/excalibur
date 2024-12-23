@@ -21,17 +21,23 @@ RUN apt-get update -y && \
     cmake \
     lsb-release \
     gnupg2 \
-    snapd \
+    software-properties-common \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Certbot using Snap
-RUN snap install core; \
-    snap install --classic certbot; \
-    ln -s /snap/bin/certbot /usr/bin/certbot
+# Install Certbot using apt (no Snap required)
+RUN apt-get update && apt-get install -y certbot python3-certbot-nginx
+
+# Install Rust and Cargo (for building quiche)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    export PATH="$HOME/.cargo/bin:$PATH" && \
+    rustup update stable
 
 # Install QUICHE (QUIC and HTTP/3 support for Nginx)
 RUN git clone --recursive https://github.com/cloudflare/quiche /tmp/quiche && \
     cd /tmp/quiche && \
+    export PATH="$HOME/.cargo/bin:$PATH" && \
     cargo build --release && \
     cp target/release/libquiche.so /usr/local/lib/ && \
     ldconfig
