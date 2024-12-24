@@ -101,10 +101,10 @@
                                             <p class="label-text">
                                                 <span>DATE</span>
                                             </p>
-                                            <div class="mt-2">{{ form.date }}</div>
-                                            {% if form.date.errors %}
+                                            <div class="mt-2">{{ form.created_date }}</div>
+                                            {% if form.created_date.errors %}
                                                 <div class="text-red-600 text-sm mt-1">
-                                                    {% for error in form.date.errors %}<p>{{ error }}</p>{% endfor %}
+                                                    {% for error in form.created_date.errors %}<p>{{ error }}</p>{% endfor %}
                                                 </div>
                                             {% endif %}
                                         </td>
