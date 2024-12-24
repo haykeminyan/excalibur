@@ -812,6 +812,12 @@ button:focus {
 }
 @media (max-width: 650px) {
   .create-filter-button {
-    left: 350px;
+    left: 250px;
+  }
+}
+
+@media (max-width: 510px) {
+  .create-filter-button {
+    left: 200px;
   }
 }

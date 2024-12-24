@@ -50,3 +50,10 @@ body {
   object-fit: contain; /* Ensures the image scales correctly without being distorted */
   z-index: 1000; /* Ensure the logo stays above other elements */
 }
+
+@media (max-width: 680px) {
+  .menu-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 3 columns */
+  }
+}
