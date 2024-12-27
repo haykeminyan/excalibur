@@ -1,0 +1,992 @@
+h1 {
+  text-align: center;
+}
+
+body,
+html {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+/* Center the grid both horizontally and vertically */
+.grid-container-first {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 1fr); /* 2 columns */
+  gap: 20px; /* Space between grid items */
+  max-width: 1000px;
+  text-align: center;
+  margin: auto; /* Center horizontally and vertically */
+  padding: 20px; /* Optional padding inside the container */
+}
+
+/* Style for each grid item */
+.grid-item {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.address-item {
+  grid-column: 1 / -1; /* Make it span across all columns */
+  padding: 30px; /* Add more padding */
+  text-align: center;
+  font-size: 1.2rem; /* Increase font size for a larger block appearance */
+  max-width: 800px; /* Control maximum width */
+  margin: 0 auto; /* Center the block */
+}
+
+#address {
+  width: 500px;
+  height: 100px;
+}
+
+/* Center the grid both horizontally and vertically */
+.grid-container-second {
+  display: inline-grid;
+  grid-template-columns: repeat(4, 1fr); /* 2 columns */
+  gap: 20px; /* Space between grid items */
+  max-width: 1000px;
+  text-align: center;
+  margin: auto; /* Center horizontally and vertically */
+  padding: 20px; /* Optional padding inside the container */
+}
+
+.grid-container-third {
+  display: inline-grid;
+  grid-template-columns: repeat(5, 1fr); /* 2 columns */
+  gap: 20px; /* Space between grid items */
+  max-width: 1000px;
+  text-align: center;
+  margin: auto; /* Center horizontally and vertically */
+  padding: 20px; /* Optional padding inside the container */
+}
+
+.grid-container {
+  text-align: center;
+}
+.container {
+  text-align: center;
+  margin-top: 100px;
+}
+.bg-blue-500 {
+  margin-top: 20px;
+}
+
+.list-pages {
+  text-align: center;
+  position: fixed; /* Fixes the paginator relative to the viewport */
+  bottom: 0; /* Pushes it to the bottom */
+  left: 0; /* Align to the left edge */
+  width: 100%; /* Makes it span the full width */
+  margin: 0; /* Remove any default margin */
+  background-color: #fff; /* Optional: Add a background color */
+  padding: 10px 0; /* Optional: Add some padding for better visibility */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+.list-pages ul {
+  margin: 20px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+.list-pages ul li {
+  display: inline-block;
+  margin: 0 20px 0 0;
+}
+.list-pages a {
+  color: #000;
+  font-size: 24px;
+  text-decoration: none;
+}
+.list-pages .page-num,
+.page-num-selected {
+  display: inline-block;
+  width: 60px;
+  border: 1px solid #d0d0d0;
+  border-radius: 30px;
+}
+.list-pages .page-num:hover {
+  box-shadow: 3px 3px 1px #d0d0d0;
+}
+.list-pages .page-num-selected {
+  border: none;
+  color: #000;
+  font-size: 20px;
+}
+.list-pages .page-num-selected:hover {
+  box-shadow: none;
+}
+
+.logout-button {
+  position: fixed; /* Fixed position for consistent placement */
+  top: 20px; /* Distance from the top of the page */
+  right: 20px; /* Distance from the right edge of the page */
+  padding: 12px 24px; /* Spacious padding */
+  font-size: 16px; /* Font size for readability */
+  font-weight: bold; /* Make the text stand out */
+  text-transform: uppercase; /* Capitalize the text */
+  color: white; /* White text color */
+  background: linear-gradient(
+    90deg,
+    #ff4d4d,
+    #d93636
+  ); /* Smooth gradient background */
+  border: none; /* No borders */
+  border-radius: 50px; /* Full-rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Elevated shadow effect */
+  transition:
+    background 0.3s ease,
+    /* Smooth hover effect for background */ transform 0.2s ease,
+    /* Button scale effect */ box-shadow 0.3s ease; /* Shadow animation */
+  z-index: 1000; /* Keeps the button above other elements */
+  overflow: hidden; /* For gradient animation */
+}
+
+/* Glow effect */
+.logout-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 300%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2); /* Subtle white glow */
+  transform: skewX(-45deg); /* Angle for glowing effect */
+  transition: left 0.5s ease; /* Smooth transition for the glow */
+}
+
+/* Hover effects */
+.logout-button:hover {
+  background: linear-gradient(90deg, #d93636, #b53030); /* Darker gradient */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+}
+
+.logout-button:hover::before {
+  left: 100%; /* Move glow across the button */
+}
+
+.logout-button:active {
+  transform: scale(0.95); /* Slight press-in effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow reduction */
+}
+
+/* Focus effect */
+.logout-button:focus {
+  outline: 3px solid #ff9999; /* Highlight button when focused */
+  outline-offset: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .logout-button {
+    padding: 10px 20px; /* Adjust padding for tablets */
+    font-size: 14px; /* Reduce font size */
+  }
+}
+
+@media (max-width: 480px) {
+  .logout-button {
+    top: 10px; /* Move closer to the top */
+    right: 10px; /* Move closer to the right */
+    padding: 8px 16px; /* Adjust padding for small screens */
+    font-size: 12px; /* Reduce font size further */
+  }
+}
+
+/* Base styles for the button */
+.create-filter-button {
+  position: fixed; /* Keeps the button in a fixed position on the screen */
+  top: 20px; /* Adjusts the vertical position */
+  left: 50%; /* Centers the button horizontally relative to the viewport */
+  transform: translateX(
+    -50%
+  ); /* Offsets the button by half its width for perfect centering */
+  display: inline-flex; /* Ensures proper alignment with the SVG */
+  align-items: center; /* Vertically aligns text and SVG */
+  justify-content: center; /* Centers content horizontally */
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white;
+  background: linear-gradient(
+    90deg,
+    #1e88e5,
+    #1565c0
+  ); /* Blue gradient for a striking look */
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition:
+    background 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out,
+    transform 0.2s ease-in-out;
+  overflow: hidden;
+  text-decoration: none; /* Removes underline for <a> */
+  z-index: 1000; /* Ensures the button appears above other elements */
+}
+
+/* Hover effect */
+.create-filter-button:hover {
+  background: linear-gradient(
+    90deg,
+    #42a5f5,
+    #1976d2
+  ); /* Lighter blue gradient on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Active (click) effect */
+.create-filter-button:active {
+  transform: scale(0.98); /* Slightly shrinks without layout jump */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Glow effect */
+.create-filter-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 300%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-45deg);
+  transition: left 0.5s ease;
+}
+
+/* Glow animation on hover */
+.create-filter-button:hover::before {
+  left: 100%;
+}
+
+/* SVG inside the button */
+.create-filter-button svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px; /* Space between SVG and text */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Slight rotation of SVG on hover */
+.create-filter-button:hover svg {
+  transform: rotate(15deg);
+}
+
+/* Focus effect for keyboard navigation */
+.create-filter-button:focus {
+  outline: 2px solid #64b5f6;
+  outline-offset: 4px;
+}
+
+@media (max-width: 768px) {
+  .create-filter-button {
+    font-size: 14px; /* Smaller text for smaller screens */
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-filter-button {
+    font-size: 12px; /* Even smaller text for extra-small screens */
+    padding: 8px 16px;
+    top: 10px; /* Closer to the top for very small screens */
+  }
+}
+
+/* Base styles for the button */
+.add-filter-button {
+  position: relative; /* Allows for pseudo-elements and dynamic positioning */
+  display: inline-block;
+  padding: 12px 24px; /* Adds comfortable padding */
+  font-size: 16px; /* Makes the text readable */
+  font-weight: bold;
+  text-transform: uppercase; /* Makes the button text all caps */
+  letter-spacing: 1px; /* Adds slight spacing between letters */
+  color: white; /* Text color */
+  background: linear-gradient(
+    90deg,
+    #4caf50,
+    #2e7d32
+  ); /* Stylish green gradient */
+  border: none; /* Removes default border */
+  border-radius: 30px; /* Fully rounded edges */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds depth with shadow */
+  cursor: pointer; /* Indicates interactivity */
+  transition: all 0.3s ease-in-out; /* Smooth animations */
+  overflow: hidden; /* Ensures the pseudo-elements don't overflow */
+}
+
+/* Hover effect */
+.add-filter-button:hover {
+  background: linear-gradient(
+    90deg,
+    #66bb6a,
+    #43a047
+  ); /* Lightens the gradient on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Increases shadow depth */
+  transform: scale(1.05); /* Slightly enlarges the button */
+}
+
+/* Active (click) effect */
+.add-filter-button:active {
+  transform: scale(0.95); /* Slightly shrinks the button on click */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduces shadow */
+}
+
+/* Glow animation on hover */
+.add-filter-button:hover::before {
+  left: 100%; /* Animates the glow effect */
+}
+
+Focus (keyboard navigation) effect .add-filter-button:focus {
+  outline: 2px solid #81c784; /* Highlight the button on focus */
+  outline-offset: 2px;
+}
+
+/* General Button Styles */
+button {
+  position: relative;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:focus {
+  outline: 3px solid #ff9999;
+  outline-offset: 4px;
+}
+
+/* Search Button */
+.search-button {
+  background: linear-gradient(90deg, #4caf50, #45a049);
+  color: white;
+}
+
+.search-button:hover {
+  background: linear-gradient(90deg, #45a049, #3e8e41);
+}
+
+.search-button:hover::before {
+  left: 100%;
+}
+
+/* Clear Filters Button */
+.clear-filters-button {
+  background: linear-gradient(90deg, #ff9800, #fb8c00);
+  color: white;
+}
+
+.clear-filters-button:hover {
+  background: linear-gradient(90deg, #fb8c00, #f57c00);
+}
+
+.clear-filters-button:hover::before {
+  left: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  button {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+/* General Styles for Search Input */
+.search-box {
+  min-width: 10px;
+  max-width: 450px; /* Optimal max-width for larger screens */
+  padding: 18px 24px; /* Slightly more padding for a spacious feel */
+  font-size: 18px; /* Larger font for better readability */
+  font-weight: 600; /* Bold text for a strong presence */
+  color: #333; /* Dark text for clear readability */
+  background-color: #fff; /* White background for a clean look */
+  border: 2px solid #ddd; /* Subtle border */
+  border-radius: 50px; /* Rounded corners for a modern feel */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  transition: all 0.4s ease-in-out; /* Smooth transition effect */
+  outline: none; /* Removes default focus outline */
+}
+
+/* Focused state */
+.search-box:focus {
+  border-color: #6a1b9a; /* Bright border color on focus */
+  background-color: #f8f8f8; /* Subtle background color change */
+  box-shadow: 0 0 12px rgba(106, 27, 154, 0.8); /* Strong focus glow */
+  transform: translateY(-2px); /* Slight lift effect */
+  animation: focusAnimation 0.4s ease-out; /* Smooth animation on focus */
+}
+
+/* Hover Effect */
+.search-box:hover {
+  border-color: #ff4081; /* Change border color on hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Enhanced hover shadow */
+}
+
+/* Placeholder Styling */
+.search-box::placeholder {
+  color: #888; /* Light gray color */
+  font-style: italic; /* Italic for a more refined look */
+  font-weight: 400; /* Light placeholder text */
+  transition: color 0.3s ease; /* Smooth transition for placeholder */
+}
+
+/* Placeholder Hover Effect */
+.search-box:hover::placeholder {
+  color: #ff4081; /* Placeholder color change on hover */
+}
+
+/* Valid Input Styling */
+.search-box:valid {
+  border-color: #4caf50; /* Green border when input is valid */
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.7); /* Green glow */
+}
+
+/* Invalid Input Styling */
+.search-box:invalid {
+  border-color: #f44336; /* Red border for invalid input */
+  box-shadow: 0 0 10px rgba(244, 67, 54, 0.7); /* Red glow for invalid input */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .search-box {
+    max-width: 90%; /* Take up most of the screen width on smaller screens */
+    font-size: 16px; /* Slightly smaller font */
+    padding: 14px 20px; /* Adjust padding for smaller devices */
+  }
+}
+
+@media (max-width: 480px) {
+  .search-box {
+    max-width: 85%; /* Even smaller width for very small screens */
+    font-size: 14px; /* Adjust font size for very small screens */
+    padding: 12px 18px; /* Further reduce padding */
+  }
+}
+
+/* Animation for the focus state */
+@keyframes focusAnimation {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+/* Hover Effect for Placeholder */
+.search-box:hover::placeholder {
+  color: #ff4081; /* Change placeholder color on hover */
+}
+
+/* Active State - When user starts typing */
+.search-box:valid {
+  border-color: #4caf50; /* Green border when input is valid */
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.7); /* Green glow */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .search-box {
+    max-width: 90%; /* Take up most of the screen width on smaller screens */
+    font-size: 16px; /* Slightly smaller font */
+  }
+}
+
+@media (max-width: 480px) {
+  .search-box {
+    max-width: 85%; /* Even smaller width for very small screens */
+    font-size: 14px; /* Adjust font size */
+  }
+}
+
+/* General Styles for Select Dropdown */
+.filter-dropdown {
+  position: relative;
+  max-width: 350px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: left;
+}
+
+/* Styling the Arrow Icon */
+.filter-dropdown::after {
+  content: "▼";
+  font-size: 12px;
+  color: #333;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Focused state */
+.filter-dropdown:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+}
+
+/* Hover effect */
+.filter-dropdown:hover {
+  border-color: #45a049;
+}
+
+/* Option Styling */
+.filter-dropdown option {
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+/* Option Hover Effect */
+.filter-dropdown option:hover {
+  background-color: #f4f4f4;
+}
+
+/* Selected Option Styling */
+.filter-dropdown option[selected] {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  .filter-dropdown {
+    max-width: 300px;
+    font-size: 14px;
+  }
+  #add-filter-btn,
+  .search-button,
+  #clear-filters-btn,
+  .logout-button {
+    width: 200px;
+  }
+  .button-container {
+    display: flex;
+    flex-direction: column; /* Forces items into a column */
+    gap: 10px; /* Adds spacing between the buttons */
+  }
+
+  /* Optional: Ensures buttons don't override styles */
+  .create-filter-button,
+  .logout-button {
+    display: inline-block;
+    width: fit-content; /* Ensures buttons are the correct size */
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-dropdown {
+    max-width: 250px;
+    font-size: 12px;
+  }
+}
+
+/* General Container Styling */
+.facture-container {
+  width: 100%;
+  max-width: 600px; /* Limiting the max width for better readability */
+  text-align: center;
+  background-color: #fff; /* White background */
+  border-radius: 12px; /* Rounded corners for a soft, modern look */
+  padding: 20px; /* Padding around the content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  margin: 20px auto; /* Centering the content */
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease; /* Smooth transition for hover effect */
+  right: 25px;
+}
+
+/* Hover effect for the container */
+.facture-container:hover {
+  transform: translateY(-5px); /* Slight lift effect */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Facture Title Styling */
+.facture-title {
+  font-size: 24px; /* Larger font for the title */
+  font-weight: bold; /* Bold for emphasis */
+  color: #1a1d1f; /* Dark gray color for title */
+  margin-bottom: 10px; /* Space below the title */
+}
+
+/* Facture Details Styling */
+.facture-details {
+  font-size: 16px; /* Slightly smaller text for the details */
+  color: #4b4f54; /* Medium gray for text */
+  margin-bottom: 8px; /* Space between each piece of information */
+  line-height: 1.5; /* Improved line spacing for readability */
+}
+
+/* Button Styling */
+button {
+  background-color: #1877f2; /* Facebook blue */
+  color: #fff; /* White text color */
+  font-size: 16px; /* Medium font size */
+  font-weight: bold; /* Bold text for the button */
+  padding: 12px 24px; /* Padding for better button size */
+  border-radius: 25px; /* Rounded button edges */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Pointer cursor on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease; /* Transition for hover effects */
+}
+
+/* Button Hover Effect */
+button:hover {
+  background-color: #165eab; /* Darker blue on hover */
+  transform: scale(1.05); /* Slightly enlarges the button */
+}
+
+/* Button Focus Effect */
+button:focus {
+  outline: none; /* Remove outline */
+  box-shadow: 0 0 5px 2px rgba(24, 119, 242, 0.5); /* Focus glow */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .facture-container {
+    max-width: 90%; /* Allow the container to use more width on small screens */
+    padding: 15px; /* Reduced padding for smaller screens */
+  }
+
+  .facture-title {
+    font-size: 20px; /* Smaller title on small screens */
+  }
+
+  .facture-details {
+    font-size: 14px; /* Smaller details text on mobile */
+  }
+
+  button {
+    width: 100%; /* Make the button take full width on mobile */
+  }
+}
+
+/* Styling the logo */
+.top-left-logo {
+  position: fixed; /* Keeps it fixed even when scrolling */
+  top: 20px; /* Distance from the top of the page */
+  left: 20px; /* Distance from the left edge of the page */
+  width: 150px; /* Set width, or use percentage for responsive scaling */
+  height: auto; /* Keep the aspect ratio */
+  object-fit: contain; /* Ensures the image scales correctly without being distorted */
+  z-index: 1000; /* Ensure the logo stays above other elements */
+}
+
+.w-8.h-8 {
+  width: 50px; /* Ensures the image retains its natural width */
+  height: auto; /* Ensures the image retains its natural height */
+  max-width: none; /* Disables any constraints on width */
+  max-height: none; /* Disables any constraints on height */
+}
+
+/* Position the kebab menu button */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  background-color: #f44336;
+  position: absolute;
+  top: 0;
+  right: 0; /* Align to the right */
+}
+
+/* Style the dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%; /* Position below the button */
+  right: 0; /* Align with the button */
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 150px; /* Set a minimum width */
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+#delete-button {
+  background-color: red;
+}
+#update-button {
+  background-color: green;
+}
+/* General Dropdown Styles */
+
+.dropdown-toggle {
+  z-index: 0;
+}
+.dropdown {
+  min-width: 20px;
+}
+
+/* Active (click) effect */
+.create-filter-button:active {
+  transform: scale(0.98); /* Slightly shrinks without layout jump */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1016px) {
+  .create-filter-button {
+    margin-left: 80px;
+  }
+}
+@media (max-width: 650px) {
+  .create-filter-button {
+    left: 250px;
+  }
+}
+
+@media (max-width: 510px) {
+  .create-filter-button {
+    left: 200px;
+  }
+}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .table-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .supplier-container {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            width: 300px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .supplier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .supplier-header h2 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .toggle-btn {
+            font-size: 14px;
+            color: #007bff;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .supplier-details {
+            display: none;
+        }
+
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .carousel-item {
+            flex: 0 0 auto;
+            width: 250px;
+            scroll-snap-align: start;
+            background-color: #fdfdfd;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .carousel-item p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        /* Horizontal Scrollbar */
+        .table-container::-webkit-scrollbar,
+        .carousel-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb,
+        .carousel-container::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-track,
+        .carousel-container::-webkit-scrollbar-track {
+            background: #f4f4f4;
+        }
+        .supplier{
+          width: 50%;
+        }
+        .table-container{
+          display: grid;
+                      grid-template-columns: repeat(3, 1fr); /* 2 columns */
+        }
+        /* Position the kebab menu button */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  background-color: #f44336;
+  position: absolute;
+  top: 0;
+  right: 0; /* Align to the right */
+}
+
+/* Style the dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%; /* Position below the button */
+  right: 0; /* Align with the button */
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 150px; /* Set a minimum width */
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+#delete-button {
+  background-color: red;
+}
+#update-button {
+  background-color: green;
+}
+/* General Dropdown Styles */
+
+.dropdown-toggle {
+  z-index: 0;
+}
+.dropdown {
+  min-width: 20px;
+  left: 110px;
+bottom: 20px;
+}

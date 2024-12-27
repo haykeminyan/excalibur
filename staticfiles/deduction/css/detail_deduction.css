@@ -1,0 +1,186 @@
+/* General Container Styling */
+.facture-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centering the container */
+  background-color: #f9f9f9; /* Optional: Add a background color */
+  text-align: center;
+  padding: 20px; /* Add some padding */
+  border-radius: 10px; /* Optional: Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
+  width: 80%; /* Optional: Set a width */
+  max-width: 600px; /* Optional: Set a max width */
+}
+
+/* Hover effect for the container */
+.facture-container:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Facture Title Styling */
+.facture-title {
+  font-size: 24px; /* Larger font for the title */
+  font-weight: bold; /* Bold for emphasis */
+  color: #1a1d1f; /* Dark gray color for title */
+  margin-bottom: 10px; /* Space below the title */
+}
+
+/* Facture Details Styling */
+.facture-details {
+  font-size: 16px; /* Slightly smaller text for the details */
+  color: #4b4f54; /* Medium gray for text */
+  margin-bottom: 8px; /* Space between each piece of information */
+  line-height: 1.5; /* Improved line spacing for readability */
+}
+
+/* Button Styling */
+button {
+  background-color: #1877f2; /* Facebook blue */
+  color: #fff; /* White text color */
+  font-size: 16px; /* Medium font size */
+  font-weight: bold; /* Bold text for the button */
+  padding: 12px 24px; /* Padding for better button size */
+  border-radius: 25px; /* Rounded button edges */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Pointer cursor on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease; /* Transition for hover effects */
+}
+
+/* Button Hover Effect */
+button:hover {
+  background-color: #165eab; /* Darker blue on hover */
+  transform: scale(1.05); /* Slightly enlarges the button */
+}
+
+/* Button Focus Effect */
+button:focus {
+  outline: none; /* Remove outline */
+  box-shadow: 0 0 5px 2px rgba(24, 119, 242, 0.5); /* Focus glow */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .facture-container {
+    max-width: 90%; /* Allow the container to use more width on small screens */
+    padding: 15px; /* Reduced padding for smaller screens */
+  }
+
+  .facture-title {
+    font-size: 20px; /* Smaller title on small screens */
+  }
+
+  .facture-details {
+    font-size: 14px; /* Smaller details text on mobile */
+  }
+
+  button {
+    width: 100%; /* Make the button take full width on mobile */
+  }
+}
+
+/* Style the dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%; /* Position below the button */
+  right: 0; /* Align with the button */
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 150px; /* Set a minimum width */
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+#delete-button {
+  background-color: red;
+}
+#update-button {
+  background-color: green;
+}
+/* Position the kebab menu button */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  background-color: #f44336;
+  position: absolute;
+  top: 0;
+  right: 0; /* Align to the right */
+}
+
+/* Style the dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%; /* Position below the button */
+  right: 0; /* Align with the button */
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 150px; /* Set a minimum width */
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+#delete-button {
+  background-color: red;
+}
+#update-button {
+  background-color: green;
+}
+/* General Dropdown Styles */
+
+.dropdown-toggle {
+  z-index: 0;
+}
+.dropdown {
+  min-width: 20px;
+}

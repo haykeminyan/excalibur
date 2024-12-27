@@ -620,7 +620,7 @@ td {
 /* For smaller screens (less than 1495px) */
 @media (max-width: 1498px) {
 
-#id_total_ttc, #id_date, #id_quantity, #id_receiver, #id_specification{
+#id_total_ttc, #id_created_date, #id_quantity, #id_receiver, #id_specification{
   width: 100%;
 }
 
@@ -685,7 +685,7 @@ td {
 
 /* Optional: For even smaller screens (e.g., mobile devices) */
 @media (max-width: 820px) {
-   .date, .firm-name, .reference-new, .quantity, .quantity_after_percent, .total_tax, .deposit {
+   .created_date, .firm-name, .reference-new, .quantity, .quantity_after_percent, .total_tax, .deposit {
 width: 100%;
 }
   #id_firm_name, #id_sku, #id_shipping_fee{
