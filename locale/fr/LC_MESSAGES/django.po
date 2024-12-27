@@ -1,0 +1,117 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-27 15:20+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: apps/facture/templates/html/local_list_facture.html:9
+#: apps/facture/templates/html/local_list_facture.html:24
+msgid "All Factures"
+msgstr "Toutes les Factures"
+
+#: apps/facture/templates/html/local_list_facture.html:35
+msgid "Change Language"
+msgstr "Changer la langue"
+
+#: excalibur/settings.py:31
+msgid "English"
+msgstr "Anglais"
+
+#: excalibur/settings.py:32
+msgid "French"
+msgstr "Français"
+
+msgid "Number facture"
+msgstr "Numéro de facture"
+
+msgid "Created date"
+msgstr "Date de création"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Percent"
+msgstr "P.U.TTC"
+
+msgid "Total Tax"
+msgstr "Total Taxe"
+
+msgid "--Select Filter--"
+msgstr "--Sélectionner le filtre--"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Search..."
+msgstr "Recherche..."
+
+msgid "Clear Filters"
+msgstr "Effacer les filtres"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Quantity"
+msgstr "Quantité"
+
+msgid "Last Updated"
+msgstr "Dernière mise à jour"
+
+msgid "No factures found."
+msgstr "Aucune facture trouvée."
+
+msgid "Add Filter"
+msgstr "Ajouter un filtre"
+
+msgid "Create"
+msgstr "Créer"
+
+msgid "Destination"
+msgstr "Désignation"
+
+msgid "Quantity after percent"
+msgstr "Montant"
+
+msgid "Deposit"
+msgstr "Acompte"
+
+msgid "Net a payer"
+msgstr "Net à payer"
+
+msgid "Firm name"
+msgstr "Nom de L’entreprise"
+
+msgid "Download DOCX"
+msgstr "Télécharger DOCX"

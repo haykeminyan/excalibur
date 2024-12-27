@@ -6,10 +6,11 @@ import re
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles import finders
 from django.forms.models import model_to_dict
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     CreateView,
@@ -21,11 +22,14 @@ from django.views.generic import (
 )
 from docx import Document
 
+from excalibur import settings
 from .constants import LOCAL_FIELDS, WORLD_FIELDS
 from .models import LocalFacture, WorldFacture
 from .parsing_docx import replace_placeholders_in_doc, set_font_size
+from django.utils.translation import get_language
 
 logger = logging.getLogger(__name__)
+
 
 
 class CSRFExemptMixin:
@@ -46,6 +50,8 @@ class BaseFactureListView(LoginRequiredMixin, ListView):
         search_params = self.request.GET.dict()
         queryset = super().get_queryset().select_related('owner')
         search_params.pop('page', None)
+        if 'language' in search_params:
+            del search_params['language']
         if search_params:
             queryset = queryset.filter(**search_params)
         else:
@@ -55,6 +61,8 @@ class BaseFactureListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['current_language'] = get_language()  # Get current language code
+        context['redirect_to'] = self.request.path  # Save the current URL to redirect after language change
         return context
 
 

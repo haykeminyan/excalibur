@@ -46,6 +46,7 @@ services:
       - ./apps/deduction:/usr/src/app/apps/deduction
       - ./apps/users:/usr/src/app/apps/users
       - ./apps/main:/usr/src/app/apps/main
+      - ./locale:/usr/src/app/locale
       - ./excalibur:/usr/src/app/excalibur
       - ./staticfiles:/usr/src/app/staticfiles
     restart: always

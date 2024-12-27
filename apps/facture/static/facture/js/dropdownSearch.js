@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     input.value = ""; // Clear the input box
   };
 
-  // Handle initial dropdown change for main filter
+  // Handle initial dropdown change for the main filter
   if (dropdown && searchInput) {
     dropdown.addEventListener("change", () => {
       updateSearchInputName(searchInput, dropdown.value);
@@ -68,14 +68,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add event listener to the "Add Filter" button
   if (addFilterButton && form) {
-    addFilterButton.addEventListener("click", createFilterBlock);
+    addFilterButton.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent form submission
+      createFilterBlock();
+    });
   }
 
   // Add event listener for Clear Filters button
   const clearFiltersButton = document.getElementById("clear-filters-btn");
 
   if (clearFiltersButton) {
-    clearFiltersButton.addEventListener("click", () => {
+    clearFiltersButton.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent form submission
       const form = document.querySelector(".search-form");
       if (form) {
         form.reset(); // Reset all form inputs

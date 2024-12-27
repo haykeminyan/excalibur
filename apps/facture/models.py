@@ -24,6 +24,7 @@ class Facture(models.Model):
     net_pay = models.FloatField()
 
 
+
 class LocalFacture(Facture):
     # check if this fucking shit has reason to exist
     destination = models.CharField(max_length=255, default='Recharge express')

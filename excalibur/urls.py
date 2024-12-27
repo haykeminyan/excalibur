@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import include, path
 from django.views.generic import RedirectView
+from django.views.i18n import set_language
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,6 @@ urlpatterns = [
     path('main/', include('apps.main.urls', namespace='main')),
     path('users/', include('apps.users.urls', namespace='users')),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('set_language/', set_language, name='set_language'),
 ]

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,6 +26,18 @@ SECRET_KEY = 'django-insecure-+dmib-8)00(@_hq$-8^mwx*dj@7m2*0#f^o%1+0_wij+^zy7+s
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('fr', _('French')),
+    # Add more languages here
+]
+LANGUAGE_CODE = 'en'
+USE_I18N = True
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',  # Path for storing translation files
+]
+LANGUAGE_COOKIE_NAME = 'django_language'
 
 ALLOWED_HOSTS = [
     'pmsolution-facture.org',
@@ -81,7 +95,8 @@ LOGGING = {
 }
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -172,11 +187,9 @@ HOME_TEMPLATES = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
 
 USE_TZ = True
 
