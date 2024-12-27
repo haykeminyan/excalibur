@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+{% load custom_filters %}
+<html lang="en">
+    <head>
+        {% load static %}
+        <!-- Load Django static template tag -->
+        <meta charset="UTF-8" />
+        <title>All Deductions</title>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+              rel="stylesheet" />
+         <meta name="csrf-token" content="{{ csrf_token }}">
+        {% block stylesheets %}
+            <!-- Correct usage of static tag -->
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="{% static 'deduction/css/list_deduction.css' %}" />
+        {% endblock stylesheets %}
+    </head>
+    {% csrf_token %}
+    <body class="bg-gray-100">
+        <div class="container mx-auto py-8">
+            <!-- Header Section -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">All Deductions</h1>
+                <!-- Dropdown for select options -->
+                <form method="get" action="" class="search-form">
+                    <!-- Preserve existing filters as hidden inputs -->
+                    {% for key, value in request.GET.items %}<input type="hidden" name="{{ key }}" value="{{ value }}" />{% endfor %}
+                    <!-- Dropdown for select options -->
+                    <!-- Search box -->
+    <input type="text"
+           id="search"
+           name="supplier"
+           class="search-box"
+           placeholder="Search by Supplier..."
+           value="{{ request.GET.supplier|default:'' }}" />
+                    <!-- Submit button -->
+                    <button type="submit" class="search-button">Search</button>
+                    <button type="button" id="clear-filters-btn" class="clear-filters-button">Clear Filters</button>
+                </form>
+                {% block scripts %}
+                    <script src="{% static 'deduction/js/dropdownSearch.js' %}"></script>
+                    <script src="{% static 'deduction/js/deductionTools.js' %}"></script>
+                {% endblock scripts %}
+                <div class="button-container">
+                    <!-- First button -->
+                    <a href="{% url 'apps.deduction:create' %}"
+                       class="create-filter-button">
+                        <svg class="w-4 h-4 mr-2"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Create
+                    </a>
+                    <!-- Second button -->
+                    <form method="post" action="{% url 'apps.users:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                </div>
+            </div>
+            <a href="{% url 'apps.main:main_menu' %}">
+                <img src="{% static 'deduction/images/logo.png' %}"
+                     alt="logo"
+                     class="top-left-logo" />
+            </a>
+            <!-- Factures List -->
+    <div class="table-container">
+        {% for supplier, deductions in suppliers_with_deductions %}
+            <div class="supplier-container">
+                <div class="supplier-header">
+                    <h2><strong>{{ supplier }}</strong></h2>
+                    <button class="toggle-btn" onclick="toggleDetails(this)">Show Details</button>
+                </div>
+                <div class="supplier-details">
+                    <div class="carousel-container">
+                        {% for deduction in deductions %}
+                            <div class="carousel-item">
+                                                                                        <!-- Kebab Menu (Dropdown) -->
+                        <div class="dropdown">
+                            <button class="dropdown-toggle"
+                                    aria-label="Actions"
+                                    onclick="toggleDropdown(this)">
+                                &#x22EE;
+                                <!-- Unicode for vertical ellipsis -->
+                            </button>
+                            <div class="dropdown-menu">
+                                <!-- Update button -->
+                                <button class="dropdown-item"
+                                        id="update-button"
+                                        onclick="updateItem({{ deduction.pk }})">Update</button>
+                                <!-- Delete button -->
+                                <button class="dropdown-item"
+                                        id="delete-button"
+                                        onclick="deleteItem({{ deduction.pk }})">Delete</button>
+                            </div>
+                        </div>
+                                <a href="{% url 'apps.deduction:detail' deduction.id %}">
+                                <p><strong>Number:</strong> {{ deduction.number_deduction }}</p>
+                                <p><strong>Date:</strong> {{ deduction.created_date }}</p>
+                                <p><strong>IFN:</strong> {{ deduction.ifn }}</p>
+                                <p><strong>Nature of products:</strong> {{ deduction.nature_of_products }}</p>
+                                    <p><strong>Montant TTC:</strong> {{ deduction.montant_ttc }}</p>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+            </div>
+            <!-- Pagination Section -->
+            {% if page_obj.has_other_pages %}
+                <nav class="list-pages">
+                    <ul>
+                        {% if page_obj.has_previous %}
+                            <li class="page-num">
+                                <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">&lt;</a>
+                            </li>
+                        {% endif %}
+                        {% for p in paginator.page_range %}
+                            {% if page_obj.number == p %}
+                                <li class="page-num page-num-selected">{{ p }}</li>
+                            {% else %}
+                                {% if p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                                    <li class="page-num">
+                                        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ p }}">{{ p }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-num">
+                                <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">&gt;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

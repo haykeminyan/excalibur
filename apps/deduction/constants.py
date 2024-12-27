@@ -1,0 +1,18 @@
+DEDUCTION_FIELDS = [
+    'created_date',
+    'proporated_rate',
+    'payment_choice',
+    'number_deduction',
+    'owner',
+    'ifn',
+    'supplier',
+    'nature_of_products',
+    'montant_ttc',
+    'montant_ht',
+    'taux_tva',
+    'montant_tva',
+    'date_regulations',
+    'cr',
+    'ice',
+]
+

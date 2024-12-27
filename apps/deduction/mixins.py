@@ -5,6 +5,7 @@ import re
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles import finders
+from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -20,10 +21,10 @@ from django.views.generic import (
     View,
 )
 from docx import Document
-
-from .constants import LOCAL_FIELDS, WORLD_FIELDS
-from .models import LocalFacture, WorldFacture
-from .parsing_docx import replace_placeholders_in_doc, set_font_size
+from itertools import groupby
+from .constants import DEDUCTION_FIELDS
+from .models import Deduction
+from ..facture.parsing_docx import replace_placeholders_in_doc, set_font_size
 
 logger = logging.getLogger(__name__)
 
@@ -38,27 +39,63 @@ class CSRFExemptMixin:
         return super().dispatch(*args, **kwargs)
 
 
-class BaseFactureListView(LoginRequiredMixin, ListView):
-    context_object_name = 'factures'
+
+class BaseDeductionListView(LoginRequiredMixin, ListView):
+    context_object_name = 'deductions'
     paginate_by = 3
 
     def get_queryset(self):
-        search_params = self.request.GET.dict()
+        """
+        Filter deductions by supplier if 'supplier' is provided in the query params.
+        """
+        supplier = self.request.GET.get('supplier')
+        logger.error(f"Supplier filter: {supplier}")
         queryset = super().get_queryset().select_related('owner')
-        search_params.pop('page', None)
-        if search_params:
-            queryset = queryset.filter(**search_params)
+
+        if supplier:
+            queryset = queryset.filter(supplier__icontains=supplier)  # Use icontains for partial match
+            logger.debug(f"Filtered queryset: {queryset}")
         else:
             queryset = queryset.order_by('-update_time')
 
         return queryset
 
     def get_context_data(self, **kwargs):
+        """
+        Add grouped and paginated supplier data to the context.
+        """
         context = super().get_context_data(**kwargs)
+
+        # Filter and order deductions
+        supplier = self.request.GET.get('supplier', '')
+        deductions = Deduction.objects.select_related('owner')
+        if supplier:
+            deductions = deductions.filter(supplier__icontains=supplier)
+        deductions = deductions.order_by('supplier')
+
+        # Group deductions by supplier
+        grouped_deductions = {
+            supplier: list(records)
+            for supplier, records in groupby(deductions, key=lambda d: d.supplier)
+        }
+
+        logger.debug(f"Grouped deductions: {grouped_deductions}")
+
+        # Paginate grouped deductions
+        grouped_items = list(grouped_deductions.items())
+        paginator = Paginator(grouped_items, self.paginate_by)  # 2 suppliers per page
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        # Add to context
+        context['suppliers_with_deductions'] = page_obj
+        context['page_obj'] = page_obj  # For pagination controls
+        context['supplier_filter'] = supplier  # To keep the filter input populated
+
+        logger.debug(f"Context data: {context}")
         return context
 
-
-class BaseFactureCreateView(LoginRequiredMixin, CreateView):
+class BaseDeductionCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('success_url')  # Update this as needed
 
     def get_context_data(self, **kwargs):
@@ -99,7 +136,7 @@ class BaseFactureCreateView(LoginRequiredMixin, CreateView):
 
 
 # Base views for shared logic
-class BaseFactureUpdateView(LoginRequiredMixin, UpdateView):
+class BaseDeductionUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -127,7 +164,7 @@ class BaseFactureUpdateView(LoginRequiredMixin, UpdateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class BaseFactureDeleteView(LoginRequiredMixin, DeleteView):
+class BaseDeductionDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -144,8 +181,8 @@ class BaseFactureDeleteView(LoginRequiredMixin, DeleteView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class BaseFactureDetailView(LoginRequiredMixin, DetailView):
-    context_object_name = 'facture'
+class BaseDeductionDetailView(LoginRequiredMixin, DetailView):
+    context_object_name = 'deduction'
     slug_url_kwarg = 'pk'
 
     def get_object(self, **kwargs):
@@ -159,8 +196,8 @@ class BaseFactureDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
-    local_template = 'facture/file_templates/file_input/Facture_template_Maroc.docx'
+class BaseDeductionExportDocx(LoginRequiredMixin, View):
+    local_template = 'deduction/file_templates/file_input/Deduction_template.docx'
 
     def generate_docx(self, facture_object, template_path):
         """
@@ -170,7 +207,7 @@ class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
         template_path = finders.find(template_path)
         doc = Document(template_path)
 
-        for field in LOCAL_FIELDS:
+        for field in DEDUCTION_FIELDS:
             regex = re.compile(rf'{re.escape(field)}')
             replace_placeholders_in_doc(doc, regex, facture_dict)
 
@@ -185,12 +222,12 @@ class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
         Handles the GET request to generate the DOCX file and return it as a downloadable response.
         """
         # Fetch deduction object
-        facture_object = get_object_or_404(LocalFacture, pk=kwargs.get('pk'))
+        deduction_object = get_object_or_404(Deduction, pk=kwargs.get('pk'))
 
         # Generate the DOCX file
-        file_stream = self.generate_docx(facture_object, self.local_template)
+        file_stream = self.generate_docx(deduction_object, self.local_template)
 
-        file_path = f'/usr/src/app/apps/facture/static/facture/file_templates/file_output/local_facture_{facture_object.number_facture}.docx'
+        file_path = f'/usr/src/app/apps/deduction/static/deduction/file_templates/file_output/deduction_{deduction_object.number_deduction}.docx'
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         # Save the generated DOCX file to the specified path
         with open(file_path, 'wb') as docx_file:
@@ -202,54 +239,6 @@ class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
             content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         )
         response['Content-Disposition'] = (
-            f'attachment; filename="local_facture_{facture_object.number_facture}.docx"'
-        )
-        return response
-
-
-class BaseFactureWorldExportDocx(LoginRequiredMixin, View):
-    local_template = 'facture/file_templates/file_input/Facture_template_World.docx'
-
-    def generate_docx(self, facture_object, template_path):
-        """
-        Generate a DOCX file from the template and return it as a BytesIO stream.
-        """
-        facture_dict = model_to_dict(facture_object)
-        template_path = finders.find(template_path)
-        doc = Document(template_path)
-
-        for field in WORLD_FIELDS:
-            regex = re.compile(rf'{re.escape(field)}')
-            replace_placeholders_in_doc(doc, regex, facture_dict)
-
-        set_font_size(doc)
-        file_stream = io.BytesIO()
-        doc.save(file_stream)
-        file_stream.seek(0)
-        return file_stream
-
-    def get(self, request, *args, **kwargs):
-        """
-        Handles the GET request to generate the DOCX file and return it as a downloadable response.
-        """
-        # Fetch deduction object
-        facture_object = get_object_or_404(WorldFacture, pk=kwargs.get('pk'))
-
-        # Generate the DOCX file
-        file_stream = self.generate_docx(facture_object, self.local_template)
-
-        file_path = f'/usr/src/app/apps/facture/static/facture/file_templates/file_output/world_facture_{facture_object.number_facture}.docx'
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        # Save the generated DOCX file to the specified path
-        with open(file_path, 'wb') as docx_file:
-            docx_file.write(file_stream.getvalue())  # Assuming file_stream is a BytesIO object
-
-        # Create the HTTP response for file download
-        response = HttpResponse(
-            file_stream,
-            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        )
-        response['Content-Disposition'] = (
-            f'attachment; filename="world_facture_{facture_object.number_facture}.docx"'
+            f'attachment; filename="deduction_{deduction_object.number_deduction}.docx"'
         )
         return response

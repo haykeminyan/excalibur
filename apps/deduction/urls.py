@@ -18,8 +18,19 @@ Including another URLconf
 from django.urls import path
 
 from apps.deduction import views
+from apps.deduction.mixins import BaseDeductionExportDocx
 
 app_name = 'apps.deduction'
 urlpatterns = [
-
+    path('', views.DeductionListView.as_view(), name='list'),
+    path('detail/<int:pk>/', views.DeductionDetailView.as_view(), name='detail'),
+    path('create/', views.AddDeduction.as_view(), name='create'),
+    path('update/<int:pk>/', views.UpdateDeduction.as_view(), name='edit'),
+    path('delete/<int:pk>/', views.DeleteDeduction.as_view(), name='delete'),
+    path(
+        'generate-docx/<int:pk>/',
+        BaseDeductionExportDocx.as_view(),
+        name='generate-deduction-docx',
+    ),
 ]
+

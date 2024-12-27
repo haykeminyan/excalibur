@@ -137,9 +137,9 @@ DATABASES = {
 }
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        # 'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         # ! uncomment dummyCache for debug sql queries
-        # 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         'LOCATION': 'redis://redis:6379',
     },
 }
