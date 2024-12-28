@@ -20,10 +20,9 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-gray-800">{% trans "All Factures" %}</h1>
 
-                <!-- Language Selection Form -->
+<!-- Language Selection Form -->
 <form action="{% url 'set_language' %}" method="post">
     {% csrf_token %}
-    <input name="next" type="hidden" value="{{ request.path }}" />
 
     <!-- Custom dropdown wrapper -->
     <div class="custom-dropdown">Choose language
@@ -109,11 +108,12 @@
                     <h2 class="facture-title">{% trans 'Number facture' %}: {{ facture.number_facture }}</h2>
                     <p class="facture-details">{% trans 'Date' %}: {{ facture.created_date }}</p>
                     <p class="facture-details">{% trans 'Reference' %}: {{ facture.reference }}</p>
-                    <p class="facture-details">{% trans 'Total' %}: {{ facture.total_payment_after_tax }}</p>
+                    <p class="facture-details">{% trans 'Total H.T' %}: {{ facture.tax_ht }}</p>
                     <p class="facture-details">{% trans 'Address' %}: {{ facture.address }}</p>
                     <p class="facture-details">{% trans 'Quantity' %}: {{ facture.quantity }}</p>
-                    <p class="facture-details">{% trans 'Percent' %}: {{ facture.percent }}</p>
-                    <p class="facture-details">{% trans 'Quantity After Percent' %}: {{ facture.quantity_after_percent }}</p>
+                    <p class="facture-details">{% trans 'P.U.TTC' %}: {{ facture.percent }}</p>
+                    <p class="facture-details">{% trans 'Total H.T.' %}: {{ facture.tax_ht }}</p>
+                    <p class="facture-details">{% trans 'Montant' %}: {{ facture.quantity_after_percent }}</p>
                     <p class="facture-details">{% trans 'Total Tax' %}: {{ facture.total_tax }}</p>
                     <p class="facture-details">{% trans 'Last Updated' %}: {{ facture.update_time }}</p>
                 </a>

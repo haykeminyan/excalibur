@@ -115,3 +115,28 @@ msgstr "Nom de L’entreprise"
 
 msgid "Download DOCX"
 msgstr "Télécharger DOCX"
+
+msgid "SKU"
+msgstr "SKU"
+
+msgid "Bill to"
+msgstr "Facturer à"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Specification"
+msgstr "Spécification"
+
+msgid "QTY"
+msgstr "QTÉ"
+
+msgid "UNIT PRICE USD"
+msgstr "PRIX UNITAIRE USD"
+
+msgid "AMOUNT"
+msgstr "MONTANTE"
+
+msgid "Shipping fee"
+msgstr "Frais d'expédition"
+

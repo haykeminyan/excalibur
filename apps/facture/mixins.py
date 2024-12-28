@@ -50,8 +50,6 @@ class BaseFactureListView(LoginRequiredMixin, ListView):
         search_params = self.request.GET.dict()
         queryset = super().get_queryset().select_related('owner')
         search_params.pop('page', None)
-        if 'language' in search_params:
-            del search_params['language']
         if search_params:
             queryset = queryset.filter(**search_params)
         else:
@@ -61,8 +59,6 @@ class BaseFactureListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['current_language'] = get_language()  # Get current language code
-        context['redirect_to'] = self.request.path  # Save the current URL to redirect after language change
         return context
 
 

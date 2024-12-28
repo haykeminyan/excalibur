@@ -75,13 +75,12 @@
     <p class="facture-details">{% trans "Firm name" %}: {{ facture.firm_name }}</p>
     <p class="facture-details">{% trans "Address" %}: {{ facture.address }}</p>
     <!-- Displaying the existing fields -->
-    <p class="facture-details">{% trans "Created date" %}: {{ facture.date }}</p>
+    <p class="facture-details">{% trans "Created date" %}: {{ facture.created_date }}</p>
     <p class="facture-details">{% trans "Reference" %}: {{ facture.reference }}</p>
     <p class="facture-details">{% trans "Destination" %}: {{ facture.destination }}</p>
     <p class="facture-details">{% trans "Quantity" %}: {{ facture.quantity }}</p>
     <p class="facture-details">{% trans "Percent" %}: {{ facture.percent }}</p>
-    <p class="facture-details">{% trans "Quantity after percent" %}: {{ facture.quantity_after_percent }}</p>
-    <p class="facture-details">{% trans "Total H.T." %}: {{ facture.total_ht }}</p>
+    <p class="facture-details">{% trans "Total H.T." %}: {{ facture.tax_ht }}</p>
     <p class="facture-details">{% trans "Total Tax" %}: {{ facture.total_tax }}</p>
     <p class="facture-details">{% trans "Total T.T.C" %}: {{ facture.quantity_after_percent }}</p>
     <p class="facture-details">{% trans "Deposit" %}: {{ facture.deposit }}</p>
