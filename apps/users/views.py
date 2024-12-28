@@ -9,9 +9,21 @@ class LoginUser(LoginView):
     template_name = 'html/login.html'
     extra_context = {'title': 'Authorization'}
 
+    def dispatch(self, request, *args, **kwargs):
+        # Remove the language cookie on logout
+        response = super().dispatch(request, *args, **kwargs)
+        response.delete_cookie('django_language')  # Remove the language cookie
+        return response
+
     def get_success_url(self):
         return reverse_lazy('apps.facture:local_list')
 
 
 class LogoutUser(LogoutView):
     template_name = 'html/login.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Remove the language cookie on logout
+        response = super().dispatch(request, *args, **kwargs)
+        response.delete_cookie('django_language')  # Remove the language cookie
+        return response
