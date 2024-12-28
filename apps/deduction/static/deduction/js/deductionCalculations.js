@@ -1,5 +1,39 @@
 /* jshint esversion: 6 */
+document.addEventListener("DOMContentLoaded", function() {
+    // Prefill created_date field
+    var createdDateContainer = document.getElementById("created-date-container");
+    var createdDateValue = createdDateContainer ? createdDateContainer.getAttribute("data-created-date") : null;
 
+    if (createdDateValue) {
+        var createdDateInput = document.getElementById("id_created_date");
+        if (createdDateInput) {
+            createdDateInput.value = createdDateValue;
+            console.log("Prefilling created_date with value:", createdDateValue);
+            console.log("Created Date Value after setting:", createdDateInput.value);
+        } else {
+            console.error("Created date input field not found.");
+        }
+    } else {
+        console.error("No created_date value found.");
+    }
+
+    // Prefill date_regulations field
+    var regulationsDateContainer = document.getElementById("date-regulations-container");
+    var regulationsDateValue = regulationsDateContainer ? regulationsDateContainer.getAttribute("data-regulations-date") : null;
+
+    if (regulationsDateValue) {
+        var regulationsDateInput = document.getElementById("id_date_regulations");
+        if (regulationsDateInput) {
+            regulationsDateInput.value = regulationsDateValue;
+            console.log("Prefilling date_regulations with value:", regulationsDateValue);
+            console.log("Date Regulations Value after setting:", regulationsDateInput.value);
+        } else {
+            console.error("Date regulations input field not found.");
+        }
+    } else {
+        console.error("No date_regulations value found.");
+    }
+});
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
   const montantTtcInput = document.getElementById("id_montant_ttc");

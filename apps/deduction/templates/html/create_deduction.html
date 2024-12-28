@@ -83,17 +83,22 @@
                                                 {% endif %}
                                             </div>
                                         </td>
-                                        <td class="date">
-                                            <p class="label-text">
-                                                <span>DATE</span>
-                                            </p>
-                                            <div class="mt-2">{{ form.created_date }}</div>
-                                            {% if form.created_date.errors %}
-                                                <div class="text-red-600 text-sm mt-1">
-                                                    {% for error in form.created_date.errors %}<p>{{ error }}</p>{% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </td>
+<div id="created-date-container" data-created-date="{{ form.instance.created_date|date:'Y-m-d' }}"></div>
+<td class="created_date">
+    <p class="label-text">
+        <span>DATE</span>
+    </p>
+    <div class="mt-2">
+        {{ form.created_date }}  <!-- The date input field is rendered here -->
+    </div>
+    {% if form.created_date.errors %}
+        <div class="text-red-600 text-sm mt-1">
+            {% for error in form.created_date.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</td>
                                         <td class="reference">
                                             <p class="label-text">
                                                 <span>IFN</span>
@@ -184,6 +189,7 @@
                                                 </div>
                                             {% endif %}
                                         </td>
+                                <div id="date-regulations-container" data-regulations-date="{{ form.instance.date_regulations|date:'Y-m-d' }}"></div>
                                         <td class="date_regulations">
                                             <p class="label-text">
                                                 <span>Date Regulations</span>
