@@ -54,7 +54,7 @@ urlpatterns = [
     path(
         'world/delete/<int:pk>/',
         DeleteWorldFacture.as_view(),
-        name='world_update',
+        name='world_delete',
     ),
     # Facture listing
     path('local/', LocalFactureListView.as_view(), name='local_list'),
