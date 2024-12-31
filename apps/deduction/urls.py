@@ -33,4 +33,3 @@ urlpatterns = [
         name='generate-deduction-docx',
     ),
 ]
-

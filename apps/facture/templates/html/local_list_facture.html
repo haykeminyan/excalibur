@@ -8,7 +8,9 @@
         <title>{% trans "All Factures" %}</title>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
               rel="stylesheet" />
-        <link href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css"
+              rel="stylesheet" />
+        <meta name="csrf-token" content="{{ csrf_token }}">
         {% block stylesheets %}
             <link rel="stylesheet"
                   type="text/css"
@@ -19,43 +21,40 @@
         <div class="container mx-auto py-8">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-gray-800">{% trans "All Factures" %}</h1>
-
-<!-- Language Selection Form -->
-<form action="{% url 'set_language' %}" method="post">
-    {% csrf_token %}
-
-    <!-- Custom dropdown wrapper -->
-    <div class="custom-dropdown">Choose language
-        <button class="dropdown-btn">
-            {% if LANGUAGE_CODE == 'en' %}
-                <span class="flag-icon flag-icon-us"></span> English
-            {% elif LANGUAGE_CODE == 'fr' %}
-                <span class="flag-icon flag-icon-fr"></span> French
-            {% endif %}
-            <i class="arrow"></i>
-        </button>
-
-        <!-- Dropdown menu -->
-        <div class="dropdown-menu">
-            <button type="submit" name="language" value="en" class="dropdown-item">
-                <span class="flag-icon flag-icon-us"></span> English
-            </button>
-            <button type="submit" name="language" value="fr" class="dropdown-item">
-                <span class="flag-icon flag-icon-fr"></span> French
-            </button>
-        </div>
-    </div>
-</form>
-
-
+                <!-- Language Selection Form -->
+                <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <!-- Custom dropdown wrapper -->
+                    <div class="custom-dropdown">
+                        Choose language
+                        <button class="dropdown-btn">
+                            {% if LANGUAGE_CODE == 'en' %}
+                                <span class="flag-icon flag-icon-us"></span> English
+                            {% elif LANGUAGE_CODE == 'fr' %}
+                                <span class="flag-icon flag-icon-fr"></span> French
+                            {% endif %}
+                            <i class="arrow"></i>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div class="dropdown-menu">
+                            <button type="submit" name="language" value="en" class="dropdown-item">
+                                <span class="flag-icon flag-icon-us"></span> English
+                            </button>
+                            <button type="submit" name="language" value="fr" class="dropdown-item">
+                                <span class="flag-icon flag-icon-fr"></span> French
+                            </button>
+                        </div>
+                    </div>
+                </form>
                 <!-- Filter Form -->
                 <form method="get" action="" class="search-form">
-                    {% for key, value in request.GET.items %}
-                        <input type="hidden" name="{{ key }}" value="{{ value }}" />
-                    {% endfor %}
+                    {% for key, value in request.GET.items %}<input type="hidden" name="{{ key }}" value="{{ value }}" />{% endfor %}
                     <select id="filter_option" class="filter-dropdown">
                         <option value="">{% trans "--Select Filter--" %}</option>
-                        <option value="number_facture" {% if request.GET.number_facture %}selected{% endif %}>{% trans "Number facture" %}</option>
+                        <option value="number_facture"
+                                {% if request.GET.number_facture %}selected{% endif %}>
+                            {% trans "Number facture" %}
+                        </option>
                         <option value="date" {% if request.GET.date %}selected{% endif %}>{% trans "Created date" %}</option>
                         <option value="reference" {% if request.GET.reference %}selected{% endif %}>{% trans "Reference" %}</option>
                         <option value="quantity" {% if request.GET.quantity %}selected{% endif %}>{% trans "Quantity" %}</option>
@@ -73,11 +72,16 @@
                 </form>
                 {% block scripts %}
                     <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
-                    <script src="{% static 'facture/js/localFactureTools.js' %}"></script>
+                    <script src="{% static 'facture/js/factureTools.js' %}"></script>
                 {% endblock scripts %}
                 <div class="button-container">
-                    <a href="{% url 'apps.facture:local_create' %}" class="create-filter-button">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <a href="{% url 'apps.facture:local_create' %}"
+                       class="create-filter-button">
+                        <svg class="w-4 h-4 mr-2"
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                         {% trans "Create" %}
@@ -88,43 +92,47 @@
                     </form>
                 </div>
             </div>
-
             <a href="{% url 'apps.main:main_menu' %}">
-                <img src="{% static 'facture/images/logo.png' %}" alt="logo" class="top-left-logo" />
+                <img src="{% static 'facture/images/logo.png' %}"
+                     alt="logo"
+                     class="top-left-logo" />
             </a>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for facture in factures %}
-        <div class="bg-white rounded-lg shadow-md p-6" style="position: relative">
-            <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
-                <button class="dropdown-toggle" aria-label="{% trans 'Actions' %}" onclick="toggleDropdown(this)">&#x22EE;</button>
-                <div class="dropdown-menu">
-                    <button class="dropdown-item" id="update-button" onclick="updateItem({{ facture.pk }})">{% trans 'Update' %}</button>
-                    <button class="dropdown-item" id="delete-button" onclick="deleteItem({{ facture.pk }})">{% trans 'Delete' %}</button>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for facture in factures %}
+                    <div class="bg-white rounded-lg shadow-md p-6" style="position: relative">
+                        <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
+                            <button class="dropdown-toggle"
+                                    aria-label="{% trans 'Actions' %}"
+                                    onclick="toggleDropdown(this)">&#x22EE;</button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item"
+                                        id="update-button"
+                                        onclick="updateItem({{ facture.pk }}, 'local')">{% trans 'Update' %}</button>
+                                <button class="dropdown-item"
+                                        id="delete-button"
+                                        onclick="deleteItem({{ facture.pk }}, 'local')">{% trans 'Delete' %}</button>
+                            </div>
+                        </div>
+                        <div class="facture-container" style="position: relative">
+                            <a href="{% url 'apps.facture:local_detail' facture.id %}">
+                                <h2 class="facture-title">{% trans 'Number facture' %}: {{ facture.number_facture }}</h2>
+                                <p class="facture-details">{% trans 'Date' %}: {{ facture.created_date }}</p>
+                                <p class="facture-details">{% trans 'Reference' %}: {{ facture.reference }}</p>
+                                <p class="facture-details">{% trans 'Total H.T' %}: {{ facture.tax_ht }}</p>
+                                <p class="facture-details">{% trans 'Address' %}: {{ facture.address }}</p>
+                                <p class="facture-details">{% trans 'Quantity' %}: {{ facture.quantity }}</p>
+                                <p class="facture-details">{% trans 'P.U.TTC' %}: {{ facture.percent }}</p>
+                                <p class="facture-details">{% trans 'Total H.T.' %}: {{ facture.tax_ht }}</p>
+                                <p class="facture-details">{% trans 'Montant' %}: {{ facture.quantity_after_percent }}</p>
+                                <p class="facture-details">{% trans 'Total Tax' %}: {{ facture.total_tax }}</p>
+                                <p class="facture-details">{% trans 'Last Updated' %}: {{ facture.update_time }}</p>
+                            </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-center text-gray-500 col-span-3">{% trans 'No factures found.' %}</p>
+                {% endfor %}
             </div>
-            <div class="facture-container" style="position: relative">
-                <a href="{% url 'apps.facture:local_detail' facture.id %}">
-                    <h2 class="facture-title">{% trans 'Number facture' %}: {{ facture.number_facture }}</h2>
-                    <p class="facture-details">{% trans 'Date' %}: {{ facture.created_date }}</p>
-                    <p class="facture-details">{% trans 'Reference' %}: {{ facture.reference }}</p>
-                    <p class="facture-details">{% trans 'Total H.T' %}: {{ facture.tax_ht }}</p>
-                    <p class="facture-details">{% trans 'Address' %}: {{ facture.address }}</p>
-                    <p class="facture-details">{% trans 'Quantity' %}: {{ facture.quantity }}</p>
-                    <p class="facture-details">{% trans 'P.U.TTC' %}: {{ facture.percent }}</p>
-                    <p class="facture-details">{% trans 'Total H.T.' %}: {{ facture.tax_ht }}</p>
-                    <p class="facture-details">{% trans 'Montant' %}: {{ facture.quantity_after_percent }}</p>
-                    <p class="facture-details">{% trans 'Total Tax' %}: {{ facture.total_tax }}</p>
-                    <p class="facture-details">{% trans 'Last Updated' %}: {{ facture.update_time }}</p>
-                </a>
-            </div>
-        </div>
-    {% empty %}
-        <p class="text-center text-gray-500 col-span-3">{% trans 'No factures found.' %}</p>
-    {% endfor %}
-</div>
-
-
             {% if page_obj.has_other_pages %}
                 <nav class="list-pages">
                     <ul>

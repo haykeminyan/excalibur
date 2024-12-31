@@ -9,7 +9,9 @@
         <title>All Factures</title>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
               rel="stylesheet" />
-                <link href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css"
+              rel="stylesheet" />
+        <meta name="csrf-token" content="{{ csrf_token }}">
         {% block stylesheets %}
             <!-- Correct usage of static tag -->
             <link rel="stylesheet"
@@ -24,40 +26,39 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-gray-800">All Factures</h1>
                 <!-- Language Selection Form -->
-<form action="{% url 'set_language' %}" method="post">
-    {% csrf_token %}
-
-    <!-- Custom dropdown wrapper -->
-    <div class="custom-dropdown">Choose language
-        <button class="dropdown-btn">
-            {% if LANGUAGE_CODE == 'en' %}
-                <span class="flag-icon flag-icon-us"></span> English
-            {% elif LANGUAGE_CODE == 'fr' %}
-                <span class="flag-icon flag-icon-fr"></span> French
-            {% endif %}
-            <i class="arrow"></i>
-        </button>
-
-        <!-- Dropdown menu -->
-        <div class="dropdown-menu">
-            <button type="submit" name="language" value="en" class="dropdown-item">
-                <span class="flag-icon flag-icon-us"></span> English
-            </button>
-            <button type="submit" name="language" value="fr" class="dropdown-item">
-                <span class="flag-icon flag-icon-fr"></span> French
-            </button>
-        </div>
-    </div>
-</form>
-
+                <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <!-- Custom dropdown wrapper -->
+                    <div class="custom-dropdown">
+                        Choose language
+                        <button class="dropdown-btn">
+                            {% if LANGUAGE_CODE == 'en' %}
+                                <span class="flag-icon flag-icon-us"></span> English
+                            {% elif LANGUAGE_CODE == 'fr' %}
+                                <span class="flag-icon flag-icon-fr"></span> French
+                            {% endif %}
+                            <i class="arrow"></i>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div class="dropdown-menu">
+                            <button type="submit" name="language" value="en" class="dropdown-item">
+                                <span class="flag-icon flag-icon-us"></span> English
+                            </button>
+                            <button type="submit" name="language" value="fr" class="dropdown-item">
+                                <span class="flag-icon flag-icon-fr"></span> French
+                            </button>
+                        </div>
+                    </div>
+                </form>
                 <!-- Filter Form -->
                 <form method="get" action="" class="search-form">
-                    {% for key, value in request.GET.items %}
-                        <input type="hidden" name="{{ key }}" value="{{ value }}" />
-                    {% endfor %}
+                    {% for key, value in request.GET.items %}<input type="hidden" name="{{ key }}" value="{{ value }}" />{% endfor %}
                     <select id="filter_option" class="filter-dropdown">
                         <option value="">{% trans "--Select Filter--" %}</option>
-                        <option value="number_facture" {% if request.GET.number_facture %}selected{% endif %}>{% trans "Number facture" %}</option>
+                        <option value="number_facture"
+                                {% if request.GET.number_facture %}selected{% endif %}>
+                            {% trans "Number facture" %}
+                        </option>
                         <option value="date" {% if request.GET.date %}selected{% endif %}>{% trans "Created date" %}</option>
                         <option value="reference" {% if request.GET.reference %}selected{% endif %}>{% trans "Reference" %}</option>
                         <option value="quantity" {% if request.GET.quantity %}selected{% endif %}>{% trans "Quantity" %}</option>
@@ -75,7 +76,7 @@
                 </form>
                 {% block scripts %}
                     <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
-                    <script src="{% static 'facture/js/worldFactureTools.js' %}"></script>
+                    <script src="{% static 'facture/js/factureTools.js' %}"></script>
                 {% endblock scripts %}
                 <div class="button-container">
                     <!-- First button -->
@@ -103,36 +104,41 @@
                      class="top-left-logo" />
             </a>
             <!-- Factures List -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for facture in factures %}
-        <div class="bg-white rounded-lg shadow-md p-6" style="position: relative">
-            <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
-                <button class="dropdown-toggle" aria-label="{% trans 'Actions' %}" onclick="toggleDropdown(this)">&#x22EE;</button>
-                <div class="dropdown-menu">
-                    <button class="dropdown-item" id="update-button" onclick="updateItem({{ facture.pk }})">{% trans 'Update' %}</button>
-                    <button class="dropdown-item" id="delete-button" onclick="deleteItem({{ facture.pk }})">{% trans 'Delete' %}</button>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for facture in factures %}
+                    <div class="bg-white rounded-lg shadow-md p-6" style="position: relative">
+                        <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
+                            <button class="dropdown-toggle"
+                                    aria-label="{% trans 'Actions' %}"
+                                    onclick="toggleDropdown(this)">&#x22EE;</button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item"
+                                        id="update-button"
+                                        onclick="updateItem({{ facture.pk }}, 'world')">{% trans 'Update' %}</button>
+                                <button class="dropdown-item"
+                                        id="delete-button"
+                                        onclick="deleteItem({{ facture.pk }}, 'world')">{% trans 'Delete' %}</button>
+                            </div>
+                        </div>
+                        <div class="facture-container" style="position: relative">
+                            <a href="{% url 'apps.facture:world_detail' facture.id %}">
+                                <h2 class="facture-title">{% trans 'Number facture' %}: {{ facture.number_facture }}</h2>
+                                <p class="facture-details">{% trans "Created date" %}: {{ facture.created_date }}</p>
+                                <p class="facture-details">{% trans "SKU" %}: {{ facture.sku }}</p>
+                                <p class="facture-details">{% trans "Description" %}: {{ facture.description }}</p>
+                                <p class="facture-details">{% trans "Specification" %}: {{ facture.specification }}</p>
+                                <p class="facture-details">{% trans "QTY" %}: {{ facture.quantity }}</p>
+                                <p class="facture-details">{% trans "UNIT PRICE USD" %}: {{ facture.percent }}</p>
+                                <p class="facture-details">{% trans "AMOUNT" %}: {{ facture.quantity_after_percent }}</p>
+                                <p class="facture-details">{% trans "Shipping fee" %}: {{ facture.total_tax }}</p>
+                                <p class="facture-details">{% trans "Total" %}: {{ facture.net_pay }}</p>
+                            </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-center text-gray-500 col-span-3">{% trans 'No factures found.' %}</p>
+                {% endfor %}
             </div>
-            <div class="facture-container" style="position: relative">
-                <a href="{% url 'apps.facture:world_detail' facture.id %}">
-                    <h2 class="facture-title">{% trans 'Number facture' %}: {{ facture.number_facture }}</h2>
-    <p class="facture-details">{% trans "Created date" %}: {{ facture.created_date }}</p>
-    <p class="facture-details">{% trans "SKU" %}: {{ facture.sku }}</p>
-        <p class="facture-details">{% trans "Description" %}: {{ facture.description }}</p>
-    <p class="facture-details">{% trans "Specification" %}: {{ facture.specification }}</p>
-    <p class="facture-details">{% trans "QTY" %}: {{ facture.quantity }}</p>
-    <p class="facture-details">{% trans "UNIT PRICE USD" %}: {{ facture.percent }}</p>
-    <p class="facture-details">{% trans "AMOUNT" %}: {{ facture.quantity_after_percent }}</p>
-    <p class="facture-details">{% trans "Shipping fee" %}: {{ facture.total_tax }}</p>
-    <p class="facture-details">{% trans "Total" %}: {{ facture.net_pay }}</p>
-                </a>
-            </div>
-        </div>
-    {% empty %}
-        <p class="text-center text-gray-500 col-span-3">{% trans 'No factures found.' %}</p>
-    {% endfor %}
-</div>
-
             <!-- Pagination Section -->
             {% if page_obj.has_other_pages %}
                 <nav class="list-pages">

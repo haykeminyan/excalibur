@@ -15,4 +15,3 @@ DEDUCTION_FIELDS = [
     'cr',
     'ice',
 ]
-

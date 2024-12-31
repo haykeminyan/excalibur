@@ -139,4 +139,3 @@ msgstr "MONTANTE"
 
 msgid "Shipping fee"
 msgstr "Frais d'expédition"
-

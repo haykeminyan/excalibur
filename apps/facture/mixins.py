@@ -5,12 +5,12 @@ import re
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles import finders
+from django.core.exceptions import PermissionDenied
 from django.forms.models import model_to_dict
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils import translation
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     CreateView,
@@ -22,14 +22,11 @@ from django.views.generic import (
 )
 from docx import Document
 
-from excalibur import settings
 from .constants import LOCAL_FIELDS, WORLD_FIELDS
 from .models import LocalFacture, WorldFacture
 from .parsing_docx import replace_placeholders_in_doc, set_font_size
-from django.utils.translation import get_language
 
 logger = logging.getLogger(__name__)
-
 
 
 class CSRFExemptMixin:
@@ -132,6 +129,32 @@ class BaseFactureUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class BaseFactureDeleteView(LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        """
+        If user is superuser he can delete concrete deduction
+        """
+        if self.request.user.is_superuser:
+            # Superuser can access all Deductions
+            return self.model.objects.all()
+        return self.model.objects.filter(owner=self.request.user)
+
+    def get_object(self, queryset=None):
+        """
+        Ensure that only objects within the restricted queryset can be accessed.
+        """
+        queryset = self.get_queryset() if queryset is None else queryset
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        logger.error(pk)
+        logger.error(queryset)
+        logger.error('!' * 100)
+
+        # Attempt to get the object and handle ownership validation
+        try:
+            obj = queryset.get(pk=pk)
+        except self.model.DoesNotExist:
+            raise PermissionDenied('you are not an owner of this deduction!')
+
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

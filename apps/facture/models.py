@@ -1,8 +1,9 @@
 import logging
-from django.utils import timezone
+
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,6 @@ class Facture(models.Model):
     quantity_after_percent = models.FloatField()
     total_tax = models.FloatField()
     net_pay = models.FloatField()
-
 
 
 class LocalFacture(Facture):
@@ -48,4 +48,3 @@ class WorldFacture(Facture):
     specification = models.IntegerField(blank=True, null=True)
     shipping_fee = models.FloatField(blank=True, null=True)
     total_sum_en = models.CharField(max_length=255)
-

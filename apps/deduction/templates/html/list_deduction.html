@@ -8,7 +8,7 @@
         <title>All Deductions</title>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
               rel="stylesheet" />
-         <meta name="csrf-token" content="{{ csrf_token }}">
+        <meta name="csrf-token" content="{{ csrf_token }}">
         {% block stylesheets %}
             <!-- Correct usage of static tag -->
             <link rel="stylesheet"
@@ -27,12 +27,12 @@
                     {% for key, value in request.GET.items %}<input type="hidden" name="{{ key }}" value="{{ value }}" />{% endfor %}
                     <!-- Dropdown for select options -->
                     <!-- Search box -->
-    <input type="text"
-           id="search"
-           name="supplier"
-           class="search-box"
-           placeholder="Search by Supplier..."
-           value="{{ request.GET.supplier|default:'' }}" />
+                    <input type="text"
+                           id="search"
+                           name="supplier"
+                           class="search-box"
+                           placeholder="Search by Supplier..."
+                           value="{{ request.GET.supplier|default:'' }}" />
                     <!-- Submit button -->
                     <button type="submit" class="search-button">Search</button>
                     <button type="button" id="clear-filters-btn" class="clear-filters-button">Clear Filters</button>
@@ -43,8 +43,7 @@
                 {% endblock scripts %}
                 <div class="button-container">
                     <!-- First button -->
-                    <a href="{% url 'apps.deduction:create' %}"
-                       class="create-filter-button">
+                    <a href="{% url 'apps.deduction:create' %}" class="create-filter-button">
                         <svg class="w-4 h-4 mr-2"
                              fill="none"
                              stroke="currentColor"
@@ -67,49 +66,61 @@
                      class="top-left-logo" />
             </a>
             <!-- Factures List -->
-    <div class="table-container">
-        {% for supplier, deductions in suppliers_with_deductions %}
-            <div class="supplier-container">
-                <div class="supplier-header">
-                    <h2><strong>{{ supplier }}</strong></h2>
-                    <button class="toggle-btn" onclick="toggleDetails(this)">Show Details</button>
-                </div>
-                <div class="supplier-details">
-                    <div class="carousel-container">
-                        {% for deduction in deductions %}
-                            <div class="carousel-item">
-                                                                                        <!-- Kebab Menu (Dropdown) -->
-                        <div class="dropdown">
-                            <button class="dropdown-toggle"
-                                    aria-label="Actions"
-                                    onclick="toggleDropdown(this)">
-                                &#x22EE;
-                                <!-- Unicode for vertical ellipsis -->
-                            </button>
-                            <div class="dropdown-menu">
-                                <!-- Update button -->
-                                <button class="dropdown-item"
-                                        id="update-button"
-                                        onclick="updateItem({{ deduction.pk }})">Update</button>
-                                <!-- Delete button -->
-                                <button class="dropdown-item"
-                                        id="delete-button"
-                                        onclick="deleteItem({{ deduction.pk }})">Delete</button>
+            <div class="table-container">
+                {% for supplier, deductions in suppliers_with_deductions %}
+                    <div class="supplier-container">
+                        <div class="supplier-header">
+                            <h2>
+                                <strong>{{ supplier }}</strong>
+                            </h2>
+                            <button class="toggle-btn" onclick="toggleDetails(this)">Show Details</button>
+                        </div>
+                        <div class="supplier-details">
+                            <div class="carousel-container">
+                                {% for deduction in deductions %}
+                                    <div class="carousel-item">
+                                        <!-- Kebab Menu (Dropdown) -->
+                                        <div class="dropdown">
+                                            <button class="dropdown-toggle"
+                                                    aria-label="Actions"
+                                                    onclick="toggleDropdown(this)">
+                                                &#x22EE;
+                                                <!-- Unicode for vertical ellipsis -->
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <!-- Update button -->
+                                                <button class="dropdown-item"
+                                                        id="update-button"
+                                                        onclick="updateItem({{ deduction.pk }})">Update</button>
+                                                <!-- Delete button -->
+                                                <button class="dropdown-item"
+                                                        id="delete-button"
+                                                        onclick="deleteItem({{ deduction.pk }})">Delete</button>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'apps.deduction:detail' deduction.id %}">
+                                            <p>
+                                                <strong>Number:</strong> {{ deduction.number_deduction }}
+                                            </p>
+                                            <p>
+                                                <strong>Date:</strong> {{ deduction.created_date }}
+                                            </p>
+                                            <p>
+                                                <strong>IFN:</strong> {{ deduction.ifn }}
+                                            </p>
+                                            <p>
+                                                <strong>Nature of products:</strong> {{ deduction.nature_of_products }}
+                                            </p>
+                                            <p>
+                                                <strong>Montant TTC:</strong> {{ deduction.montant_ttc }}
+                                            </p>
+                                        </a>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
-                                <a href="{% url 'apps.deduction:detail' deduction.id %}">
-                                <p><strong>Number:</strong> {{ deduction.number_deduction }}</p>
-                                <p><strong>Date:</strong> {{ deduction.created_date }}</p>
-                                <p><strong>IFN:</strong> {{ deduction.ifn }}</p>
-                                <p><strong>Nature of products:</strong> {{ deduction.nature_of_products }}</p>
-                                    <p><strong>Montant TTC:</strong> {{ deduction.montant_ttc }}</p>
-                                </a>
-                            </div>
-                        {% endfor %}
                     </div>
-                </div>
-            </div>
-        {% endfor %}
+                {% endfor %}
             </div>
             <!-- Pagination Section -->
             {% if page_obj.has_other_pages %}
@@ -144,7 +155,5 @@
 </html>
 </title>
 </head>
-<body>
-
-</body>
+<body></body>
 </html>

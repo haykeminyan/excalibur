@@ -1,19 +1,24 @@
+import importlib
+import logging
 from unittest.mock import patch
 
 import pytest
-from django.middleware.csrf import get_token
-from django.urls import reverse
+from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory
-from django.contrib.auth.models import User, AnonymousUser
-import importlib
-import logging
+from django.urls import reverse
 
-from apps.main.views import MainMenuListView
-from apps.users.tests.constants import url_names_from_deduction, url_names_from_facture, url_names_from_users, \
-    url_names_from_main, url_to_view_mapping, url_names_from_fail
 import excalibur.settings as settings
+from apps.users.tests.constants import (
+    url_names_from_deduction,
+    url_names_from_facture,
+    url_names_from_fail,
+    url_names_from_main,
+    url_names_from_users,
+    url_to_view_mapping,
+)
 
 logger = logging.getLogger(__name__)
+
 
 @pytest.fixture
 def user(db):
@@ -36,9 +41,11 @@ def test__all_main_apps_redirect_to_login(factory):
 
     # Test each URL
     for url_name in all_url_names:
-        if any(keyword in url_name for keyword in ['detail', 'edit', 'update', 'delete', 'generate']):
+        if any(
+            keyword in url_name for keyword in ['detail', 'edit', 'update', 'delete', 'generate']
+        ):
             # Assuming you know the pk (e.g., pk=1)
-            request = factory.get(reverse(url_name, kwargs={'pk':1}))
+            request = factory.get(reverse(url_name, kwargs={'pk': 1}))
         elif url_name in url_names_from_fail:
             with patch('pytest.fail') as mock_fail:
                 mock_fail(url_name)
@@ -77,6 +84,7 @@ def test__main_app(factory):
                 response = view.as_view()(request)
                 assert response.status_code == 200
 
+
 @pytest.mark.django_db
 def test__user_app_fail(factory):
     # Combine all URL names from different sources
@@ -101,13 +109,17 @@ def test__user_app_fail(factory):
                 assert response.status_code == 403
                 assert 'CSRF verification failed' in str(response.content)
 
+
 @pytest.mark.django_db
 def test__user_success_login(client, user):
     # Simulate a POST request with valid credentials
-    response = client.post(reverse('apps.users:login'), {
-        'username': user.username,
-        'password': 'password',
-    })
+    response = client.post(
+        reverse('apps.users:login'),
+        {
+            'username': user.username,
+            'password': 'password',
+        },
+    )
 
     # Assert redirection to the success_url
     assert response.status_code == 302

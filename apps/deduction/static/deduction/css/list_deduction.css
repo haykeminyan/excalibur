@@ -821,110 +821,110 @@ button:focus {
     left: 200px;
   }
 }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-        }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+}
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+h1 {
+  text-align: center;
+  color: #333;
+}
 
-        .table-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 20px;
-            padding: 10px;
-        }
+.table-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 20px;
+  padding: 10px;
+}
 
-        .supplier-container {
-            flex: 0 0 auto;
-            scroll-snap-align: start;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            width: 300px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+.supplier-container {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-        .supplier-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+.supplier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
 
-        .supplier-header h2 {
-            font-size: 18px;
-            font-weight: bold;
-            color: #555;
-        }
+.supplier-header h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+}
 
-        .toggle-btn {
-            font-size: 14px;
-            color: #007bff;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
+.toggle-btn {
+  font-size: 14px;
+  color: #007bff;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
 
-        .supplier-details {
-            display: none;
-        }
+.supplier-details {
+  display: none;
+}
 
-        .carousel-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 30px;
-            margin-top: 10px;
-        }
+.carousel-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 30px;
+  margin-top: 10px;
+}
 
-        .carousel-item {
-            flex: 0 0 auto;
-            width: 250px;
-            scroll-snap-align: start;
-            background-color: #fdfdfd;
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
+.carousel-item {
+  flex: 0 0 auto;
+  width: 250px;
+  scroll-snap-align: start;
+  background-color: #fdfdfd;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
 
-        .carousel-item p {
-            margin: 5px 0;
-            color: #666;
-        }
+.carousel-item p {
+  margin: 5px 0;
+  color: #666;
+}
 
-        /* Horizontal Scrollbar */
-        .table-container::-webkit-scrollbar,
-        .carousel-container::-webkit-scrollbar {
-            height: 8px;
-        }
+/* Horizontal Scrollbar */
+.table-container::-webkit-scrollbar,
+.carousel-container::-webkit-scrollbar {
+  height: 8px;
+}
 
-        .table-container::-webkit-scrollbar-thumb,
-        .carousel-container::-webkit-scrollbar-thumb {
-            background: #ddd;
-            border-radius: 4px;
-        }
+.table-container::-webkit-scrollbar-thumb,
+.carousel-container::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
 
-        .table-container::-webkit-scrollbar-track,
-        .carousel-container::-webkit-scrollbar-track {
-            background: #f4f4f4;
-        }
-        .supplier{
-          width: 50%;
-        }
-        .table-container{
-          display: grid;
-                      grid-template-columns: repeat(3, 1fr); /* 2 columns */
-        }
-        /* Position the kebab menu button */
+.table-container::-webkit-scrollbar-track,
+.carousel-container::-webkit-scrollbar-track {
+  background: #f4f4f4;
+}
+.supplier {
+  width: 50%;
+}
+.table-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 2 columns */
+}
+/* Position the kebab menu button */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -988,5 +988,5 @@ button:focus {
 .dropdown {
   min-width: 20px;
   left: 110px;
-bottom: 20px;
+  bottom: 20px;
 }

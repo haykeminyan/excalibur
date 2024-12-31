@@ -120,63 +120,62 @@ button:focus {
 #update-button {
   background-color: green;
 }
- .custom-dropdown {
-        position: fixed; /* Change to fixed position */
-        top: 15px;
-        left: 200px;
-        z-index: 1000; /* Ensure it is above other elements */
+.custom-dropdown {
+  position: fixed; /* Change to fixed position */
+  top: 15px;
+  left: 200px;
+  z-index: 1000; /* Ensure it is above other elements */
+}
 
-    }
+.dropdown-btn {
+  color: #333;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 16px;
+}
 
-    .dropdown-btn {
-        color: #333;
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        cursor: pointer;
-        font-size: 16px;
-    }
+.dropdown-btn .flag-icon {
+  margin-right: 8px;
+}
 
-    .dropdown-btn .flag-icon {
-        margin-right: 8px;
-    }
+.dropdown-btn .arrow {
+  margin-left: 8px;
+}
 
-    .dropdown-btn .arrow {
-        margin-left: 8px;
-    }
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 150px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 5px;
+  top: 100%;
+  left: 0;
+}
 
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 150px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        border-radius: 5px;
-        top: 100%;
-        left: 0;
-    }
+.dropdown-menu .dropdown-item {
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  background-color: black;
+  border: none;
+  cursor: pointer;
+}
 
-    .dropdown-menu .dropdown-item {
-        padding: 8px 12px;
-        width: 100%;
-        text-align: left;
-        background-color: black;
-        border: none;
-        cursor: pointer;
-    }
+.dropdown-menu .dropdown-item:hover {
+  background-color: green;
+}
 
-    .dropdown-menu .dropdown-item:hover {
-        background-color: green;
-    }
+.custom-dropdown:hover .dropdown-menu {
+  display: block;
+}
 
-    .custom-dropdown:hover .dropdown-menu {
-        display: block;
-    }
-
-    .custom-dropdown:hover .dropdown-btn {
-        background-color: #f9f9f9;
-    }
+.custom-dropdown:hover .dropdown-btn {
+  background-color: #f9f9f9;
+}

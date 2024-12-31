@@ -2,17 +2,16 @@ import io
 import logging
 import os
 import re
+from itertools import groupby
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles import finders
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -22,10 +21,10 @@ from django.views.generic import (
     View,
 )
 from docx import Document
-from itertools import groupby
+
+from ..facture.parsing_docx import replace_placeholders_in_doc, set_font_size
 from .constants import DEDUCTION_FIELDS
 from .models import Deduction
-from ..facture.parsing_docx import replace_placeholders_in_doc, set_font_size
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +40,6 @@ logger = logging.getLogger(__name__)
 #         return super().dispatch(*args, **kwargs)
 
 
-
 class BaseDeductionListView(LoginRequiredMixin, ListView):
     context_object_name = 'deductions'
     paginate_by = 3
@@ -55,7 +53,9 @@ class BaseDeductionListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset().select_related('owner')
 
         if supplier:
-            queryset = queryset.filter(supplier__icontains=supplier)  # Use icontains for partial match
+            queryset = queryset.filter(
+                supplier__icontains=supplier,
+            )  # Use icontains for partial match
             logger.debug(f"Filtered queryset: {queryset}")
         else:
             queryset = queryset.order_by('-update_time')
@@ -96,6 +96,7 @@ class BaseDeductionListView(LoginRequiredMixin, ListView):
 
         logger.debug(f"Context data: {context}")
         return context
+
 
 class BaseDeductionCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('success_url')  # Update this as needed
@@ -187,7 +188,7 @@ class BaseDeductionDeleteView(LoginRequiredMixin, DeleteView):
         try:
             obj = queryset.get(pk=pk)
         except Deduction.DoesNotExist:
-            raise PermissionDenied("you are not an owner of this deduction!")
+            raise PermissionDenied('you are not an owner of this deduction!')
 
         return obj
 

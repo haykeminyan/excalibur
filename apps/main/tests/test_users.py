@@ -1,10 +1,6 @@
-
 import pytest
-from django.urls import reverse
-from django.test import RequestFactory
 from django.contrib.auth.models import User
-
-from apps.facture.views import LocalFactureListView
+from django.test import RequestFactory
 
 
 @pytest.fixture

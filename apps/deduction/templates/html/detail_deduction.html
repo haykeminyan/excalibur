@@ -8,60 +8,59 @@
         <title>All Factures</title>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
               rel="stylesheet" />
-                 <meta name="csrf-token" content="{{ csrf_token }}">
-    {% block stylesheets %}
-        <!-- Correct usage of static tag -->
-        <link rel="stylesheet"
-              type="text/css"
-              href="{% static 'deduction/css/detail_deduction.css' %}" />
-    {% endblock stylesheets %}
-                {% block scripts %}
-    <script src="{% static 'deduction/js/deductionTools.js' %}"></script>
-{% endblock scripts %}
+        <meta name="csrf-token" content="{{ csrf_token }}">
+        {% block stylesheets %}
+            <!-- Correct usage of static tag -->
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="{% static 'deduction/css/detail_deduction.css' %}" />
+        {% endblock stylesheets %}
+        {% block scripts %}
+            <script src="{% static 'deduction/js/deductionTools.js' %}"></script>
+        {% endblock scripts %}
     </head>
-<body>
-    {% csrf_token %}
-
-<div class="facture-container">
-    <!-- Kebab Menu (Dropdown) -->
-    <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
-        <button class="dropdown-toggle"
-                aria-label="Actions"
-                onclick="toggleDropdown(this)">
-            &#x22EE;
-            <!-- Unicode for vertical ellipsis -->
-        </button>
-        <div class="dropdown-menu">
-            <!-- Update button -->
-            <button class="dropdown-item"
-                    id="update-button"
-                    onclick="updateItem({{ deduction.pk }})">Update</button>
-            <!-- Delete button -->
-            <button class="dropdown-item"
-                    id="delete-button"
-                    onclick="deleteItem({{ deduction.pk }})">Delete</button>
+    <body>
+        {% csrf_token %}
+        <div class="facture-container">
+            <!-- Kebab Menu (Dropdown) -->
+            <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
+                <button class="dropdown-toggle"
+                        aria-label="Actions"
+                        onclick="toggleDropdown(this)">
+                    &#x22EE;
+                    <!-- Unicode for vertical ellipsis -->
+                </button>
+                <div class="dropdown-menu">
+                    <!-- Update button -->
+                    <button class="dropdown-item"
+                            id="update-button"
+                            onclick="updateItem({{ deduction.pk }})">Update</button>
+                    <!-- Delete button -->
+                    <button class="dropdown-item"
+                            id="delete-button"
+                            onclick="deleteItem({{ deduction.pk }})">Delete</button>
+                </div>
+            </div>
+            <h2 class="facture-title">Number deduction: {{ deduction.number_deduction }}</h2>
+            <p class="facture-details">IFN: {{ deduction.ifn }}</p>
+            <p class="facture-details">Supplier: {{ deduction.supplier }}</p>
+            <!-- Displaying the existing fields -->
+            <p class="facture-details">Created Date: {{ deduction.created_date }}</p>
+            <p class="facture-details">Nature of products: {{ deduction.nature_of_products }}</p>
+            <p class="facture-details">Montant TTC: {{ deduction.montant_ttc }}</p>
+            <p class="facture-details">Montant HT: {{ deduction.montant_ht }}</p>
+            <p class="facture-details">Taux TVA: {{ deduction.taux_tva }}</p>
+            <p class="facture-details">Montant TVA: {{ deduction.montant_tva }}</p>
+            <p class="facture-details">Proporated rate: {{ deduction.proporated_rate }}</p>
+            <p class="facture-details">Date regulations: {{ deduction.date_regulations }}</p>
+            <p class="facture-details">Payment choice: {{ deduction.payment_choice }}</p>
+            <p class="facture-details">CR: {{ deduction.cr }}</p>
+            <p class="facture-details">ICE: {{ deduction.ice }}</p>
+            <!-- Added missing fields -->
+            <!-- Update time (optional) -->
+            <p class="facture-details">Last Updated: {{ deduction.update_time }}</p>
+            <a href="{% url 'apps.deduction:generate-deduction-docx' deduction.pk %}"
+               class="btn btn-primary">Download DOCX</a>
         </div>
-    </div>
-    <h2 class="facture-title">Number deduction: {{ deduction.number_deduction }}</h2>
-    <p class="facture-details">IFN: {{ deduction.ifn }}</p>
-    <p class="facture-details">Supplier: {{ deduction.supplier }}</p>
-    <!-- Displaying the existing fields -->
-    <p class="facture-details">Created Date: {{ deduction.created_date }}</p>
-    <p class="facture-details">Nature of products: {{ deduction.nature_of_products }}</p>
-    <p class="facture-details">Montant TTC: {{ deduction.montant_ttc }}</p>
-    <p class="facture-details">Montant HT: {{ deduction.montant_ht }}</p>
-    <p class="facture-details">Taux TVA: {{ deduction.taux_tva }}</p>
-    <p class="facture-details">Montant TVA: {{ deduction.montant_tva }}</p>
-    <p class="facture-details">Proporated rate: {{ deduction.proporated_rate }}</p>
-    <p class="facture-details">Date regulations: {{ deduction.date_regulations }}</p>
-    <p class="facture-details">Payment choice: {{ deduction.payment_choice }}</p>
-    <p class="facture-details">CR: {{ deduction.cr }}</p>
-    <p class="facture-details">ICE: {{ deduction.ice }}</p>
-    <!-- Added missing fields -->
-    <!-- Update time (optional) -->
-    <p class="facture-details">Last Updated: {{ deduction.update_time }}</p>
-    <a href="{% url 'apps.deduction:generate-deduction-docx' deduction.pk %}"
-       class="btn btn-primary">Download DOCX</a>
-</div>
-</body>
+    </body>
 </html>

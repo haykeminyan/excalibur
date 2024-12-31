@@ -7,89 +7,89 @@
         <!-- Load Django static template tag -->
         <meta charset="UTF-8" />
         <title>{% trans "All Factures" %}</title>
+        <meta name="csrf-token" content="{{ csrf_token }}">
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
               rel="stylesheet" />
-                <link href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css" rel="stylesheet" />
-    {% block stylesheets %}
-        <!-- Correct usage of static tag -->
-        <link rel="stylesheet"
-              type="text/css"
-              href="{% static 'facture/css/detail_facture_local.css' %}" />
-    {% endblock stylesheets %}
+        <link href="https://cdn.jsdelivr.net/npm/flag-icon-css/css/flag-icon.min.css"
+              rel="stylesheet" />
+        {% block stylesheets %}
+            <!-- Correct usage of static tag -->
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="{% static 'facture/css/detail_facture_local.css' %}" />
+        {% endblock stylesheets %}
         {% block scripts %}
-    <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
-    <script src="{% static 'facture/js/localFactureTools.js' %}"></script>
-{% endblock scripts %}
+            <script src="{% static 'facture/js/dropdownSearch.js' %}"></script>
+            <script src="{% static 'facture/js/factureTools.js' %}"></script>
+        {% endblock scripts %}
     </head>
-<body>
-                <!-- Language Selection Form -->
-<form action="{% url 'set_language' %}" method="post">
-    {% csrf_token %}
-    <input name="next" type="hidden" value="{{ request.path }}" />
-
-    <!-- Custom dropdown wrapper -->
-    <div class="custom-dropdown">Choose language
-        <button class="dropdown-btn">
-            {% if LANGUAGE_CODE == 'en' %}
-                <span class="flag-icon flag-icon-us"></span> English
-            {% elif LANGUAGE_CODE == 'fr' %}
-                <span class="flag-icon flag-icon-fr"></span> French
-            {% endif %}
-            <i class="arrow"></i>
-        </button>
-
-        <!-- Dropdown menu -->
-        <div class="dropdown-menu">
-            <button type="submit" name="language" value="en" class="dropdown-item">
-                <span class="flag-icon flag-icon-us"></span> English
-            </button>
-            <button type="submit" name="language" value="fr" class="dropdown-item">
-                <span class="flag-icon flag-icon-fr"></span> French
-            </button>
+    <body>
+        <!-- Language Selection Form -->
+        <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}" />
+            <!-- Custom dropdown wrapper -->
+            <div class="custom-dropdown">
+                Choose language
+                <button class="dropdown-btn">
+                    {% if LANGUAGE_CODE == 'en' %}
+                        <span class="flag-icon flag-icon-us"></span> English
+                    {% elif LANGUAGE_CODE == 'fr' %}
+                        <span class="flag-icon flag-icon-fr"></span> French
+                    {% endif %}
+                    <i class="arrow"></i>
+                </button>
+                <!-- Dropdown menu -->
+                <div class="dropdown-menu">
+                    <button type="submit" name="language" value="en" class="dropdown-item">
+                        <span class="flag-icon flag-icon-us"></span> English
+                    </button>
+                    <button type="submit" name="language" value="fr" class="dropdown-item">
+                        <span class="flag-icon flag-icon-fr"></span> French
+                    </button>
+                </div>
+            </div>
+        </form>
+        {% csrf_token %}
+        <div class="facture-container">
+            <!-- Kebab Menu (Dropdown) -->
+            <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
+                <button class="dropdown-toggle"
+                    aria-label="{% trans "Actions" %"}
+                    onclick="toggleDropdown(this)">
+                    &#x22EE;
+                    <!-- Unicode for vertical ellipsis -->
+                </button>
+                <div class="dropdown-menu">
+                    <!-- Update button -->
+                    <button class="dropdown-item"
+                            id="update-button"
+                            onclick="updateItem({{ facture.pk }}, 'local')">{% trans "Update" %}</button>
+                    <!-- Delete button -->
+                    <button class="dropdown-item"
+                            id="delete-button"
+                            onclick="deleteItem({{ facture.pk }}, 'local')">{% trans "Delete" %}</button>
+                </div>
+            </div>
+            <h2 class="facture-title">{% trans "Number facture" %}: {{ facture.number_facture }}</h2>
+            <p class="facture-details">{% trans "Firm name" %}: {{ facture.firm_name }}</p>
+            <p class="facture-details">{% trans "Address" %}: {{ facture.address }}</p>
+            <!-- Displaying the existing fields -->
+            <p class="facture-details">{% trans "Created date" %}: {{ facture.created_date }}</p>
+            <p class="facture-details">{% trans "Reference" %}: {{ facture.reference }}</p>
+            <p class="facture-details">{% trans "Destination" %}: {{ facture.destination }}</p>
+            <p class="facture-details">{% trans "Quantity" %}: {{ facture.quantity }}</p>
+            <p class="facture-details">{% trans "Percent" %}: {{ facture.percent }}</p>
+            <p class="facture-details">{% trans "Total H.T." %}: {{ facture.tax_ht }}</p>
+            <p class="facture-details">{% trans "Total Tax" %}: {{ facture.total_tax }}</p>
+            <p class="facture-details">{% trans "Total T.T.C" %}: {{ facture.quantity_after_percent }}</p>
+            <p class="facture-details">{% trans "Deposit" %}: {{ facture.deposit }}</p>
+            <p class="facture-details">{% trans "Net a payer" %}: {{ facture.net_pay }}</p>
+            <!-- Added missing fields -->
+            <!-- Update time (optional) -->
+            <p class="facture-details">{% trans "Last Updated" %}: {{ facture.update_time }}</p>
+            <a href="{% url 'apps.facture:generate-local-docx' facture.pk %}"
+               class="btn btn-primary">{% trans "Download DOCX" %}</a>
         </div>
-    </div>
-</form>
-    {% csrf_token %}
-
-<div class="facture-container">
-    <!-- Kebab Menu (Dropdown) -->
-    <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
-        <button class="dropdown-toggle"
-                aria-label="{% trans "Actions" %"}
-                onclick="toggleDropdown(this)">
-            &#x22EE;
-            <!-- Unicode for vertical ellipsis -->
-        </button>
-        <div class="dropdown-menu">
-            <!-- Update button -->
-            <button class="dropdown-item"
-                    id="update-button"
-                    onclick="updateItem({{ facture.pk }})">{% trans "Update" %}</button>
-            <!-- Delete button -->
-            <button class="dropdown-item"
-                    id="delete-button"
-                    onclick="deleteItem({{ facture.pk }})">{% trans "Delete" %}</button>
-        </div>
-    </div>
-    <h2 class="facture-title">{% trans "Number facture" %}: {{ facture.number_facture }}</h2>
-    <p class="facture-details">{% trans "Firm name" %}: {{ facture.firm_name }}</p>
-    <p class="facture-details">{% trans "Address" %}: {{ facture.address }}</p>
-    <!-- Displaying the existing fields -->
-    <p class="facture-details">{% trans "Created date" %}: {{ facture.created_date }}</p>
-    <p class="facture-details">{% trans "Reference" %}: {{ facture.reference }}</p>
-    <p class="facture-details">{% trans "Destination" %}: {{ facture.destination }}</p>
-    <p class="facture-details">{% trans "Quantity" %}: {{ facture.quantity }}</p>
-    <p class="facture-details">{% trans "Percent" %}: {{ facture.percent }}</p>
-    <p class="facture-details">{% trans "Total H.T." %}: {{ facture.tax_ht }}</p>
-    <p class="facture-details">{% trans "Total Tax" %}: {{ facture.total_tax }}</p>
-    <p class="facture-details">{% trans "Total T.T.C" %}: {{ facture.quantity_after_percent }}</p>
-    <p class="facture-details">{% trans "Deposit" %}: {{ facture.deposit }}</p>
-    <p class="facture-details">{% trans "Net a payer" %}: {{ facture.net_pay }}</p>
-    <!-- Added missing fields -->
-    <!-- Update time (optional) -->
-    <p class="facture-details">{% trans "Last Updated" %}: {{ facture.update_time }}</p>
-    <a href="{% url 'apps.facture:generate-local-docx' facture.pk %}"
-       class="btn btn-primary">{% trans "Download DOCX" %}</a>
-</div>
-</body>
+    </body>
 </html>

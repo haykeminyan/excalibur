@@ -7,6 +7,7 @@ function getCSRFToken() {
   }
   return tokenMeta.getAttribute("content");
 }
+
 function toggleDropdown(button) {
   const dropdownMenu = button.nextElementSibling;
 
@@ -30,13 +31,13 @@ document.addEventListener("click", (event) => {
   }
 });
 
-function updateItem(pk) {
-  const updateUrl = `/deduction/update/${pk}/`; // Construct URL dynamically
+function updateItem(pk, typeFacture) {
+  const updateUrl = `/facture/${typeFacture}/update/${pk}/`; // Construct URL dynamically
   window.location.href = updateUrl; // Redirect to the update view
 }
 
-function deleteItem(pk) {
-  const deleteUrl = `/deduction/delete/${pk}/`; // Construct URL dynamically
+function deleteItem(pk, typeFacture) {
+  const deleteUrl = `/facture/${typeFacture}/delete/${pk}/`; // Construct URL dynamically
   const csrfToken = getCSRFToken();
 
   if (!csrfToken) {
@@ -44,7 +45,7 @@ function deleteItem(pk) {
     return;
   }
 
-  if (confirm("Are you sure you want to delete this deduction?")) {
+  if (confirm("Are you sure you want to delete this facture?")) {
     fetch(deleteUrl, {
       method: "POST",
       headers: {
@@ -55,7 +56,7 @@ function deleteItem(pk) {
       .then((response) => {
         if (response.ok) {
           alert("Deduction deleted successfully!");
-          window.location.href = "/deduction/";
+          window.location.href = `/facture/${typeFacture}`;
         } else {
           response.text().then((text) => {
             console.error("Server error response:", text);
@@ -67,27 +68,5 @@ function deleteItem(pk) {
         console.error("Network error:", error);
         alert("An error occurred. Please check your connection and try again.");
       });
-  }
-}
-
-function toggleDetails(button) {
-  const supplierContainer = button.closest(".supplier-container");
-  const details = supplierContainer.querySelector(".supplier-details");
-  const otherDetails = document.querySelectorAll(".supplier-details");
-
-  // Close all other supplier details
-  otherDetails.forEach((detail) => {
-    if (detail !== details) {
-      detail.style.display = "none";
-    }
-  });
-
-  // Toggle current supplier details
-  if (details.style.display === "none" || details.style.display === "") {
-    details.style.display = "block";
-    button.textContent = "Hide Details";
-  } else {
-    details.style.display = "none";
-    button.textContent = "Show Details";
   }
 }

@@ -13,6 +13,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='facture',
             name='language',
-            field=models.CharField(choices=[('en', 'English'), ('fr', 'French')], default='en', max_length=10),
+            field=models.CharField(
+                choices=[('en', 'English'), ('fr', 'French')],
+                default='en',
+                max_length=10,
+            ),
         ),
     ]

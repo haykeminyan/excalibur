@@ -1,34 +1,28 @@
-from datetime import date
-from unittest.mock import patch
-
-import pytest
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
-from django.middleware.csrf import get_token
-from django.urls import reverse
-from django.test import RequestFactory
-from django.contrib.auth.models import User, AnonymousUser
-import importlib
 import logging
-from django.urls import reverse_lazy
+
 import pytest
-from django.urls import reverse
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory
-from apps.deduction.models import Deduction
+from django.urls import reverse
 
-
-
-from apps.deduction.forms import get_next_deduction_number, DeductionFormBase, DeductionForm
-from apps.deduction.mixins import BaseDeductionListView, BaseDeductionCreateView, BaseDeductionDeleteView
+from apps.deduction.mixins import BaseDeductionDeleteView
 from apps.deduction.models import Deduction
 from apps.deduction.tests.constants import PAYLOAD_DEDUCTION_CREATE
-from apps.deduction.views import DeductionListView, AddDeduction, UpdateDeduction, DeleteDeduction
+from apps.deduction.views import (
+    AddDeduction,
+    DeductionListView,
+    DeleteDeduction,
+    UpdateDeduction,
+)
 
 logger = logging.getLogger(__name__)
+
 
 @pytest.fixture
 def user(db):
     return User.objects.create_user(username='testuser', password='password')
+
 
 @pytest.fixture
 def superuser(db):
@@ -44,7 +38,7 @@ def factory():
 @pytest.mark.parametrize('supplier', ['foo', ''])
 def test__base_deduction_list_queryset(supplier):
     # given
-    Deduction.objects.create(number_deduction="20230001", supplier=supplier)
+    Deduction.objects.create(number_deduction='20230001', supplier=supplier)
     deduction_view = DeductionListView()
 
     # when
@@ -64,10 +58,10 @@ def test__base_deduction_list_queryset(supplier):
 @pytest.mark.django_db
 def test__base_deduction_list_context_data():
     # given
-    Deduction.objects.create(number_deduction="20230001",  supplier='foo')
-    Deduction.objects.create(number_deduction="20230002",  supplier='foo')
-    Deduction.objects.create(number_deduction="20230003",  supplier='foo')
-    Deduction.objects.create(number_deduction="20230004",  supplier='foo')
+    Deduction.objects.create(number_deduction='20230001', supplier='foo')
+    Deduction.objects.create(number_deduction='20230002', supplier='foo')
+    Deduction.objects.create(number_deduction='20230003', supplier='foo')
+    Deduction.objects.create(number_deduction='20230004', supplier='foo')
 
     deduction_view = DeductionListView()
 
@@ -87,24 +81,20 @@ def test__base_deduction_list_context_data():
     assert context_data['supplier_filter'] == 'foo'
 
 
-
-
-
-
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'payload_deduction',
     [
         PAYLOAD_DEDUCTION_CREATE,  # Valid payload
-        {}
-    ]
+        {},
+    ],
 )
 @pytest.mark.parametrize(
     'deduction_view, url',
     [
         (AddDeduction(), 'apps.deduction:create'),
         (UpdateDeduction(), 'apps.deduction:edit'),
-    ]
+    ],
 )
 def test_base_deduction_create_update_context_data(user, payload_deduction, deduction_view, url):
     """
@@ -143,7 +133,9 @@ def test_base_deduction_create_update_context_data(user, payload_deduction, dedu
         # And: Ensure that the newly created Deduction object is available in the context (self.object)
         assert view.object is not None  # This should be set after form_valid()
         assert isinstance(view.object, Deduction)  # Ensure it's an instance of Deduction
-        assert view.object.number_deduction == '20240001'  # Ensure the Deduction object has the correct number
+        assert (
+            view.object.number_deduction == '20240001'
+        )  # Ensure the Deduction object has the correct number
     else:
         # Testing invalid case where the form should fail
         assert view.form_invalid(form)
@@ -155,7 +147,7 @@ def test_deduction_delete_view(superuser, user):
     # Create a test Deduction object
     deduction = Deduction.objects.create(
         number_deduction='20240002',
-        owner=user
+        owner=user,
     )
 
     # Define the URL for the delete view
@@ -180,10 +172,10 @@ def test_deduction_delete_view(superuser, user):
 @pytest.mark.django_db
 def test_deduction_delete_view_invalid_user(user):
     # Create a test Deduction object
-    owner = User.objects.create(username="owner", password="password")
+    owner = User.objects.create(username='owner', password='password')
     deduction = Deduction.objects.create(
         number_deduction='20240001',
-        owner=owner
+        owner=owner,
     )
 
     # Define the URL for the delete view
@@ -200,7 +192,5 @@ def test_deduction_delete_view_invalid_user(user):
     view.kwargs = {'pk': deduction.pk}
 
     # Verify that a PermissionDenied exception is raised
-    with pytest.raises(PermissionDenied, match="you are not an owner of this deduction!"):
+    with pytest.raises(PermissionDenied, match='you are not an owner of this deduction!'):
         view.get_object(queryset=view.get_queryset())
-
-

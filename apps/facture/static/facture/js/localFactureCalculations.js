@@ -1,21 +1,23 @@
 /* jshint esversion: 6 */
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get the data-created-date attribute from the container
-        var createdDateContainer = document.getElementById("created-date-container");
-        var createdDateValue = createdDateContainer ? createdDateContainer.getAttribute("data-created-date") : null;
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the data-created-date attribute from the container
+  var createdDateContainer = document.getElementById("created-date-container");
+  var createdDateValue = createdDateContainer
+    ? createdDateContainer.getAttribute("data-created-date")
+    : null;
 
-        console.log("Prefilling created_date with value:", createdDateValue);
+  console.log("Prefilling created_date with value:", createdDateValue);
 
-        // Now, set the value of the input field if available
-        var createdDateInput = document.getElementById("id_created_date");
-        if (createdDateInput && createdDateValue) {
-            createdDateInput.value = createdDateValue;  // Prefill the field with the value from data attribute
-            console.log("Created Date Value after setting:", createdDateInput.value);
-        } else {
-            console.error("Created date input field or value not found.");
-        }
-    });
+  // Now, set the value of the input field if available
+  var createdDateInput = document.getElementById("id_created_date");
+  if (createdDateInput && createdDateValue) {
+    createdDateInput.value = createdDateValue; // Prefill the field with the value from data attribute
+    console.log("Created Date Value after setting:", createdDateInput.value);
+  } else {
+    console.error("Created date input field or value not found.");
+  }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";

@@ -1,15 +1,9 @@
+import logging
 from datetime import date
-from unittest.mock import patch
 
 import pytest
-from django.middleware.csrf import get_token
-from django.urls import reverse
-from django.test import RequestFactory
-from django.contrib.auth.models import User, AnonymousUser
-import importlib
-import logging
 
-from apps.deduction.forms import get_next_deduction_number, DeductionFormBase, DeductionForm
+from apps.deduction.forms import DeductionForm, get_next_deduction_number
 from apps.deduction.models import Deduction
 
 logger = logging.getLogger(__name__)
@@ -28,6 +22,7 @@ def test__get_next_deduction_number():
     Deduction.objects.create(number_deduction=200022)
     number = get_next_deduction_number()
     assert number == 200023
+
 
 @pytest.mark.django_db
 def test__deduction_form():
