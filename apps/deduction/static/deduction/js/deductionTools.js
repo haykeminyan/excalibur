@@ -1,8 +1,12 @@
         // Retrieve CSRF token from meta tag
-        function getCSRFToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        }
-
+function getCSRFToken() {
+    const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+    if (!tokenMeta) {
+        console.error("CSRF token not found in meta tags.");
+        return null;
+    }
+    return tokenMeta.getAttribute('content');
+}
         function toggleDropdown(button) {
             const dropdownMenu = button.nextElementSibling;
 
@@ -31,30 +35,40 @@
             window.location.href = updateUrl; // Redirect to the update view
         }
 
-        function deleteItem(pk) {
-            const deleteUrl = `/deduction/delete/${pk}/`; // Construct URL dynamically
+function deleteItem(pk) {
+    const deleteUrl = `/deduction/delete/${pk}/`; // Construct URL dynamically
+    const csrfToken = getCSRFToken();
 
-            if (confirm("Are you sure you want to delete this deduction?")) {
-                fetch(deleteUrl, {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": getCSRFToken(), // Include CSRF token dynamically
-                    },
-                })
-                .then((response) => {
-                    if (response.ok) {
-                        alert("Facture deleted successfully!");
-                        window.location.href = "/deduction/";
-                    } else {
-                        alert("Failed to delete facture.");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                    alert("An error occurred.");
+    if (!csrfToken) {
+        alert("CSRF token is missing. Please refresh the page and try again.");
+        return;
+    }
+
+    if (confirm("Are you sure you want to delete this deduction?")) {
+        fetch(deleteUrl, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken, // Include CSRF token dynamically
+                "Content-Type": "application/json", // Ensure content type is correct
+            },
+        })
+        .then((response) => {
+            if (response.ok) {
+                alert("Deduction deleted successfully!");
+                window.location.href = "/deduction/";
+            } else {
+                response.text().then((text) => {
+                    console.error("Server error response:", text);
+                    alert("Failed to delete deduction. Please try again.");
                 });
             }
-        }
+        })
+        .catch((error) => {
+            console.error("Network error:", error);
+            alert("An error occurred. Please check your connection and try again.");
+        });
+    }
+}
 
         function toggleDetails(button) {
             const supplierContainer = button.closest('.supplier-container');

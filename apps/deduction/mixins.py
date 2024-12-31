@@ -5,9 +5,10 @@ import re
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles import finders
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -28,15 +29,16 @@ from ..facture.parsing_docx import replace_placeholders_in_doc, set_font_size
 
 logger = logging.getLogger(__name__)
 
-
-class CSRFExemptMixin:
-    """
-    A mixin that exempts the dispatch method from CSRF verification.
-    """
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+# if you want to disable csrf-checking and make it as api-test for application
+# use this mixin
+# class CSRFExemptMixin:
+#     """
+#     A mixin that exempts the dispatch method from CSRF verification.
+#     """
+#
+#     @method_decorator(csrf_exempt)
+#     def dispatch(self, *args, **kwargs):
+#         return super().dispatch(*args, **kwargs)
 
 
 
@@ -165,6 +167,29 @@ class BaseDeductionUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class BaseDeductionDeleteView(LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        """
+        If user is superuser he can delete concrete deduction
+        """
+        if self.request.user.is_superuser:
+            # Superuser can access all Deductions
+            return Deduction.objects.all()
+        return Deduction.objects.filter(owner=self.request.user)
+
+    def get_object(self, queryset=None):
+        """
+        Ensure that only objects within the restricted queryset can be accessed.
+        """
+        queryset = self.get_queryset() if queryset is None else queryset
+        pk = self.kwargs.get(self.pk_url_kwarg)
+
+        # Attempt to get the object and handle ownership validation
+        try:
+            obj = queryset.get(pk=pk)
+        except Deduction.DoesNotExist:
+            raise PermissionDenied("you are not an owner of this deduction!")
+
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

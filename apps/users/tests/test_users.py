@@ -5,14 +5,13 @@ from django.middleware.csrf import get_token
 from django.urls import reverse
 from django.test import RequestFactory
 from django.contrib.auth.models import User, AnonymousUser
-from django.test import Client
-from apps.deduction.views import DeductionListView
-from apps.facture.views import LocalFactureListView
+import importlib
 import logging
 
 from apps.main.views import MainMenuListView
 from apps.users.tests.constants import url_names_from_deduction, url_names_from_facture, url_names_from_users, \
     url_names_from_main, url_to_view_mapping, url_names_from_fail
+import excalibur.settings as settings
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ def factory():
 
 
 @pytest.mark.django_db
-def test_all_main_apps_redirect_to_login(factory):
+def test__all_main_apps_redirect_to_login(factory):
     # Combine all URL names from different sources
     all_url_names = [
         *url_names_from_deduction,
@@ -56,7 +55,7 @@ def test_all_main_apps_redirect_to_login(factory):
 
 
 @pytest.mark.django_db
-def test_main_app(factory):
+def test__main_app(factory):
     # Combine all URL names from different sources
     all_url_names = [
         *url_names_from_main,
@@ -79,7 +78,7 @@ def test_main_app(factory):
                 assert response.status_code == 200
 
 @pytest.mark.django_db
-def test_user_app_fail(factory):
+def test__user_app_fail(factory):
     # Combine all URL names from different sources
     all_url_names = [
         *url_names_from_users,
@@ -103,27 +102,27 @@ def test_user_app_fail(factory):
                 assert 'CSRF verification failed' in str(response.content)
 
 @pytest.mark.django_db
-def test_user_app_succeed(client, user):
-    all_url_names = [
-        *url_names_from_users
-    ]
+def test__user_success_login(client, user):
+    # Simulate a POST request with valid credentials
+    response = client.post(reverse('apps.users:login'), {
+        'username': user.username,
+        'password': 'password',
+    })
 
-    for url_name in all_url_names:
-        client.force_login(user)  # Simulate a logged-in user
-        response = client.post(reverse(url_name))
-        # If the response is a redirect (status code 302), check the 'Location' header
-        if response.status_code == 302:
-            print(f"Redirecting to: {response['Location']}")
-            assert '/users/login/' in response['Location']
-        else:
-            # If it's not a redirect, access the _request attribute to get the path
-            print(f"Response URL path: {response._request.path_info}")
-            assert response.status_code == 200
+    # Assert redirection to the success_url
+    assert response.status_code == 302
+    assert response.url == reverse('apps.facture:local_list')  # Replace with your actual URL
 
 
-@pytest.mark.django_db
-def test_login_success(factory, user):
-    request = factory.get(reverse('apps.facture:local_list'))
-    request.user = user
-    response = LocalFactureListView.as_view()(request)
-    assert response.status_code == 200
+@pytest.mark.parametrize('environment', ['production', 'development'])
+def test__enviroment_settings(monkeypatch, environment):
+    monkeypatch.setenv('ENVIRONMENT', environment)
+    importlib.reload(settings)  # Reimport and execute settings.py
+
+    if environment == 'production':
+        assert settings.SECURE_SSL_REDIRECT is True
+        assert settings.SECURE_PROXY_SSL_HEADER == ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    elif environment == 'development':
+        assert settings.SECURE_SSL_REDIRECT is False
+        assert settings.SECURE_PROXY_SSL_HEADER is None
