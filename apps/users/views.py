@@ -7,9 +7,7 @@ from django.urls import reverse_lazy
 class LoginUser(LoginView):
     form_class = AuthenticationForm
     template_name = 'html/login.html'
-
-    def get_success_url(self):
-        return reverse_lazy('apps.facture:local_list')
+    success_url = 'apps.facture:local_list'
 
 
 class LogoutUser(LogoutView):

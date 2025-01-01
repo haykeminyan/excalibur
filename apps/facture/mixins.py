@@ -60,7 +60,6 @@ class BaseFactureListView(LoginRequiredMixin, ListView):
 
 
 class BaseFactureCreateView(LoginRequiredMixin, CreateView):
-    success_url = reverse_lazy('success_url')  # Update this as needed
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -101,6 +100,30 @@ class BaseFactureCreateView(LoginRequiredMixin, CreateView):
 
 # Base views for shared logic
 class BaseFactureUpdateView(LoginRequiredMixin, UpdateView):
+    def get_queryset(self):
+        """
+        If user is superuser he can delete concrete deduction
+        """
+        if self.request.user.is_superuser:
+            # Superuser can access all Deductions
+            return self.model.objects.all()
+        return self.model.objects.filter(owner=self.request.user)
+
+    def get_object(self, queryset=None):
+        """
+        Ensure that only objects within the restricted queryset can be accessed.
+        """
+        queryset = self.get_queryset() if queryset is None else queryset
+        pk = self.kwargs.get(self.pk_url_kwarg)
+
+        # Attempt to get the object and handle ownership validation
+        try:
+            obj = queryset.get(pk=pk)
+        except self.model.DoesNotExist:
+            raise PermissionDenied('you are not an owner of this deduction!')
+
+        return obj
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -144,9 +167,6 @@ class BaseFactureDeleteView(LoginRequiredMixin, DeleteView):
         """
         queryset = self.get_queryset() if queryset is None else queryset
         pk = self.kwargs.get(self.pk_url_kwarg)
-        logger.error(pk)
-        logger.error(queryset)
-        logger.error('!' * 100)
 
         # Attempt to get the object and handle ownership validation
         try:
