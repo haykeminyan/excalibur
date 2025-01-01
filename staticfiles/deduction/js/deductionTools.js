@@ -1,10 +1,12 @@
 // Retrieve CSRF token from meta tag
 function getCSRFToken() {
-  return document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
+  const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+  if (!tokenMeta) {
+    console.error("CSRF token not found in meta tags.");
+    return null;
+  }
+  return tokenMeta.getAttribute("content");
 }
-
 function toggleDropdown(button) {
   const dropdownMenu = button.nextElementSibling;
 
@@ -28,32 +30,60 @@ document.addEventListener("click", (event) => {
   }
 });
 
-function updateItem(pk) {
-  const updateUrl = `/deduction/update/${pk}/`; // Construct URL dynamically
-  window.location.href = updateUrl; // Redirect to the update view
+function updateItem(pk, typeFacture) {
+  const csrfToken = getCSRFToken();
+
+  if (!csrfToken) {
+    alert("CSRF token is missing. Please refresh the page and try again.");
+    return;
+  }
+  window.location.href = `/deduction/update/${pk}/`; // Redirect to the update view
 }
 
-function deleteItem(pk) {
+function deleteItem(pk, typeFacture) {
   const deleteUrl = `/deduction/delete/${pk}/`; // Construct URL dynamically
+  const csrfToken = getCSRFToken();
 
-  if (confirm("Are you sure you want to delete this deduction?")) {
+  if (!csrfToken) {
+    alert("CSRF token is missing. Please refresh the page and try again.");
+    return;
+  }
+
+  if (confirm("Are you sure you want to delete this facture?")) {
     fetch(deleteUrl, {
       method: "POST",
       headers: {
-        "X-CSRFToken": getCSRFToken(), // Include CSRF token dynamically
+        "X-CSRFToken": csrfToken,
+        "Content-Type": "application/json",
       },
     })
       .then((response) => {
         if (response.ok) {
           alert("Facture deleted successfully!");
           window.location.href = "/deduction/";
-        } else {
-          alert("Failed to delete facture.");
+        } else if (response.status === 403) {
+          alert("You are not an owner of this deduction!");
+          window.location.href = "/deduction/";
+        }
+        // Check if the response is JSON
+        const contentType = response.headers.get("Content-Type");
+        if (!contentType || !contentType.includes("application/json")) {
+          return response.text().then((text) => {
+            throw new Error(`Unexpected response format: ${text}`);
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          alert(data.success);
+          window.location.href = "/deduction/";
+        } else if (data.error) {
+          alert(`Error: ${data.error}`);
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
-        alert("An error occurred.");
+        console.error("Fetch error:", error.message);
       });
   }
 }

@@ -61,7 +61,6 @@ class CheckOwnerDeduction:
         return obj
 
 
-
 class BaseDeductionListView(LoginRequiredMixin, ListView):
     context_object_name = 'deductions'
     paginate_by = 3
@@ -135,7 +134,6 @@ class BaseDeductionCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-
 # Base views for shared logic
 class BaseDeductionUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
@@ -156,14 +154,12 @@ class BaseDeductionUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-
 class BaseDeductionDeleteView(LoginRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         """
         Enforce ownership validation when retrieving the object.
         """
         return CheckOwnerDeduction(self.model, self.request, self.kwargs).get_object()
-
 
 
 class BaseDeductionDetailView(LoginRequiredMixin, DetailView):
@@ -175,7 +171,6 @@ class BaseDeductionDetailView(LoginRequiredMixin, DetailView):
         Ensure the object is fetched or return a 404 if not found.
         """
         return get_object_or_404(self.model, pk=self.kwargs.get(self.slug_url_kwarg))
-
 
 
 class BaseDeductionExportDocx(LoginRequiredMixin, View):

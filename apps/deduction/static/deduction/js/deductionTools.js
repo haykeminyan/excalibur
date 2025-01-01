@@ -60,10 +60,10 @@ function deleteItem(pk, typeFacture) {
       .then((response) => {
         if (response.ok) {
           alert("Facture deleted successfully!");
-          window.location.href = '/deduction/';
+          window.location.href = "/deduction/";
         } else if (response.status === 403) {
           alert("You are not an owner of this deduction!");
-          window.location.href = '/deduction/';
+          window.location.href = "/deduction/";
         }
         // Check if the response is JSON
         const contentType = response.headers.get("Content-Type");
@@ -77,7 +77,7 @@ function deleteItem(pk, typeFacture) {
       .then((data) => {
         if (data.success) {
           alert(data.success);
-          window.location.href = '/deduction/';
+          window.location.href = "/deduction/";
         } else if (data.error) {
           alert(`Error: ${data.error}`);
         }
@@ -87,7 +87,6 @@ function deleteItem(pk, typeFacture) {
       });
   }
 }
-
 
 function toggleDetails(button) {
   const supplierContainer = button.closest(".supplier-container");
