@@ -6,7 +6,6 @@ from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory
 from django.urls import reverse
 
-from apps.deduction.mixins import BaseDeductionDeleteView
 from apps.deduction.models import Deduction
 from apps.deduction.tests.constants import PAYLOAD_DEDUCTION_CREATE
 from apps.deduction.views import (
@@ -134,7 +133,7 @@ def test_base_deduction_create_update_context_data(user, payload_deduction, dedu
         assert view.object is not None  # This should be set after form_valid()
         assert isinstance(view.object, Deduction)  # Ensure it's an instance of Deduction
         assert (
-            view.object.number_deduction == '20240001'
+            view.object.number_deduction == '20250001'
         )  # Ensure the Deduction object has the correct number
     else:
         # Testing invalid case where the form should fail
@@ -174,7 +173,7 @@ def test_deduction_delete_view_invalid_user(user):
     # Create a test Deduction object
     owner = User.objects.create(username='owner', password='password')
     deduction = Deduction.objects.create(
-        number_deduction='20240001',
+        number_deduction='20250001',
         owner=owner,
     )
 
@@ -186,7 +185,7 @@ def test_deduction_delete_view_invalid_user(user):
     request.user = user  # incorrect user
 
     # Create the view instance
-    view = BaseDeductionDeleteView()
+    view = DeleteDeduction()
     view.request = request
 
     view.kwargs = {'pk': deduction.pk}
@@ -194,3 +193,55 @@ def test_deduction_delete_view_invalid_user(user):
     # Verify that a PermissionDenied exception is raised
     with pytest.raises(PermissionDenied, match='you are not an owner of this deduction!'):
         view.get_object(queryset=view.get_queryset())
+
+
+@pytest.mark.django_db
+def test_deduction_update_non_superuser_deduction(user, superuser):
+    # Create a test Deduction object
+    deduction = Deduction.objects.create(
+        number_deduction='20250001',
+        owner=superuser,
+    )
+
+    # Define the URL for the delete view
+    url = reverse('apps.deduction:edit', kwargs={'pk': deduction.pk})
+
+    # Create the request and attach a different user
+    request = RequestFactory().put(url)
+    request.user = user  # incorrect user
+
+    # Create the view instance
+    view = UpdateDeduction()
+    view.request = request
+
+    view.kwargs = {'pk': deduction.pk}
+
+    # Verify that a PermissionDenied exception is raised
+    with pytest.raises(PermissionDenied, match='you are not an owner of this deduction!'):
+        view.post(request, pk=deduction.pk)
+
+
+@pytest.mark.django_db
+def test_deduction_update_superuser_deduction(user, superuser):
+    # Create a test Deduction object
+    deduction = Deduction.objects.create(
+        number_deduction='20250001',
+        owner=user,
+    )
+
+    # Define the URL for the delete view
+    url = reverse('apps.deduction:edit', kwargs={'pk': deduction.pk})
+
+    # Create the request and attach a different user
+    request = RequestFactory().put(url)
+    request.user = superuser  # incorrect user
+
+    # Create the view instance
+    view = UpdateDeduction()
+    view.request = request
+    view.kwargs = {'pk': deduction.pk}
+
+    response = view.post(request, pk=deduction.pk)
+
+    # Assert that the deduction object was deleted
+    assert response.status_code == 200  # Redirection after successful deletion

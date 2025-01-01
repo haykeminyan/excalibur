@@ -17,6 +17,15 @@
                   href="{% static 'facture/css/local_list_facture.css' %}" />
         {% endblock stylesheets %}
     </head>
+    <!-- JavaScript alert for error messages -->
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                alert("{{ message|escapejs }}");
+            {% endfor %}
+        </script>
+    {% endif %}
+    {% csrf_token %}
     <body class="bg-gray-100">
         <div class="container mx-auto py-8">
             <div class="flex justify-between items-center mb-6">

@@ -30,12 +30,17 @@ document.addEventListener("click", (event) => {
   }
 });
 
-function updateItem(pk) {
-  const updateUrl = `/deduction/update/${pk}/`; // Construct URL dynamically
-  window.location.href = updateUrl; // Redirect to the update view
+function updateItem(pk, typeFacture) {
+  const csrfToken = getCSRFToken();
+
+  if (!csrfToken) {
+    alert("CSRF token is missing. Please refresh the page and try again.");
+    return;
+  }
+  window.location.href = `/deduction/update/${pk}/`; // Redirect to the update view
 }
 
-function deleteItem(pk) {
+function deleteItem(pk, typeFacture) {
   const deleteUrl = `/deduction/delete/${pk}/`; // Construct URL dynamically
   const csrfToken = getCSRFToken();
 
@@ -44,31 +49,45 @@ function deleteItem(pk) {
     return;
   }
 
-  if (confirm("Are you sure you want to delete this deduction?")) {
+  if (confirm("Are you sure you want to delete this facture?")) {
     fetch(deleteUrl, {
       method: "POST",
       headers: {
-        "X-CSRFToken": csrfToken, // Include CSRF token dynamically
-        "Content-Type": "application/json", // Ensure content type is correct
+        "X-CSRFToken": csrfToken,
+        "Content-Type": "application/json",
       },
     })
       .then((response) => {
         if (response.ok) {
-          alert("Deduction deleted successfully!");
-          window.location.href = "/deduction/";
-        } else {
-          response.text().then((text) => {
-            console.error("Server error response:", text);
-            alert("Failed to delete deduction. Please try again.");
+          alert("Facture deleted successfully!");
+          window.location.href = '/deduction/';
+        } else if (response.status === 403) {
+          alert("You are not an owner of this deduction!");
+          window.location.href = '/deduction/';
+        }
+        // Check if the response is JSON
+        const contentType = response.headers.get("Content-Type");
+        if (!contentType || !contentType.includes("application/json")) {
+          return response.text().then((text) => {
+            throw new Error(`Unexpected response format: ${text}`);
           });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          alert(data.success);
+          window.location.href = '/deduction/';
+        } else if (data.error) {
+          alert(`Error: ${data.error}`);
         }
       })
       .catch((error) => {
-        console.error("Network error:", error);
-        alert("An error occurred. Please check your connection and try again.");
+        console.error("Fetch error:", error.message);
       });
   }
 }
+
 
 function toggleDetails(button) {
   const supplierContainer = button.closest(".supplier-container");

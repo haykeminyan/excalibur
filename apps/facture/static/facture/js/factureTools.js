@@ -32,8 +32,13 @@ document.addEventListener("click", (event) => {
 });
 
 function updateItem(pk, typeFacture) {
-  const updateUrl = `/facture/${typeFacture}/update/${pk}/`; // Construct URL dynamically
-  window.location.href = updateUrl; // Redirect to the update view
+  const csrfToken = getCSRFToken();
+
+  if (!csrfToken) {
+    alert("CSRF token is missing. Please refresh the page and try again.");
+    return;
+  }
+  window.location.href = `/facture/${typeFacture}/update/${pk}/`; // Redirect to the update view
 }
 
 function deleteItem(pk, typeFacture) {
@@ -49,24 +54,37 @@ function deleteItem(pk, typeFacture) {
     fetch(deleteUrl, {
       method: "POST",
       headers: {
-        "X-CSRFToken": csrfToken, // Include CSRF token dynamically
-        "Content-Type": "application/json", // Ensure content type is correct
+        "X-CSRFToken": csrfToken,
+        "Content-Type": "application/json",
       },
     })
       .then((response) => {
         if (response.ok) {
-          alert("Deduction deleted successfully!");
+          alert("Facture deleted successfully!");
           window.location.href = `/facture/${typeFacture}`;
-        } else {
-          response.text().then((text) => {
-            console.error("Server error response:", text);
-            alert("Failed to delete deduction. Please try again.");
+        } else if (response.status === 403) {
+          alert("You are not an owner of this facture!");
+          window.location.href = `/facture/${typeFacture}`;
+        }
+        // Check if the response is JSON
+        const contentType = response.headers.get("Content-Type");
+        if (!contentType || !contentType.includes("application/json")) {
+          return response.text().then((text) => {
+            throw new Error(`Unexpected response format: ${text}`);
           });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          alert(data.success);
+          window.location.href = `/facture/${typeFacture}`;
+        } else if (data.error) {
+          alert(`Error: ${data.error}`);
         }
       })
       .catch((error) => {
-        console.error("Network error:", error);
-        alert("An error occurred. Please check your connection and try again.");
+        console.error("Fetch error:", error.message);
       });
   }
 }
