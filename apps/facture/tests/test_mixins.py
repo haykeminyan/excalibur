@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 
 @pytest.mark.django_db
 def test__check_owner_local_facture_superuser(request, user, superuser):
-    LocalFacture.objects.all().delete()
-
     # given
     facture = LocalFacture(
         reference=LOCAL_FACTURE['reference'],
@@ -43,8 +41,7 @@ def test__check_owner_local_facture_superuser(request, user, superuser):
 
 @pytest.mark.django_db
 def test__check_owner_local_facture_user(request, user):
-    LocalFacture.objects.all().delete()
-    user_test = User.objects.create_user(username='test', password='foo')
+    user_test = User.objects.create_user(username='user_test', password='foo')
 
     # given
     facture = LocalFacture(
@@ -74,8 +71,6 @@ def test__check_owner_local_facture_user(request, user):
 
 @pytest.mark.django_db
 def test__check_owner_world_facture_superuser(request, user, superuser):
-    WorldFacture.objects.all().delete()
-
     # given
     facture = WorldFacture(
         receiver=WORLD_FACTURE['receiver'],
@@ -104,8 +99,7 @@ def test__check_owner_world_facture_superuser(request, user, superuser):
 
 @pytest.mark.django_db
 def test__check_owner_world_facture_user(request, user):
-    WorldFacture.objects.all().delete()
-    user_test = User.objects.create_user(username='test', password='foo')
+    user_test = User.objects.create_user(username='user_test', password='foo')
     # given
     facture = WorldFacture(
         receiver=WORLD_FACTURE['receiver'],

@@ -14,7 +14,7 @@ def user(db):
 
 @pytest.fixture
 def superuser(db):
-    return User.objects.create_superuser(username='testuser', password='password')
+    return User.objects.create_superuser(username='superuser', password='password')
 
 
 @pytest.fixture
