@@ -1,0 +1,29 @@
+LOCAL_FACTURE = {
+    'reference': 'test',
+    'firm_name': 'test',
+    'address': 'Yerevan, Armenia',
+    'destination': 'Recharge express',
+    'quantity': 1000,
+    'percent': 0.5,
+    'quantity_after_percent': 500,
+    'tax_ht': 500,
+    'total_tax': 83.3,
+    'total_ttc': 500,
+    'deposit': 12,
+    'net_pay': 500,
+}
+
+WORLD_FACTURE = {
+    'receiver': 'test',
+    'firm_name': 'test',
+    'address': 'Porto, Portugal',
+    'sku': '123',
+    'description': 'Recharge Card and Express',
+    'specification': 123,
+    'quantity': 123,
+    'percent': 0.5,
+    'quantity_after_percent': 61.5,
+    'total_tax': 1,
+    'net_pay': 60.5,
+    'account_number': 1234567890,
+}

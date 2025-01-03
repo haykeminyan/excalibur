@@ -1,9 +1,13 @@
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import connections
 from django.db.utils import OperationalError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+
+logger = logging.getLogger(__name__)
 
 
 @csrf_exempt
@@ -12,6 +16,7 @@ def healthcheck(request):
     try:
         connections['default'].cursor()
     except OperationalError:
+        logger.error('OperationalError encountered')
         db_health = 'unhealthy'
     return JsonResponse({'status': 'healthy', 'database': db_health})
 

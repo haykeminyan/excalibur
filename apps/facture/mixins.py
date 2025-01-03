@@ -42,7 +42,7 @@ class CheckOwnerFacture:
             return self.model.objects.all()
         return self.model.objects.filter(owner=self.request.user)
 
-    def get_object(self, queryset=None):
+    def get_facture(self, queryset=None):
         """
         Ensure that only objects within the restricted queryset can be accessed.
         """
@@ -94,7 +94,7 @@ class BaseFactureUpdateView(LoginRequiredMixin, UpdateView):
         """
         Enforce ownership validation when retrieving the object.
         """
-        return CheckOwnerFacture(self.model, self.request, self.kwargs).get_object()
+        return CheckOwnerFacture(self.model, self.request, self.kwargs).get_facture()
 
     def form_valid(self, form):
         # Log the form instance before save to ensure the owner is set
@@ -113,7 +113,7 @@ class BaseFactureDeleteView(LoginRequiredMixin, DeleteView):
         """
         Enforce ownership validation when retrieving the object.
         """
-        return CheckOwnerFacture(self.model, self.request, self.kwargs).get_object()
+        return CheckOwnerFacture(self.model, self.request, self.kwargs).get_facture()
 
 
 class BaseFactureDetailView(LoginRequiredMixin, DetailView):

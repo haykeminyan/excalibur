@@ -24,6 +24,12 @@ class Facture(models.Model):
     total_tax = models.FloatField()
     net_pay = models.FloatField()
 
+    def save(self, *args, **kwargs):
+        # Ensure the owner is set when saving a LocalFacture instance
+        if not self.owner:
+            self.owner = self.user  # or self.request.user if accessible
+        super().save(*args, **kwargs)
+
 
 class LocalFacture(Facture):
     # check if this fucking shit has reason to exist
@@ -32,12 +38,6 @@ class LocalFacture(Facture):
     tax_ht = models.FloatField()
     total_ttc = models.FloatField()
     total_sum_fr = models.CharField(max_length=255)
-
-    def save(self, *args, **kwargs):
-        # Ensure the owner is set when saving a LocalFacture instance
-        if not self.owner:
-            self.owner = self.user  # or self.request.user if accessible
-        super().save(*args, **kwargs)
 
 
 class WorldFacture(Facture):

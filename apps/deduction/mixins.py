@@ -45,7 +45,7 @@ class CheckOwnerDeduction:
             return self.model.objects.all()
         return self.model.objects.filter(owner=self.request.user)
 
-    def get_object(self, queryset=None):
+    def get_deduction(self, queryset=None):
         """
         Ensure that only objects within the restricted queryset can be accessed.
         """
@@ -140,7 +140,7 @@ class BaseDeductionUpdateView(LoginRequiredMixin, UpdateView):
         """
         Enforce ownership validation when retrieving the object.
         """
-        return CheckOwnerDeduction(self.model, self.request, self.kwargs).get_object()
+        return CheckOwnerDeduction(self.model, self.request, self.kwargs).get_deduction()
 
     def form_valid(self, form):
         # Log the form instance before save to ensure the owner is set
@@ -159,7 +159,7 @@ class BaseDeductionDeleteView(LoginRequiredMixin, DeleteView):
         """
         Enforce ownership validation when retrieving the object.
         """
-        return CheckOwnerDeduction(self.model, self.request, self.kwargs).get_object()
+        return CheckOwnerDeduction(self.model, self.request, self.kwargs).get_deduction()
 
 
 class BaseDeductionDetailView(LoginRequiredMixin, DetailView):

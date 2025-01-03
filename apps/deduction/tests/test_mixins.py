@@ -1,4 +1,6 @@
+import io
 import logging
+from unittest.mock import Mock, mock_open, patch
 
 import pytest
 from django.contrib.auth.models import User
@@ -6,31 +8,18 @@ from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory
 from django.urls import reverse
 
+from apps.deduction.mixins import BaseDeductionExportDocx
 from apps.deduction.models import Deduction
 from apps.deduction.tests.constants import PAYLOAD_DEDUCTION_CREATE
 from apps.deduction.views import (
     AddDeduction,
+    DeductionDetailView,
     DeductionListView,
     DeleteDeduction,
     UpdateDeduction,
 )
 
 logger = logging.getLogger(__name__)
-
-
-@pytest.fixture
-def user(db):
-    return User.objects.create_user(username='testuser', password='password')
-
-
-@pytest.fixture
-def superuser(db):
-    return User.objects.create_superuser(username='admin', password='password')
-
-
-@pytest.fixture
-def factory():
-    return RequestFactory()
 
 
 @pytest.mark.django_db
@@ -245,3 +234,108 @@ def test_deduction_update_superuser_deduction(user, superuser):
 
     # Assert that the deduction object was deleted
     assert response.status_code == 200  # Redirection after successful deletion
+
+
+@pytest.mark.django_db
+def test_deduction_details(user, superuser):
+    # Create a test Deduction object
+    deduction = Deduction.objects.create(
+        number_deduction='20250001',
+        owner=user,
+    )
+
+    # Define the URL for the delete view
+    url = reverse('apps.deduction:detail', kwargs={'pk': deduction.pk})
+
+    # Create the request and attach a different user
+    request = RequestFactory().put(url)
+    request.user = superuser  # incorrect user
+
+    # Create the view instance
+    view = DeductionDetailView()
+    view.request = request
+    view.kwargs = {'pk': deduction.pk}
+
+    response = view.get(request, pk=deduction.pk)
+
+    # Assert that the deduction object was deleted
+    assert response.status_code == 200  # Redirection after successful deletion
+
+
+@pytest.mark.django_db
+@patch('apps.deduction.mixins.Document')
+@patch('apps.deduction.mixins.model_to_dict')
+@patch('apps.deduction.mixins.finders.find')
+@patch('apps.deduction.mixins.replace_placeholders_in_doc')
+@patch('apps.deduction.mixins.set_font_size')
+def test_generate_docx(
+    mock_set_font_size,
+    mock_replace_placeholders,
+    mock_finders,
+    mock_model_to_dict,
+    mock_document,
+):
+    # Mock dependencies
+    mock_facture_object = Mock()
+    mock_model_to_dict.return_value = {'field1': 'value1'}
+    mock_finders.return_value = '/mock/template/path'
+    mock_doc = Mock()
+    mock_document.return_value = mock_doc
+    mock_file_stream = io.BytesIO()
+    mock_doc.save = Mock()
+
+    # Call the method
+    view = BaseDeductionExportDocx()
+    result = view.generate_docx(mock_facture_object, 'template.docx')
+
+    # Assertions
+    mock_model_to_dict.assert_called_once_with(mock_facture_object)
+    mock_finders.assert_called_once_with('template.docx')
+    mock_replace_placeholders.assert_called()
+    mock_set_font_size.assert_called_once_with(mock_doc)
+    assert isinstance(result, io.BytesIO)
+
+
+@pytest.mark.django_db
+@patch('apps.deduction.mixins.get_object_or_404')
+@patch('apps.deduction.mixins.BaseDeductionExportDocx.generate_docx')
+@patch('builtins.open', new_callable=mock_open)
+@patch('os.makedirs')
+def test_generate_docx_get(
+    mock_makedirs,
+    mock_open_func,
+    mock_generate_docx,
+    mock_get_object_or_404,
+):
+    # Mock dependencies
+    mock_deduction_object = Mock(number_deduction='123')
+    mock_get_object_or_404.return_value = mock_deduction_object
+    mock_file_stream = io.BytesIO(b'Test Content')
+    mock_generate_docx.return_value = mock_file_stream
+
+    # Mock request and kwargs
+    mock_request = Mock()
+    mock_kwargs = {'pk': 1}
+
+    # Call the method
+    view = BaseDeductionExportDocx()
+    response = view.get(mock_request, **mock_kwargs)
+
+    # Assertions
+    mock_get_object_or_404.assert_called_once_with(Deduction, pk=1)
+    mock_generate_docx.assert_called_once_with(mock_deduction_object, view.local_template)
+    mock_open_func.assert_called_once_with(
+        '/usr/src/app/apps/deduction/static/deduction/file_templates/file_output/deduction_123.docx',
+        'wb',
+    )
+    mock_open_func().write.assert_called_once_with(b'Test Content')
+    mock_makedirs.assert_called_once_with(
+        '/usr/src/app/apps/deduction/static/deduction/file_templates/file_output',
+        exist_ok=True,
+    )
+    assert response['Content-Disposition'] == 'attachment; filename="deduction_123.docx"'
+    assert (
+        response['Content-Type']
+        == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    assert response.content == b'Test Content'
