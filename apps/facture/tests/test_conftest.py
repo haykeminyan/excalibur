@@ -12,9 +12,8 @@ def test_factory_creates_request(factory):
     assert request.POST['key'] == 'value'
 
 
-
 def test_superuser_creation(superuser):
-    assert superuser.is_superuser, "Superuser flag should be True"
-    assert superuser.is_staff, "Staff flag should be True for superuser"
-    assert superuser.username == 'superuser', "Username should match the created username"
-    assert superuser.check_password('password'), "Password should be correctly set and verified"
+    assert superuser.is_superuser, 'Superuser flag should be True'
+    assert superuser.is_staff, 'Staff flag should be True for superuser'
+    assert superuser.username == 'superuser', 'Username should match the created username'
+    assert superuser.check_password('password'), 'Password should be correctly set and verified'
