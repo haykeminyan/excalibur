@@ -13,23 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      database:
-        image: postgres:17
-        ports:
-          - 5434:5432
-        env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        options: >
-          --health-cmd="pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
+    database:
+      image: postgres:17
+      ports:
+        - 5434:5432
+      env:
+        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      options: >
+        --health-cmd="pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-postgres}"
+        --health-interval=10s
+        --health-timeout=5s
+        --health-retries=5
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Verify environment variables
+        run: |
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}"
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}"
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
 
       # Set up Docker Buildx
       - name: Set up Docker Buildx
