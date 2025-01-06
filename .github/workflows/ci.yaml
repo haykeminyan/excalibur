@@ -55,7 +55,7 @@ jobs:
 
       - name: Run Django migrations
         run: |
-          docker-compose exec excalibur python manage.py migrate --noinput
+          docker-compose exec -T excalibur python manage.py migrate --noinput
 
       - name: Run tests
         run: |
