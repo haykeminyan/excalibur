@@ -43,6 +43,9 @@ jobs:
         run: |
           docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
 
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@v2.1.0
+
       - name: Debug Database Logs
         run: docker logs $(docker ps -aq --filter "name=postgres")
 
@@ -65,4 +68,3 @@ jobs:
         run: |
           docker-compose down --remove-orphans
           docker network prune -f  # Force remove any unused networks
-
