@@ -22,10 +22,8 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         options: >
-          --health-cmd="pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-postgres}"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-cmd="pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-postgres}" 
+          --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
       - name: Checkout code
@@ -37,22 +35,13 @@ jobs:
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}"
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
 
-      # Set up Docker Buildx
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # Build and start containers
       - name: Build and start containers with docker-compose
         run: |
           docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
 
-      # Debug container issues
-      - name: Debug Docker containers
-        run: |
-          docker ps -a
-          docker logs $(docker ps -aq --filter "name=postgres")
+      - name: Debug Database Logs
+        run: docker logs $(docker ps -aq --filter "name=postgres")
 
-      # Wait for PostgreSQL
       - name: Wait for PostgreSQL
         run: |
           until docker-compose exec database pg_isready -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }}; do
@@ -60,16 +49,13 @@ jobs:
             sleep 5
           done
 
-      # Run Django migrations
       - name: Run Django migrations
         run: |
           docker-compose exec excalibur python manage.py migrate --noinput
 
-      # Run tests
       - name: Run tests
         run: |
           docker-compose exec excalibur python manage.py test --noinput
 
-      # Clean up
       - name: Shutdown services
         run: docker-compose down
