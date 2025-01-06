@@ -16,7 +16,7 @@ jobs:
       database:
         image: postgres:17
         ports:
-          - 5433:5432
+          - 5434:5432
         env:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
