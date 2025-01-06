@@ -24,7 +24,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-your-secret-key')
 
 # Initialize Sentry only once, adjust the settings based on the environment.
 sentry_sdk.init(
-    dsn=os.getenv('SENTRY_DSN', 'sentry-secret-key'),
+    dsn=os.getenv('SENTRY_DSN'),
     traces_sample_rate=1.0,  # Capture 100% of transactions
     send_default_pii=True,  # Include personally identifiable information (PII) in the event payload
     _experiments={
@@ -38,7 +38,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default to False for production
 if not DEBUG:
     # For production, Sentry should be properly configured with performance monitoring.
     sentry_sdk.init(
-        dsn=os.getenv('SENTRY_DSN', 'sentry-secret-key'),
+        dsn=os.getenv('SENTRY_DSN'),
         traces_sample_rate=1.0,
         send_default_pii=True,
     )
