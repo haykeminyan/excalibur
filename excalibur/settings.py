@@ -13,19 +13,35 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+import sentry_sdk
 from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+dmib-8)00(@_hq$-8^mwx*dj@7m2*0#f^o%1+0_wij+^zy7+s'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+# Initialize Sentry only once, adjust the settings based on the environment.
+sentry_sdk.init(
+    dsn=os.getenv('SENTRY_DSN'),
+    traces_sample_rate=1.0,  # Capture 100% of transactions
+    send_default_pii=True,  # Include personally identifiable information (PII) in the event payload
+    _experiments={
+        'continuous_profiling_auto_start': True,  # Start the profiler automatically when possible
+    },
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default to False for production if not set in env
+
+if not DEBUG:
+    # For production, Sentry should be properly configured with performance monitoring.
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'),
+        traces_sample_rate=1.0,
+        send_default_pii=True,
+    )
 
 LANGUAGES = [
     ('en', _('English')),
