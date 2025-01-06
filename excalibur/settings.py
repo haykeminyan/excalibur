@@ -33,19 +33,7 @@ sentry_sdk.init(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default to False for production if not set in env
 
-
-if not DEBUG:
-    # For production, Sentry should be properly configured with performance monitoring.
-    sentry_sdk.init(
-        dsn="https://3a19edee45f9812bff566cc93a4fbb52@o4506701381042176.ingest.us.sentry.io/4508597688991744",
-        traces_sample_rate=1.0,
-        send_default_pii=True,
-        _experiments={
-            'continuous_profiling_auto_start': True,  # Start the profiler automatically when possible
-        },
-    )
 
 LANGUAGES = [
     ('en', _('English')),
@@ -226,10 +214,23 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 if ENVIRONMENT == 'production':
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    DEBUG = False
 else:
     # Disable SSL redirection for development (no need for SSL)
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = None
+    DEBUG = True
+
+if not DEBUG:
+    # For production, Sentry should be properly configured with performance monitoring.
+    sentry_sdk.init(
+        dsn="https://3a19edee45f9812bff566cc93a4fbb52@o4506701381042176.ingest.us.sentry.io/4508597688991744",
+        traces_sample_rate=1.0,
+        send_default_pii=True,
+        _experiments={
+            'continuous_profiling_auto_start': True,  # Start the profiler automatically when possible
+        },
+    )
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
