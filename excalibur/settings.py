@@ -20,7 +20,7 @@ from django.utils.translation import gettext_lazy as _
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY =os.getenv('SECRET_KEY', 'django-your-secret-key')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-your-secret-key')
 
 # Initialize Sentry only once, adjust the settings based on the environment.
 sentry_sdk.init(
@@ -38,7 +38,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default to False for production
 if not DEBUG:
     # For production, Sentry should be properly configured with performance monitoring.
     sentry_sdk.init(
-        dsn=os.getenv('SENTRY_DSN'),
+        dsn=os.getenv('SENTRY_DSN', 'sentry-secret-key'),
         traces_sample_rate=1.0,
         send_default_pii=True,
     )
