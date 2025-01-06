@@ -59,7 +59,7 @@ jobs:
 
       - name: Run tests
         run: |
-          docker-compose exec -T excalibur pytest --noinput
+          docker-compose exec -T excalibur pytest
 
       - name: Shutdown services
         run: |
