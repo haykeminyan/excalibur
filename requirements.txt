@@ -15,3 +15,4 @@ pytest-django==4.9.0
 coverage==7.6.10
 sentry_sdk==2.19.2
 sentry-sdk[django]
+django-axes[ipware]
