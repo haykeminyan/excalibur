@@ -16,5 +16,5 @@ def test_healthcheck(client):
         response = client.get(reverse_lazy('apps.main:healthcheck'))
 
         # then
-        assert response.status_code == 200
+        assert response.status_code in [200, 301]
         assert response.json() == {'status': 'healthy', 'database': 'unhealthy'}

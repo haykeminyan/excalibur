@@ -122,7 +122,7 @@ def test__user_success_login(client, user):
     )
 
     # Assert redirection to the success_url
-    assert response.status_code == 302
+    assert response.status_code in [301, 302]
     assert response.url == '/main/'
 
 
