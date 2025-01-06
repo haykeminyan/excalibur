@@ -1,0 +1,69 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: postgres:17
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        ports:
+          - '5433:5432'
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h database"]
+          interval: 10s
+          timeout: 5s
+          retries: 5
+      redis:
+        image: redis:latest
+        container_name: redis
+        ports:
+          - '6379:6379'
+        restart: always
+        healthcheck:
+          test: ["CMD", "redis-cli", "-h", "redis", "ping"]
+          interval: 10s
+          timeout: 3s
+          retries: 3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and start containers with docker-compose
+      run: |
+        # Run docker-compose to build and start the containers in the background
+        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
+
+    - name: Wait for containers to be ready
+      run: |
+        # Wait for the database and other services to be ready before running tests
+        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec database pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}
+        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec redis redis-cli -h redis ping
+
+    - name: Run migrations
+      run: |
+        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec excalibur python manage.py migrate
+
+    - name: Run tests
+      run: |
+        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec excalibur python manage.py test
+
+    - name: Shutdown containers
+      run: |
+        # Clean up by bringing down the containers
+        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml down
