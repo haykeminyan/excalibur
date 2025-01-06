@@ -209,11 +209,16 @@ TIME_ZONE = 'UTC'
 
 USE_TZ = True
 
+SESSION_COOKIE_AGE = 3600
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
+
 
 if ENVIRONMENT == 'production':
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
     DEBUG = False
 else:
     # Disable SSL redirection for development (no need for SSL)

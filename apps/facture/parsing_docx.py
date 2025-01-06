@@ -32,13 +32,10 @@ def replace_in_text(text, regex, replace_dict):
     Helper function to replace placeholders in a text using regex from replace_dict.
     """
     text = text.strip()  # Trim the text
-    logger.error(f'Original text: {text}')
-    logger.error('!' * 100)
 
     # Use regex to find placeholders and replace them with values from the replace_dict
     for match in regex.finditer(text):
         placeholder = match.group(0)
-        logger.error(f'Found placeholder: {placeholder}')
 
         # Check if the placeholder is in the replace_dict
         if placeholder in replace_dict:
@@ -51,7 +48,6 @@ def replace_in_text(text, regex, replace_dict):
             elif replacement_value is None:
                 replacement_value = ''
 
-            logger.error(f'Replacing {placeholder} with {replacement_value}')
             text = text.replace(placeholder, str(replacement_value))
 
     return text

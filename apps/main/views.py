@@ -16,7 +16,6 @@ def healthcheck(request):
     try:
         connections['default'].cursor()
     except OperationalError:
-        logger.error('OperationalError encountered')
         db_health = 'unhealthy'
     return JsonResponse({'status': 'healthy', 'database': db_health})
 
