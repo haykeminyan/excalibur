@@ -59,7 +59,10 @@ jobs:
 
       - name: Run tests
         run: |
-          docker-compose exec -T excalibur python manage.py test --noinput
+          docker-compose exec -T excalibur pytest --noinput
 
       - name: Shutdown services
-        run: docker-compose down
+        run: |
+          docker-compose down --remove-orphans
+          docker network prune -f  # Force remove any unused networks
+
