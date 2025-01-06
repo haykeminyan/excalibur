@@ -38,13 +38,17 @@ jobs:
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}"
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}"
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}"  # Debugging to ensure SENTRY_DSN is set
+
+      - name: Set up environment variables for Sentry
+        run: |
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> $GITHUB_ENV
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+          echo "DEBUG=False" >> $GITHUB_ENV  # Make sure DEBUG is set to False in production
 
       - name: Build and start containers with docker-compose
         run: |
           docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
-
-      - name: Debug Database Logs
-        run: docker logs $(docker ps -aq --filter "name=postgres")
 
       - name: Wait for PostgreSQL
         run: |
