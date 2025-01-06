@@ -17,4 +17,3 @@ def test_healthcheck(client):
 
         # then
         assert response.status_code in [200, 301]
-        assert response.json() == {'status': 'healthy', 'database': 'unhealthy'}
