@@ -3,6 +3,7 @@ LOCAL_FACTURE = {
     'firm_name': 'test',
     'address': 'Yerevan, Armenia',
     'destination': 'Recharge express',
+    'created_date': '2025-12-12',
     'quantity': 1000,
     'percent': 0.5,
     'quantity_after_percent': 500,
@@ -11,6 +12,7 @@ LOCAL_FACTURE = {
     'total_ttc': 500,
     'deposit': 12,
     'net_pay': 500,
+    'total_sum_fr': 'test',
     'number_facture': 20025001,
 }
 
@@ -19,6 +21,7 @@ WORLD_FACTURE = {
     'firm_name': 'test',
     'address': 'Porto, Portugal',
     'sku': 123,
+    'created_date': '2025-12-12',
     'description': 'Recharge Card and Express',
     'specification': 123,
     'quantity': 123,
@@ -27,5 +30,6 @@ WORLD_FACTURE = {
     'total_tax': 1,
     'net_pay': 60.5,
     'account_number': 1234567890,
+    'total_sum_en': 'test',
     'number_facture': 20025001,
 }
