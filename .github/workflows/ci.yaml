@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Workflow
 
 on:
   push:
@@ -9,61 +9,68 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+
     services:
       database:
         image: postgres:17
+        ports:
+          - 5433:5432
         env:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        ports:
-          - '5433:5432'
-        healthcheck:
-          test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h database"]
-          interval: 10s
-          timeout: 5s
-          retries: 5
+        options: > 
+          --health-cmd="pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h database" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+
       redis:
         image: redis:latest
-        container_name: redis
         ports:
-          - '6379:6379'
-        restart: always
-        healthcheck:
-          test: ["CMD", "redis-cli", "-h", "redis", "ping"]
-          interval: 10s
-          timeout: 3s
-          retries: 3
+          - 6379:6379
+        options: > 
+          --health-cmd="redis-cli -h redis ping"
+          --health-interval=10s
+          --health-timeout=3s
+          --health-retries=3
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      # Set up Docker Buildx for better caching and multi-platform builds (optional but recommended)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Build and start containers with docker-compose
-      run: |
-        # Run docker-compose to build and start the containers in the background
-        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
+      # Build and start the containers in detached mode
+      - name: Build and start containers with docker-compose
+        run: |
+          docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
 
-    - name: Wait for containers to be ready
-      run: |
-        # Wait for the database and other services to be ready before running tests
-        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec database pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}
-        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec redis redis-cli -h redis ping
+      # Wait for PostgreSQL and Redis to be ready
+      - name: Wait for PostgreSQL
+        run: |
+          docker exec database pg_isready -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }}
 
-    - name: Run migrations
-      run: |
-        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec excalibur python manage.py migrate
+      - name: Wait for Redis
+        run: |
+          docker exec redis redis-cli -h redis ping
 
-    - name: Run tests
-      run: |
-        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml exec excalibur python manage.py test
+      # Run Django migrations
+      - name: Run Django migrations
+        run: |
+          docker-compose exec excalibur python manage.py migrate --noinput
 
-    - name: Shutdown containers
-      run: |
-        # Clean up by bringing down the containers
-        docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml down
+      # Run tests
+      - name: Run tests
+        run: |
+          docker-compose exec excalibur python manage.py test --noinput
+
+      # Clean up
+      - name: Shutdown services
+        run: docker-compose down
+
