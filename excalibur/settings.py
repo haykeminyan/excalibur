@@ -33,7 +33,7 @@ sentry_sdk.init(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'  # Default to False for production if not set in env
+DEBUG = True  # Default to False for production if not set in env
 
 if not DEBUG:
     # For production, Sentry should be properly configured with performance monitoring.
