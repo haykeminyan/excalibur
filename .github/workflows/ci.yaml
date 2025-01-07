@@ -27,8 +27,8 @@ jobs:
       rabbitmq:
         image: "rabbitmq:3-management"
         ports:
-          - "5672:5672"  # AMQP
-          - "15672:15672"  # RabbitMQ Management UI
+          - "5672:5672"
+          - "15672:15672"
         env:
           RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USER }}
           RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
