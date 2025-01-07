@@ -72,10 +72,10 @@ jobs:
             sleep 5
           done
 
-      - name: Wait for RabbitMQ
+      - name: Wait for RabbitMQ to be ready
         run: |
-          until docker-compose exec -T rabbitmq curl -s -f http://localhost:15672/healthcheck; do
-            echo "Waiting for RabbitMQ..."
+          until docker exec rabbitmq rabbitmqctl status; do
+            echo "Waiting for RabbitMQ to be ready..."
             sleep 5
           done
 
