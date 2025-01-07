@@ -85,21 +85,21 @@ services:
     working_dir: /usr/src/app
 
   rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    image: "rabbitmq:3-management"
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5672:5672"  # AMQP
+      - "15672:15672"  # RabbitMQ Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     networks:
       - excalibur_network
     healthcheck:
-      test: [ "CMD", "rabbitmqctl", "status" ]
+      test: ["CMD", "curl", "-f", "http://localhost:15672/healthcheck"]
       interval: 10s
-      timeout: 5s
-      retries: 3
+      retries: 5
+    depends_on:
+      - excalibur
 
   nginx:
     build:
