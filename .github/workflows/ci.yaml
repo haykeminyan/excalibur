@@ -24,6 +24,20 @@ jobs:
         options: |
           --network-alias database
 
+      rabbitmq:
+        image: "rabbitmq:3-management"
+        ports:
+          - "5672:5672"  # AMQP
+          - "15672:15672"  # RabbitMQ Management UI
+        env:
+          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USER }}
+          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
+        options: |
+          --network-alias rabbitmq
+          --health-cmd "curl -f http://localhost:15672/healthcheck || exit 1"
+          --health-interval 10s
+          --health-retries 5
+
     steps:
       - name: Install Docker Compose
         run: |
@@ -38,7 +52,12 @@ jobs:
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}"
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}"
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}"
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}"  # Debugging to ensure SENTRY_DSN is set
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}"
+          echo "RABBITMQ_USER=${{ secrets.RABBITMQ_USER }}"
+          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}"
+          echo "RABBITMQ_QUEUE_LOCAL_FACTURE=${{ secrets.RABBITMQ_QUEUE_LOCAL_FACTURE }}"
+          echo "RABBITMQ_QUEUE_WORLD_FACTURE=${{ secrets.RABBITMQ_QUEUE_WORLD_FACTURE }}"
+          echo "RABBITMQ_QUEUE_DEDUCTIONS=${{ secrets.RABBITMQ_QUEUE_DEDUCTIONS }}"
 
       - name: Set up environment variables for Sentry
         run: |
@@ -54,6 +73,13 @@ jobs:
         run: |
           until docker-compose exec -T database pg_isready -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }}; do
             echo "Waiting for database..."
+            sleep 5
+          done
+
+      - name: Wait for RabbitMQ
+        run: |
+          until docker-compose exec -T rabbitmq curl -s -f http://localhost:15672/healthcheck; do
+            echo "Waiting for RabbitMQ..."
             sleep 5
           done
 

@@ -8,6 +8,12 @@ class LoginUser(LoginView):
     template_name = 'html/login.html'
     success_url = 'apps.facture:local_list'
 
+    def dispatch(self, request, *args, **kwargs):
+        # Remove the language cookie on logout
+        response = super().dispatch(request, *args, **kwargs)
+        response.delete_cookie('django_language')  # Remove the language cookie
+        return response
+
 
 class LogoutUser(LogoutView):
     template_name = 'html/login.html'

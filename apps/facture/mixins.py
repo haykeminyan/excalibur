@@ -19,6 +19,8 @@ from django.views.generic import (
 )
 from docx import Document
 
+from excalibur.rabbitmq_service import send_rabbitmq_message
+
 from .constants import LOCAL_FIELDS, WORLD_FIELDS
 from .models import LocalFacture, WorldFacture
 from .parsing_docx import replace_placeholders_in_doc, set_font_size
@@ -84,6 +86,10 @@ class BaseFactureCreateView(LoginRequiredMixin, CreateView):
         if not form.instance.owner:
             form.instance.owner = self.request.user
 
+        # Send RabbitMQ message on successful creation
+        message = f"Facture created: ID={form.instance.pk}, Owner={form.instance.owner}"
+        send_rabbitmq_message(self.model, message)
+
         logger.info(f'Form instance after owner set: {form.instance.owner}')
         return super().form_valid(form)
 
@@ -104,6 +110,10 @@ class BaseFactureUpdateView(LoginRequiredMixin, UpdateView):
         if not form.instance.owner:
             form.instance.owner = self.request.user
 
+        # Send RabbitMQ message on successful creation
+        message = f"Facture updated: ID={form.instance.pk}, Owner={form.instance.owner}"
+        send_rabbitmq_message(self.model, message)
+
         logger.info(f'Form instance after owner set: {form.instance.owner}')
         return super().form_valid(form)
 
@@ -114,6 +124,15 @@ class BaseFactureDeleteView(LoginRequiredMixin, DeleteView):
         Enforce ownership validation when retrieving the object.
         """
         return CheckOwnerFacture(self.model, self.request, self.kwargs).get_facture()
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+
+        # Send RabbitMQ message on successful deletion
+        message = f"Facture deleted: ID={self.object.id}, Owner={self.object.owner}"
+        send_rabbitmq_message(self.model, message)
+
+        return response
 
 
 class BaseFactureDetailView(LoginRequiredMixin, DetailView):
@@ -172,6 +191,11 @@ class BaseFactureLocalExportDocx(LoginRequiredMixin, View):
         response['Content-Disposition'] = (
             f'attachment; filename="local_facture_{facture_object.number_facture}.docx"'
         )
+
+        # Send RabbitMQ message on document export
+        message = f"Local Facture document exported: ID={facture_object.id}, Owner={facture_object.owner}"
+        send_rabbitmq_message(LocalFacture, message)
+
         return response
 
 
@@ -220,4 +244,9 @@ class BaseFactureWorldExportDocx(LoginRequiredMixin, View):
         response['Content-Disposition'] = (
             f'attachment; filename="world_facture_{facture_object.number_facture}.docx"'
         )
+
+        # Send RabbitMQ message on document export
+        message = f"World Facture document exported: ID={facture_object.id}, Owner={facture_object.owner}"
+        send_rabbitmq_message(WorldFacture, message)
+
         return response

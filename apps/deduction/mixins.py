@@ -22,6 +22,8 @@ from django.views.generic import (
 )
 from docx import Document
 
+from excalibur.rabbitmq_service import send_rabbitmq_message
+
 from ..facture.parsing_docx import replace_placeholders_in_doc, set_font_size
 from .constants import DEDUCTION_FIELDS
 from .models import Deduction
@@ -41,7 +43,6 @@ class CheckOwnerDeduction:
         If user is superuser he can delete concrete deduction
         """
         if self.request.user.is_superuser:
-            # Superuser can access all Deductions
             return self.model.objects.all()
         return self.model.objects.filter(owner=self.request.user)
 
@@ -52,7 +53,6 @@ class CheckOwnerDeduction:
         queryset = self.get_queryset() if queryset is None else queryset
         pk = self.kwargs.get(self.pk_url_kwarg)
 
-        # Attempt to get the object and handle ownership validation
         try:
             obj = queryset.get(pk=pk)
         except self.model.DoesNotExist:
@@ -66,17 +66,12 @@ class BaseDeductionListView(LoginRequiredMixin, ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        """
-        Filter deductions by supplier if 'supplier' is provided in the query params.
-        """
         supplier = self.request.GET.get('supplier')
         logger.error(f"Supplier filter: {supplier}")
         queryset = super().get_queryset().select_related('owner')
 
         if supplier:
-            queryset = queryset.filter(
-                supplier__icontains=supplier,
-            )  # Use icontains for partial match
+            queryset = queryset.filter(supplier__icontains=supplier)
             logger.debug(f"Filtered queryset: {queryset}")
         else:
             queryset = queryset.order_by('-update_time')
@@ -84,19 +79,13 @@ class BaseDeductionListView(LoginRequiredMixin, ListView):
         return queryset
 
     def get_context_data(self, **kwargs):
-        """
-        Add grouped and paginated supplier data to the context.
-        """
         context = super().get_context_data(**kwargs)
-
-        # Filter and order deductions
         supplier = self.request.GET.get('supplier', '')
         deductions = Deduction.objects.select_related('owner')
         if supplier:
             deductions = deductions.filter(supplier__icontains=supplier)
         deductions = deductions.order_by('supplier')
 
-        # Group deductions by supplier
         grouped_deductions = {
             supplier: list(records)
             for supplier, records in groupby(deductions, key=lambda d: d.supplier)
@@ -104,62 +93,63 @@ class BaseDeductionListView(LoginRequiredMixin, ListView):
 
         logger.debug(f"Grouped deductions: {grouped_deductions}")
 
-        # Paginate grouped deductions
         grouped_items = list(grouped_deductions.items())
-        paginator = Paginator(grouped_items, self.paginate_by)  # 2 suppliers per page
+        paginator = Paginator(grouped_items, self.paginate_by)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        # Add to context
         context['suppliers_with_deductions'] = page_obj
-        context['page_obj'] = page_obj  # For pagination controls
-        context['supplier_filter'] = supplier  # To keep the filter input populated
+        context['page_obj'] = page_obj
+        context['supplier_filter'] = supplier
 
         logger.debug(f"Context data: {context}")
         return context
 
 
 class BaseDeductionCreateView(LoginRequiredMixin, CreateView):
-    success_url = reverse_lazy('success_url')  # Update this as needed
+    success_url = reverse_lazy('success_url')
 
     def form_valid(self, form):
-        # Log the form instance before save to ensure the owner is set
-        logger.info(f'Form instance before save: {form.instance.owner}')
-
-        # Ensure 'owner' is set before saving
         if not form.instance.owner:
             form.instance.owner = self.request.user
+        response = super().form_valid(form)
 
-        logger.info(f'Form instance after owner set: {form.instance.owner}')
-        return super().form_valid(form)
+        # Send RabbitMQ message on successful creation
+        message = f"Deduction created: ID={self.object.id}, Owner={self.object.owner}"
+        send_rabbitmq_message(self.model, message)
+
+        return response
 
 
-# Base views for shared logic
 class BaseDeductionUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
-        """
-        Enforce ownership validation when retrieving the object.
-        """
         return CheckOwnerDeduction(self.model, self.request, self.kwargs).get_deduction()
 
     def form_valid(self, form):
-        # Log the form instance before save to ensure the owner is set
-        logger.info(f'Form instance before save: {form.instance.owner}')
-
-        # Ensure 'owner' is set before saving
         if not form.instance.owner:
             form.instance.owner = self.request.user
+        response = super().form_valid(form)
 
-        logger.info(f'Form instance after owner set: {form.instance.owner}')
-        return super().form_valid(form)
+        # Send RabbitMQ message on successful update
+        message = f"Deduction updated: ID={self.object.id}, Owner={self.object.owner}"
+        send_rabbitmq_message(self.model, message)
+
+        return response
 
 
 class BaseDeductionDeleteView(LoginRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
-        """
-        Enforce ownership validation when retrieving the object.
-        """
         return CheckOwnerDeduction(self.model, self.request, self.kwargs).get_deduction()
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        response = super().delete(request, *args, **kwargs)
+
+        # Send RabbitMQ message on successful deletion
+        message = f"Deduction deleted: ID={obj.id}, Owner={obj.owner}"
+        send_rabbitmq_message(self.model, message)
+
+        return response
 
 
 class BaseDeductionDetailView(LoginRequiredMixin, DetailView):
@@ -167,9 +157,6 @@ class BaseDeductionDetailView(LoginRequiredMixin, DetailView):
     slug_url_kwarg = 'pk'
 
     def get_object(self, **kwargs):
-        """
-        Ensure the object is fetched or return a 404 if not found.
-        """
         return get_object_or_404(self.model, pk=self.kwargs.get(self.slug_url_kwarg))
 
 
@@ -177,9 +164,6 @@ class BaseDeductionExportDocx(LoginRequiredMixin, View):
     local_template = 'deduction/file_templates/file_input/Deduction_template.docx'
 
     def generate_docx(self, facture_object, template_path):
-        """
-        Generate a DOCX file from the template and return it as a BytesIO stream.
-        """
         facture_dict = model_to_dict(facture_object)
         template_path = finders.find(template_path)
         doc = Document(template_path)
@@ -195,22 +179,14 @@ class BaseDeductionExportDocx(LoginRequiredMixin, View):
         return file_stream
 
     def get(self, request, *args, **kwargs):
-        """
-        Handles the GET request to generate the DOCX file and return it as a downloadable response.
-        """
-        # Fetch deduction object
         deduction_object = get_object_or_404(Deduction, pk=kwargs.get('pk'))
-
-        # Generate the DOCX file
         file_stream = self.generate_docx(deduction_object, self.local_template)
 
         file_path = f'/usr/src/app/apps/deduction/static/deduction/file_templates/file_output/deduction_{deduction_object.number_deduction}.docx'
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        # Save the generated DOCX file to the specified path
         with open(file_path, 'wb') as docx_file:
-            docx_file.write(file_stream.getvalue())  # Assuming file_stream is a BytesIO object
+            docx_file.write(file_stream.getvalue())
 
-        # Create the HTTP response for file download
         response = HttpResponse(
             file_stream,
             content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -218,4 +194,9 @@ class BaseDeductionExportDocx(LoginRequiredMixin, View):
         response['Content-Disposition'] = (
             f'attachment; filename="deduction_{deduction_object.number_deduction}.docx"'
         )
+
+        # Send RabbitMQ message on document export
+        message = f"Deduction document exported: ID={deduction_object.id}, Owner={deduction_object.owner}"
+        send_rabbitmq_message(Deduction, message)
+
         return response

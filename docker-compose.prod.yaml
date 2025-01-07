@@ -57,10 +57,18 @@ services:
       - REDIS_PORT=6379
       - DJANGO_SETTINGS_MODULE=excalibur.settings
       - ENVIRONMENT=production
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - RABBITMQ_QUEUE_LOCAL_FACTURE=${RABBITMQ_QUEUE_LOCAL_FACTURE}
+      - RABBITMQ_QUEUE_WORLD_FACTURE=${RABBITMQ_QUEUE_WORLD_FACTURE}
+      - RABBITMQ_QUEUE_DEDUCTIONS=${RABBITMQ_QUEUE_DEDUCTIONS}
     depends_on:
       database:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/main/healthcheck/"]
@@ -75,6 +83,23 @@ services:
     networks:
       - excalibur_network
     working_dir: /usr/src/app
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - excalibur_network
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   nginx:
     build:
