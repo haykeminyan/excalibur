@@ -86,7 +86,7 @@ services:
     working_dir: /usr/src/app
 
   rabbitmq:
-    image: rabbitmq:4.0.5-alpine
+    image: rabbitmq:3-management
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
