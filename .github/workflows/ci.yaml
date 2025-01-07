@@ -30,8 +30,8 @@ jobs:
           - "5672:5672"
           - "15672:15672"
         env:
-          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USER }}
-          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
+          RABBITMQ_DEFAULT_USER: admin
+          RABBITMQ_DEFAULT_PASS: Pw5Rzu5tAbfsUbL7yOeBp
         options: |
           --network-alias rabbitmq
           --health-cmd "curl -f http://localhost:15672/healthcheck || exit 1"
