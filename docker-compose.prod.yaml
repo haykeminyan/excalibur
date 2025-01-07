@@ -85,7 +85,7 @@ services:
     working_dir: /usr/src/app
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:4.0.5-alpine
     container_name: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
