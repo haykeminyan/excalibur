@@ -12,11 +12,6 @@ NGINX_PID=$!
 echo "Waiting for Nginx to start..."
 sleep 5
 
-# Test internet connectivity before attempting Certbot
-if ! curl -s --head https://e6.o.lencr.org | grep "200 OK"; then
-    echo "Cannot resolve e6.o.lencr.org. Check DNS or firewall settings."
-    exit 1
-fi
 
 # Obtain SSL certificates via Certbot
 echo "Obtaining SSL certificates..."
