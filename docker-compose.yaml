@@ -16,6 +16,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    env_file:
+      - .env
 
   redis:
     image: redis:latest
@@ -64,6 +66,8 @@ services:
       - RABBITMQ_QUEUE_LOCAL_FACTURE=${RABBITMQ_QUEUE_LOCAL_FACTURE}
       - RABBITMQ_QUEUE_WORLD_FACTURE=${RABBITMQ_QUEUE_WORLD_FACTURE}
       - RABBITMQ_QUEUE_DEDUCTIONS=${RABBITMQ_QUEUE_DEDUCTIONS}
+      - CELERY_BROKER_URL=pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq//
+      - CELERY_RESULT_BACKEND=rpc://
     depends_on:
       database:
         condition: service_healthy
@@ -84,6 +88,8 @@ services:
     networks:
       - excalibur_network
     working_dir: /usr/src/app
+    env_file:
+      - .env
 
   rabbitmq:
     image: rabbitmq:4-management
@@ -93,6 +99,8 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    env_file:
+      - .env
     networks:
       - excalibur_network
     healthcheck:
@@ -100,6 +108,38 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+
+  celery:
+    build: .
+    command: sh -c "python wait_for_service.py && celery -A excalibur worker --loglevel=info"
+    volumes:
+      - .:/usr/src/app
+      - ./logs:/usr/src/app/logs
+    environment:
+      - CELERY_BROKER_URL=pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq//
+      - CELERY_RESULT_BACKEND=rpc://
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - excalibur_network
+    env_file:
+      - .env
+
+  flower:
+    build: .
+    command: sh -c "python -m flower flower --broker=pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq// --port=5555"
+    ports:
+      - "5555:5555"  # Flower Web UI
+    depends_on:
+      - rabbitmq
+      - celery
+    networks:
+      - excalibur_network
+    environment:
+      - FLOWER_BASIC_AUTH=${FLOWER_USER}:${FLOWER_PASSWORD}
+    env_file:
+      - .env
 
 volumes:
   postgres_data:

@@ -9,7 +9,7 @@ from django.contrib.staticfiles import finders
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -20,7 +20,10 @@ from django.views.generic import (
     UpdateView,
     View,
 )
-from docx import Document
+from django.urls import reverse
+
+from excalibur import settings
+from .tasks import generate_docx_task
 
 from excalibur.rabbitmq_service import send_rabbitmq_message
 
@@ -159,44 +162,42 @@ class BaseDeductionDetailView(LoginRequiredMixin, DetailView):
     def get_object(self, **kwargs):
         return get_object_or_404(self.model, pk=self.kwargs.get(self.slug_url_kwarg))
 
+def download_deduction_document(request, file_name):
+    # Generate the full file path based on the file name
+    file_path = os.path.join('/usr/src/app/apps/deduction/static/deduction/file_templates/file_output', file_name)
+
+    # Check if the file exists and return the file response
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=file_name)
+    else:
+        return HttpResponse("File not found.", status=404)
 
 class BaseDeductionExportDocx(LoginRequiredMixin, View):
-    local_template = 'deduction/file_templates/file_input/Deduction_template.docx'
+    local_template = 'apps/deduction/static/deduction/file_templates/file_input/Deduction_template.docx'
 
-    def generate_docx(self, facture_object, template_path):
-        facture_dict = model_to_dict(facture_object)
-        template_path = finders.find(template_path)
-        doc = Document(template_path)
-
-        for field in DEDUCTION_FIELDS:
-            regex = re.compile(rf'{re.escape(field)}')
-            replace_placeholders_in_doc(doc, regex, facture_dict)
-
-        set_font_size(doc)
-        file_stream = io.BytesIO()
-        doc.save(file_stream)
-        file_stream.seek(0)
-        return file_stream
+    # def get(self, request, *args, **kwargs):
+    #     deduction_object = get_object_or_404(Deduction, pk=kwargs.get('pk'))
+    #
+    #     # Trigger the Celery task to generate the docx in the background
+    #     task_result = generate_docx_task.delay(deduction_object.id)
+    #
+    #     # Wait for the result to get the file path (optional, blocking until file is ready)
+    #     file_path = task_result.get()
+    #
+    #     # Construct the URL for downloading the file
+    #     file_name = os.path.basename(file_path)
+    #     download_url = reverse('apps.deduction:download_deduction_document', kwargs={'file_name': file_name})
+    #     # Trigger the Celery task to generate the docx in the background
+    #     generate_docx_task.delay(deduction_object.id)
+    #
+    #     # Return an immediate response to the user (you can show a loading page or notify the user)
+    #     return HttpResponse(f"Your document is being generated. Once ready, download it from <a href='{download_url}'>here</a>.")
 
     def get(self, request, *args, **kwargs):
         deduction_object = get_object_or_404(Deduction, pk=kwargs.get('pk'))
-        file_stream = self.generate_docx(deduction_object, self.local_template)
 
-        file_path = f'/usr/src/app/apps/deduction/static/deduction/file_templates/file_output/deduction_{deduction_object.number_deduction}.docx'
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        with open(file_path, 'wb') as docx_file:
-            docx_file.write(file_stream.getvalue())
+        # Trigger the Celery task to generate the docx in the background
+        task_result = generate_docx_task.delay(deduction_object.id)
 
-        response = HttpResponse(
-            file_stream,
-            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        )
-        response['Content-Disposition'] = (
-            f'attachment; filename="deduction_{deduction_object.number_deduction}.docx"'
-        )
-
-        # Send RabbitMQ message on document export
-        message = f"Deduction document exported: ID={deduction_object.id}, Owner={deduction_object.owner}"
-        send_rabbitmq_message(Deduction, message)
-
-        return response
+        # Immediately respond to the user that the task has started
+        return JsonResponse({'status': 'Document generation started', 'task_id': task_result.id})

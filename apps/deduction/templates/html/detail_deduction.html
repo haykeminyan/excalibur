@@ -21,6 +21,34 @@
     </head>
     <body>
         {% csrf_token %}
+<script>
+    function startDocumentExport(deductionId) {
+        fetch(`/deduction/${deductionId}/export/`)  // Send request to trigger the Celery task
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "Document generation started") {
+                    // Poll for task status every 3 seconds
+                    pollForFile(data.task_id);
+                }
+            });
+    }
+
+    function pollForFile(taskId) {
+        const interval = setInterval(() => {
+            fetch(`/deduction/task_status/${taskId}/`)  // Check if the task is done
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "completed") {
+                        // Stop polling once the task is done
+                        clearInterval(interval);
+                        // Provide the download link or start download
+                        const downloadUrl = `/deduction/generated_documents/${data.file_name}/`;
+                        window.location.href = downloadUrl;  // Trigger the download
+                    }
+                });
+        }, 3000);  // Poll every 3 seconds
+    }
+</script>
         <div class="facture-container">
             <!-- Kebab Menu (Dropdown) -->
             <div class="dropdown" style="position: absolute; top: 10px; right: 10px">
@@ -59,8 +87,10 @@
             <!-- Added missing fields -->
             <!-- Update time (optional) -->
             <p class="facture-details">Last Updated: {{ deduction.update_time }}</p>
-            <a href="{% url 'apps.deduction:generate-deduction-docx' deduction.pk %}"
-               class="btn btn-primary">Download DOCX</a>
+<a href="javascript:void(0);" onclick="startDocumentExport({{ deduction.pk }})" class="btn btn-primary">
+    Download DOCX
+</a>
+
         </div>
     </body>
 </html>

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ensure logs directory exists at runtime
+mkdir -p /usr/src/app/logs
+
 # Wait for the database to be ready
 echo "Waiting for database..."
 while ! nc -z $POSTGRES_HOST 5432; do
@@ -18,3 +21,6 @@ python manage.py collectstatic --noinput
 # Start the server
 echo "Starting server..."
 exec "$@"
+
+# Start Celery worker
+celery -A excalibur worker --loglevel=info

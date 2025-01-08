@@ -79,6 +79,9 @@ INSTALLED_APPS = [
     'apps.facture',
     'apps.users',
 ]
+# Define the logs directory dynamically
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)  # Create the directory if it doesn't exist
 
 LOGGING = {
     'version': 1,
@@ -98,7 +101,7 @@ LOGGING = {
         'django.db.backends': {
             'level': 'WARNING',
             'handlers': ['console', 'file'],
-            'propagate': False,
+            'propagate': True,
         },
     },
 }
@@ -210,6 +213,9 @@ USE_TZ = True
 
 SESSION_COOKIE_AGE = 3600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'pyamqp://guest:guest@rabbitmq//')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'rpc://')
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 

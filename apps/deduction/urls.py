@@ -18,7 +18,8 @@ Including another URLconf
 from django.urls import path
 
 from apps.deduction import views
-from apps.deduction.mixins import BaseDeductionExportDocx
+from apps.deduction.mixins import BaseDeductionExportDocx, download_deduction_document
+from apps.deduction.tasks import task_status
 
 app_name = 'apps.deduction'
 urlpatterns = [
@@ -32,4 +33,9 @@ urlpatterns = [
         BaseDeductionExportDocx.as_view(),
         name='generate-deduction-docx',
     ),
+    # path('generated_documents/<str:file_name>/', download_deduction_document, name='download_deduction_document'),
+    path('<int:pk>/export/', BaseDeductionExportDocx.as_view(), name='export_deduction_document'),
+    path('task_status/<str:task_id>/', task_status, name='task_status'),
+    path('generated_documents/<str:file_name>/', download_deduction_document,
+         name='download_deduction_document'),
 ]

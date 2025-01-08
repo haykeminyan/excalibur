@@ -29,7 +29,14 @@ RUN mkdir -p /usr/src/app/logs
 # Upgrade pip and install dependencies from requirements.txt
 COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
+# Create the logs directory (if not already created)
+RUN mkdir -p /usr/src/app/logs
+RUN chmod -R 755 /usr/src/app/logs
+COPY wait_for_service.py /usr/src/app/
 
+# Install Celery and Flower in the final image to be able to run the Celery worker and Flower
+RUN pip install celery
+RUN pip install flower
 # Copy the application files
 COPY . .
 
