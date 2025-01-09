@@ -59,7 +59,7 @@ function deleteItem(pk, typeFacture) {
     })
       .then((response) => {
         if (response.ok) {
-          alert("Facture deleted successfully!");
+          alert("Deduction deleted successfully!");
           window.location.href = "/deduction/";
         } else if (response.status === 403) {
           alert("You are not an owner of this deduction!");
