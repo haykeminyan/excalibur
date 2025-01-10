@@ -38,11 +38,13 @@ else
   exit 1
 fi
 
-# Set up cron job for automatic SSL certificate renewal
-echo "Setting up automatic SSL certificate renewal..."
 
-# Add a cron job that runs twice a day (adjust if needed)
-echo "0 0,12 * * * root certbot renew --quiet && nginx -s reload" >> /etc/crontab
+
+# Set up cron job for renewal
+echo "Setting up automatic SSL certificate renewal..."
+echo "0 0,12 * * * root certbot renew --quiet && nginx -s reload" > /etc/cron.d/certbot-renew
+chmod 0644 /etc/cron.d/certbot-renew
+crontab /etc/cron.d/certbot-renew
 
 # Start the cron service
 service cron start
