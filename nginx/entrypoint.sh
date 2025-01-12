@@ -3,9 +3,9 @@
 # Ensure the logs directory exists
 mkdir -p /usr/src/app/logs
 
-# Start Nginx in the background and capture the process ID
+# Start Nginx
 echo "Starting Nginx..."
-nginx &
+nginx -g "daemon off;" &
 
 # Capture the Nginx process PID so we can wait on it later
 NGINX_PID=$!
@@ -18,7 +18,6 @@ sleep 5
 echo "Obtaining SSL certificates..."
 certbot --nginx -d pmsolution-facture.org -d www.pmsolution-facture.org --email ibhayk@gmail.com --agree-tos --no-eff-email --non-interactive
 
-# Ensure certificates were successfully obtained
 if [ $? -eq 0 ]; then
   echo "Certificates successfully obtained."
 else
@@ -30,7 +29,6 @@ fi
 echo "Reloading Nginx..."
 nginx -s reload
 
-# Log the Nginx reload result
 if [ $? -eq 0 ]; then
   echo "Nginx reloaded successfully."
 else
@@ -38,20 +36,26 @@ else
   exit 1
 fi
 
-
-
-# Set up cron job for renewal
+# Set up automatic renewal cron job
 echo "Setting up automatic SSL certificate renewal..."
-echo "0 0,12 * * * root certbot renew --quiet && nginx -s reload" > /etc/cron.d/certbot-renew
+cat <<EOL > /etc/cron.d/certbot-renew
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+0 0,12 * * * root certbot renew --quiet --deploy-hook "nginx -s reload" >> /usr/src/app/logs/certbot-renew.log 2>&1
+EOL
+
 chmod 0644 /etc/cron.d/certbot-renew
 crontab /etc/cron.d/certbot-renew
 
-# Start the cron service
-service cron start
+# Start cron in the foreground
+echo "Starting cron..."
+cron -f &
+CRON_PID=$!
 
-# Keep the Nginx process running in the foreground
-echo "Keeping Nginx running in the foreground..."
+# Wait for Nginx and cron processes
 wait $NGINX_PID
+wait $CRON_PID
 
 # Keep the container running by running an infinite loop or dummy process
 tail -f /dev/null
