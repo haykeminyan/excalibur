@@ -64,7 +64,7 @@
                                 {% if request.GET.number_facture %}selected{% endif %}>
                             {% trans "Number facture" %}
                         </option>
-                        <option value="date" {% if request.GET.date %}selected{% endif %}>{% trans "Created date" %}</option>
+                        <option value="created_date" {% if request.GET.created_date %}selected{% endif %}>{% trans "Created date" %}</option>
                         <option value="reference" {% if request.GET.reference %}selected{% endif %}>{% trans "Reference" %}</option>
                         <option value="quantity" {% if request.GET.quantity %}selected{% endif %}>{% trans "Quantity" %}</option>
                         <option value="percent" {% if request.GET.percent %}selected{% endif %}>{% trans "Percent" %}</option>
